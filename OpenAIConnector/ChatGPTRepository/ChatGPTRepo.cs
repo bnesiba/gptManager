@@ -12,7 +12,9 @@ namespace gptManager.Repository.ChatGPTRepository
         public ChatGPTRepo(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<BearerTokenHere>");
+            
+            //TODO: get from config?
+            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<OpenAITokenGoesHere>");
 
         }
 
@@ -76,6 +78,7 @@ namespace gptManager.Repository.ChatGPTRepository
             }
             else
             {
+                //TODO: should probably throw here?
                 return null;
             }
         }

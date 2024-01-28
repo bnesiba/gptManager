@@ -1,3 +1,4 @@
+using ContextManagement;
 using gptManager.Repository.ChatGPTRepository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ChatGPTRepo, ChatGPTRepo>();
+builder.Services.AddSingleton<ChatContextManager, ChatContextManager>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

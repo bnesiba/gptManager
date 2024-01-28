@@ -40,13 +40,13 @@ namespace gptManager.Repository.ChatGPTRepository.models
         public string role { get; set; }
         public string content { get; set; }
 
-        public string name { get; set; }
+        public string? name { get; set; }
 
         public OpenAISystemMessage()
         {
         }
 
-        public  OpenAISystemMessage(string name, string content){
+        public  OpenAISystemMessage(string? name, string content){
             this.role = "system";
             this.content = content;
             this.name = name;
@@ -97,7 +97,7 @@ namespace gptManager.Repository.ChatGPTRepository.models
         public OpenAIAssistantMessage()
         {
         }
-        public OpenAIAssistantMessage(string name, string content, List<OpenAIToolCall>? toolCalls = null)
+        public OpenAIAssistantMessage(string? name, string content, List<OpenAIToolCall>? toolCalls = null)
         {
             this.role = "assistant";
             this.content = content;

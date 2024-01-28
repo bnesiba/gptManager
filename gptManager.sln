@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gptManager", "gptManager\gp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContextManagement", "contextManagement\ContextManagement.csproj", "{98D1938D-04E1-4E1D-A20E-4888FC11059E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAIConnector", "OpenAIConnector\OpenAIConnector.csproj", "{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{98D1938D-04E1-4E1D-A20E-4888FC11059E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98D1938D-04E1-4E1D-A20E-4888FC11059E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98D1938D-04E1-4E1D-A20E-4888FC11059E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

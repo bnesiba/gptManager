@@ -11,4 +11,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ChatManagement\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\contextManagement\ContextManagement.csproj" />
+    <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
+  </ItemGroup>
+
 </Project>
