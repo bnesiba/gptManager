@@ -14,7 +14,7 @@ namespace gptManager.Repository.ChatGPTRepository
             _httpClient = httpClientFactory.CreateClient();
             
             //TODO: get from config?
-            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<OpenAITokenGoesHere>");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<Bearer Token Goes Here>");
 
         }
 

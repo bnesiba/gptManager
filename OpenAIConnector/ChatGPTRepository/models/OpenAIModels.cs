@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+
+//TODO: make a separate set of AI-system agnostic models and converters 
 namespace gptManager.Repository.ChatGPTRepository.models
 {
     public class OpenAIModelsResponse
@@ -18,11 +20,21 @@ namespace gptManager.Repository.ChatGPTRepository.models
         public string owned_by { get; set; }
     }
 
+    public static class OpenAIMessageRoles
+    {
+        public static string system = "system";
+        public static string user = "user";
+        public static string assistant = "assistant";
+    }
+
 
     public class OpenAIChatRequest
     {
         public string model { get; set; }
         public List<OpenAIChatMessage> messages { get; set; }
+
+        //randomness/chaos 0-2
+        public int temperature { get; set; }
     }
 
     public interface OpenAIChatMessage
@@ -47,7 +59,7 @@ namespace gptManager.Repository.ChatGPTRepository.models
         }
 
         public  OpenAISystemMessage(string? name, string content){
-            this.role = "system";
+            this.role = OpenAIMessageRoles.system;
             this.content = content;
             this.name = name;
         }
@@ -82,7 +94,7 @@ namespace gptManager.Repository.ChatGPTRepository.models
 
         public OpenAIUserMessage(string content)
         {
-            this.role = "user";
+            this.role = OpenAIMessageRoles.user;
             this.content = content;
         }
     }
@@ -99,7 +111,7 @@ namespace gptManager.Repository.ChatGPTRepository.models
         }
         public OpenAIAssistantMessage(string? name, string content, List<OpenAIToolCall>? toolCalls = null)
         {
-            this.role = "assistant";
+            this.role = OpenAIMessageRoles.assistant;
             this.content = content;
             this.name = name;
             this.tool_calls = toolCalls;

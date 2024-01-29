@@ -34,5 +34,15 @@ namespace ContextManagement.Models
         {
             chatContext.Add(new OpenAIAssistantMessage(name, message));
         }
+
+        public void AddMessage(OpenAIChatMessage message)
+        {
+            chatContext.Add(message);
+        }
+
+        public void AddMessages(List<OpenAIChatMessage> messages)
+        {
+            chatContext.AddRange(messages);
+        }
     }
 }

@@ -13,11 +13,21 @@ namespace ContextManagement
     {
         //TODO: make this a database or memcache or something
         private Dictionary<Guid, ChatSession> _chatSessions = new Dictionary<Guid, ChatSession>();
-        private ChatGPTRepo _chatGPTRepo;
+        private ChatGPTRepo _chatGptRepo;
+        private Guid _evaluationContextId;
+        private string _evaluatorIdentity;
 
-        public ChatContextManager(ChatGPTRepo chatGPTRepo)
+        public ChatContextManager(ChatGPTRepo chatGptRepo)
         {
-            _chatGPTRepo = chatGPTRepo;
+            _chatGptRepo = chatGptRepo;
+            _evaluatorIdentity = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "FixedIdentities/PromptRequirementsEvaluator.txt");
+            _evaluationContextId = CreateChatSession("Evaluator", "gpt-3.5-turbo", _evaluatorIdentity).Id;
+        }
+
+        public ChatSession CreateStructuredChatSession(string name, string model)
+        {
+            string initialIdentity = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "FixedIdentities/ChatPrimaryIdentity.txt");
+            return CreateChatSession(name, model, initialIdentity);
         }
 
         public ChatSession CreateChatSession(string name, string model, string? systemMessage = null)
@@ -29,6 +39,7 @@ namespace ContextManagement
             };
             if (systemMessage != null)
             {
+                //chatSession.AddAssistantMessage("assistant", "I am an assistant that only return json objects. Those objects only contain type and message properties");
                 chatSession.AddSystemMessage("system", systemMessage);
             }
             _chatSessions.Add(chatSession.Id, chatSession);
@@ -47,7 +58,7 @@ namespace ContextManagement
             }
         }
 
-        public string? Chat(Guid id, string message)
+        public string? Chat(Guid id, string message, int chaos = 1)
         {
             if (_chatSessions.ContainsKey(id))
             {
@@ -60,9 +71,10 @@ namespace ContextManagement
                 var chatRequest = new OpenAIChatRequest()
                 {
                     model = _chatSessions[id].model,
-                    messages = newContext
+                    messages = newContext,
+                    temperature = chaos
                 };
-                var response = _chatGPTRepo.Chat(chatRequest);
+                var response = _chatGptRepo.Chat(chatRequest);
 
                 //only update the chat context if we get a success response
                 if (response != null)
@@ -75,6 +87,111 @@ namespace ContextManagement
             }
 
             return null;
+        }
+
+        public string? Chat(Guid id, List<OpenAIChatMessage> additionalContext, int chaos = 1)
+        {
+            if (_chatSessions.ContainsKey(id))
+            {
+                //copy the context so we can add the new message without committing the user message until we get a success response
+                //this might be unnecessary/easier to do another way
+                List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
+                _chatSessions[id].chatContext.ForEach(m => newContext.Add(m));
+                newContext.AddRange(additionalContext);
+
+                var chatRequest = new OpenAIChatRequest()
+                {
+                    model = _chatSessions[id].model,
+                    messages = newContext,
+                    temperature = chaos
+                };
+                var response = _chatGptRepo.Chat(chatRequest);
+
+                //only update the chat context if we get a success response
+                if (response != null)
+                {
+                    _chatSessions[id].AddMessages(additionalContext);
+                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.name, response.choices[0].message.content);
+                    return response.choices[0].message.content;
+                }
+
+            }
+
+            return null;
+        }
+
+        public string? StructuredChat(Guid id, string message, int chaos = 1)
+        {
+            if (_chatSessions.ContainsKey(id))
+            {
+                //copy the context so we can add the new message without committing the user message until we get a success response
+                //this might be unnecessary/easier to do another way
+                List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
+                _chatSessions[id].chatContext.ForEach(m => newContext.Add(m));
+                newContext.Add(new OpenAIUserMessage(message));
+
+                var chatRequest = new OpenAIChatRequest()
+                {
+                    model = _chatSessions[id].model,
+                    messages = newContext,
+                    temperature = chaos
+                };
+                var response = ProcessChatRequest(chatRequest);
+
+                //only update the chat context if we get a success response
+                if (response != null)
+                {
+                    _chatSessions[id].AddUserMessage(message);
+                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.name, response.choices[0].message.content);
+                    return response.choices[0].message.content;
+                }
+
+            }
+
+            return null;
+        }
+
+        private OpenAIChatResponse? ProcessChatRequest(OpenAIChatRequest chatRequest)
+        {
+            if (AuxiliaryNeeded(chatRequest))
+            {
+                chatRequest.messages.Add(new OpenAIAssistantMessage("tooluser goes here", "tooluse failed"));
+            }
+
+            return _chatGptRepo.Chat(chatRequest);
+        }
+
+
+
+        private bool AuxiliaryNeeded(OpenAIChatRequest chatRequest)
+        {
+            int retriesCount = 0;
+            bool auxiliaryNeeded = false;
+            List<OpenAIChatMessage> evaluationContext = new List<OpenAIChatMessage>()
+                { new OpenAISystemMessage("Evaluator", this._evaluatorIdentity) };
+            var messageEvaluationContext =chatRequest.messages.FindAll(m => m.role != OpenAIMessageRoles.system);
+            var mostRecentMessage = messageEvaluationContext.Last();
+            messageEvaluationContext.Remove(mostRecentMessage);
+            evaluationContext.AddRange(messageEvaluationContext);
+
+            //generate query message
+            var queryMessage = new OpenAIUserMessage("'yes' or 'no', is this something you would need the internet or external systems for? " + mostRecentMessage.content);
+            evaluationContext.Add(queryMessage);
+
+            do
+            {
+                string? auxDecisionString = Chat(this._evaluationContextId, evaluationContext, 0);
+                if (string.Equals(auxDecisionString, "yes",StringComparison.CurrentCultureIgnoreCase) || string.Equals(auxDecisionString, "no", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    auxiliaryNeeded = string.Equals(auxDecisionString, "yes", StringComparison.CurrentCultureIgnoreCase);
+                    break;
+                }
+
+                retriesCount++;
+
+            } while (retriesCount<4);
+            Console.WriteLine("auxiliary needed: " + auxiliaryNeeded);
+            return auxiliaryNeeded;
         }
     }
 }

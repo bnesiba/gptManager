@@ -48,7 +48,9 @@ namespace gptManager.Controllers
             try
             {
                 //var chatResult = _chatGPTRepo.SimpleChat(chatMessage);
-                var chatSession = _chatContextManager.CreateChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                //var chatSession = _chatContextManager.CreateChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                //var chatSession = _chatContextManager.CreateStructuresChatSession($"Chat-{DateTime.Now}", "gpt-4-turbo-preview");
+                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
                 var chatResult = _chatContextManager.Chat(chatSession.Id, chatMessage);
                 
                 if (chatResult != null)
@@ -68,18 +70,66 @@ namespace gptManager.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("newSession")]
+        public virtual IActionResult GetNewSessionId()
+        {
+            try
+            {
+                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                //var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-4-turbo-preview");
+
+                return Ok(chatSession.Id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred\n\n {ex}");
+                return StatusCode(500);
+            }
+        }
+
         [HttpPost]
         [Route("conversate/{conversationId}")]
         public virtual IActionResult AdvancedChat([FromBody] string chatMessage, [FromRoute] Guid conversationId)
         {
             try
             {
-                //TODO: implement conversationID
-                //var chatResult = _chatGPTRepo.AdvancedChat("",chatMessage,new List<OpenAIChatMessage>());
                 var chatSession = _chatContextManager.GetChatSession(conversationId);
                 if (chatSession != null)
                 {
                     var chatResult = _chatContextManager.Chat(chatSession.Id, chatMessage);
+
+                    if (chatResult != null)
+                    {
+                        return Ok(chatResult);
+                    }
+                    else
+                    {
+                        return StatusCode(400, chatResult);
+                    }
+                }
+                else
+                {
+                    return StatusCode(404, $"No chat session found for id: {conversationId}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred\n\n {ex}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("structuredChat/{conversationId}")]
+        public virtual IActionResult StructuredChat([FromBody] string chatMessage, [FromRoute] Guid conversationId)
+        {
+            try
+            {
+                var chatSession = _chatContextManager.GetChatSession(conversationId);
+                if (chatSession != null)
+                {
+                    var chatResult = _chatContextManager.StructuredChat(chatSession.Id, chatMessage);
 
                     if (chatResult != null)
                     {
