@@ -2,7 +2,7 @@
 
 
 //TODO: make a separate set of AI-system agnostic models and converters 
-namespace gptManager.Repository.ChatGPTRepository.models
+namespace OpenAIConnector.ChatGPTRepository.models
 {
     public class OpenAIModelsResponse
     {
@@ -35,6 +35,22 @@ namespace gptManager.Repository.ChatGPTRepository.models
 
         //randomness/chaos 0-2
         public int temperature { get; set; }
+
+        public OpenAITool[]? tools { get; set; }
+    }
+
+    public class OpenAITool
+    {
+        public string type { get; set; }
+        public OpenAiToolFunction function { get; set; }
+
+    }
+
+    public class OpenAiToolFunction
+    {
+        public string description { get; set; }
+        public string name { get; set; }
+        public object parameters { get; set; }
     }
 
     public interface OpenAIChatMessage
@@ -122,10 +138,10 @@ namespace gptManager.Repository.ChatGPTRepository.models
     {   
         public string id { get; set; }
         public string type { get; set; }
-        public OpenAIFunction function { get; set; }
+        public OpenAIFunctionCall function { get; set; }
     }
 
-    public class OpenAIFunction
+    public class OpenAIFunctionCall
     {
         public string name { get; set; }
         public string arguments { get; set; }

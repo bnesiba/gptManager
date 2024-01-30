@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using gptManager.Repository.ChatGPTRepository.models;
+using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ContextManagement.Models
 {

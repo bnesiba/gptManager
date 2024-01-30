@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
-using gptManager.Repository.ChatGPTRepository.models;
+using OpenAIConnector.ChatGPTRepository.models;
 
-namespace gptManager.Repository.ChatGPTRepository
+namespace OpenAIConnector.ChatGPTRepository
 {
     public class ChatGPTRepo
     {

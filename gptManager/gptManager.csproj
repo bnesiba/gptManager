@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\contextManagement\ContextManagement.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
+    <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 using ContextManagement;
-using gptManager.Repository.ChatGPTRepository;
+using OpenAIConnector.ChatGPTRepository;
+using ToolManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ChatGPTRepo, ChatGPTRepo>();
 builder.Services.AddSingleton<ChatContextManager, ChatContextManager>();
+builder.Services.AddSingleton<ToolDefinitionManager, ToolDefinitionManager>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

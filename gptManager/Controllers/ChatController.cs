@@ -1,8 +1,6 @@
 ﻿using ContextManagement;
-using gptManager.Repository.ChatGPTRepository;
-using gptManager.Repository.ChatGPTRepository.models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OpenAIConnector.ChatGPTRepository;
 
 namespace gptManager.Controllers
 {
