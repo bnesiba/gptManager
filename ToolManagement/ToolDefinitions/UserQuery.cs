@@ -7,42 +7,27 @@ using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
-
-    //this ended up being an odd place to start because it involves returning and waiting for a response...
-    public class UserQuery
+    public class UserQuery: ToolDefinition
     {
+        public string Name => "UserPersonalInfo";
 
-        public static OpenAITool GetToolRequestDefinition()
+        public string Description => "Get remembered or pre-entered information about the user, including demographics, interests, and more";
+
+        public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
-            OpenAiToolFunction toolFunction = new OpenAiToolFunction()
+            new ToolProperty()
             {
+                name = "query",
+                type = "string",
+                description = "The information that you need"
+            }
 
-                name = "UserQuery",
-                description = "Get additional information directly from the user.",
-                parameters = new
-                {
-                    type = "object",
-                    properties = new {
-                        query = new
-                        {
-                            type = "string",
-                            description = "The question to ask the user."
-                        }
-                    }
-                }
-                
-            };
+        };
 
-            return new OpenAITool()
-            {
-                type = "function",
-                function = toolFunction
-            };
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
+        {
+            return new OpenAIToolMessage("stuff", toolCall.id);
         }
 
-        public static OpenAIChatMessage GetToolMessage(string query)
-        {
-            return new OpenAIAssistantMessage("UserQueryTool",  query);
-        }
     }
 }

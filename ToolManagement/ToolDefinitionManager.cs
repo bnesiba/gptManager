@@ -10,46 +10,18 @@ namespace ToolManagement
 {
     public class ToolDefinitionManager
     {
+       private List<ToolDefinition> tools = new List<ToolDefinition>();
+
+       public ToolDefinitionManager()
+       {
+            tools.Add(new UserQuery());
+            tools.Add(new InternetSearch());
+            tools.Add(new FindEmails());
+       }
+
         public OpenAITool[] GetToolDefinitions()
         {
-            return new List<OpenAITool>()
-            {
-                UserQuery.GetToolRequestDefinition(),
-                FindEmails.GetToolRequestDefinition(),
-                InternetSearch.GetToolRequestDefinition()
-            }.ToArray();
+            return tools.Select(t => t.GetToolRequestDefinition()).ToArray();
         }
-
-        //public OpenAITool[] GetTestingStuff()
-        //{
-        //    return new List<OpenAITool>()
-        //    {
-        //        new OpenAITool()
-        //        {
-        //            type = "function",
-        //            function = new OpenAiToolFunction()
-        //            {
-        //                description = "Get additional information directly from the user.",
-        //                name = "UserQuery",
-        //                parameters = new
-        //                {
-        //                    type = "object",
-        //                    properties = new {
-        //                        location = new
-        //                        {
-        //                            type = "string",
-        //                            description = "The city and state, e.g. San Francisco, CA"
-        //                        },
-        //                        unit = new
-        //                        {
-        //                            type = "string",
-        //                            @enum = new string[] { "celsius", "fahrenheit" }
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        },  
-        //    }.ToArray();
-        //}
     }
 }

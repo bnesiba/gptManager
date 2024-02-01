@@ -99,9 +99,9 @@ namespace ContextManagement
             return null;
         }
 
-        public string? Chat(Guid id, List<OpenAIChatMessage> additionalContext, int chaos = 1, bool ephemeral = false)
+        public string? Chat(Guid id, List<OpenAIChatMessage> additionalContext, int chaos = 1, bool ephemeral = false, int? maxTokens = null)
         {
-            return GetChatResponse(id, additionalContext, chaos, ephemeral)?.choices[0].message.content;
+            return GetChatResponse(id, additionalContext, chaos, ephemeral, maxTokens: maxTokens)?.choices[0].message.content;
         }
 
 
@@ -137,7 +137,12 @@ namespace ContextManagement
             return null;
         }
 
-        private OpenAIChatResponse? GetChatResponse(Guid id, List<OpenAIChatMessage> additionalContext, int chaos = 1, bool ephemeral = false, OpenAITool[]? tools = null)
+        private OpenAIChatResponse? GetChatResponse(Guid id, 
+                                                    List<OpenAIChatMessage> additionalContext, 
+                                                    int chaos = 1, 
+                                                    bool ephemeral = false, 
+                                                    OpenAITool[]? tools = null,
+                                                    int? maxTokens = null)
         {
             if (_chatSessions.ContainsKey(id))
             {
@@ -152,7 +157,8 @@ namespace ContextManagement
                     model = _chatSessions[id].model,
                     messages = newContext,
                     temperature = chaos,
-                    tools = tools
+                    tools = tools,
+                    max_tokens = maxTokens
                 };
                 var response = _chatGptRepo.Chat(chatRequest);
 
@@ -175,7 +181,7 @@ namespace ContextManagement
 
         private OpenAIChatResponse? ProcessChatRequest(OpenAIChatRequest chatRequest)
         {
-            if (AuxiliaryNeeded(chatRequest))
+            if (true || AuxiliaryNeeded(chatRequest))
             {
                 var toolUserId = GenerateToolManager();
                 var toolCalls = GetToolCalls(toolUserId,chatRequest);
@@ -189,6 +195,7 @@ namespace ContextManagement
 
 
 
+        //TODO: this seems like more trouble than it's worth?
         private bool AuxiliaryNeeded(OpenAIChatRequest chatRequest)
         {
             int retriesCount = 0;
@@ -206,7 +213,7 @@ namespace ContextManagement
 
             do
             {
-                string? auxDecisionString = Chat(this._evaluationContextId, evaluationContext, 0, true);
+                string? auxDecisionString = Chat(this._evaluationContextId, evaluationContext, 0, true, maxTokens:1);
                 if (string.Equals(auxDecisionString, "yes",StringComparison.CurrentCultureIgnoreCase) || string.Equals(auxDecisionString, "no", StringComparison.CurrentCultureIgnoreCase))
                 {
                     auxiliaryNeeded = string.Equals(auxDecisionString, "yes", StringComparison.CurrentCultureIgnoreCase);

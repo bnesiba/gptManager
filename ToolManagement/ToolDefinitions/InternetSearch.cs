@@ -7,40 +7,26 @@ using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public class InternetSearch
+    public class InternetSearch : ToolDefinition
     {
+        public string Name => "InternetSearch";
 
-        public static OpenAITool GetToolRequestDefinition()
+        public string Description => "Get additional information from the internet using google search.";
+
+        public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
-            OpenAiToolFunction toolFunction = new OpenAiToolFunction()
+            new ToolProperty()
             {
-                description = "Get additional information from the internet using google search.",
-                name = "InternetSearch",
-                parameters = new
-                {
-                    type = "object",
-                    properties = new
-                    {
-                        query = new
-                        {
-                            type = "string",
-                            description = "The string to send to the search engine"
-                        }
-                    },
-                }
+                name = "query",
+                type = "string",
+                description = "The string to send to the search engine"
+            }
 
-            };
+        };
 
-            return new OpenAITool()
-            {
-                type = "function",
-                function = toolFunction
-            };
-        }
-
-        public static OpenAIChatMessage GetToolMessage(string query)
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
         {
-            return new OpenAIAssistantMessage("InternetSearchTool", query);
+            return new OpenAIToolMessage("stuff", toolCall.id);
         }
     }
 }

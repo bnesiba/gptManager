@@ -37,6 +37,8 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public int temperature { get; set; }
 
         public OpenAITool[]? tools { get; set; }
+
+        public int? max_tokens { get; set; }
     }
 
     public class OpenAITool

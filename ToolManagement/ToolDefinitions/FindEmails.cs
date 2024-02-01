@@ -7,45 +7,32 @@ using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public class FindEmails
+    public class FindEmails: ToolDefinition
     {
+        public string Name => "FindEmails";
 
-        public static OpenAITool GetToolRequestDefinition()
+        public string Description => "Get the latest emails that contain the search string or from address";
+
+        public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
-            OpenAiToolFunction toolFunction = new OpenAiToolFunction()
+            new ToolProperty()
             {
-                description = "Get the latest emails that contain the search string or from address",
-                name = "FindEmails",
-                parameters = new
-                {
-                    type = "object",
-                    properties = new
-                    {
-                        SearchString = new
-                        {
-                            type = "string",
-                            description = "Used to search the body of the email"
-                        },
-                        FromAddress = new
-                        {
-                            type = "string",
-                            description = "The from address of the emails to search for"
-                        },
-                    }
-                }
-
-            };
-
-            return new OpenAITool()
+                name = "SearchString",
+                type = "string",
+                description = "Used to search the subject and body of the emails"
+            }
+            ,new ToolProperty()
             {
-                type = "function",
-                function = toolFunction
-            };
-        }
+                name = "FromAddress",
+                type = "string",
+                description = "The from address of the emails to search for"
+            }
 
-        public static OpenAIChatMessage GetToolMessage(string query)
+        };
+
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
         {
-            return new OpenAIAssistantMessage("FindEmailsTool", query);
+            return new OpenAIToolMessage("stuff", toolCall.id);
         }
     }
 }
