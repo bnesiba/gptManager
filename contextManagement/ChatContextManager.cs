@@ -185,7 +185,11 @@ namespace ContextManagement
             {
                 var toolUserId = GenerateToolManager();
                 var toolCalls = GetToolCalls(toolUserId,chatRequest);
-                chatRequest.messages.Add(new OpenAIAssistantMessage("tooluser goes here", "tooluse failed"));
+                if (toolCalls.Any())
+                {
+                    var toolResults = _toolManager.ExecuteTools(chatRequest.messages, toolCalls);
+                    toolResults.ForEach(tm => chatRequest.messages.Add(tm));
+                }
             }
 
             return _chatGptRepo.Chat(chatRequest);
@@ -195,7 +199,7 @@ namespace ContextManagement
 
 
 
-        //TODO: this seems like more trouble than it's worth?
+        //TODO: this seems like more trouble than it's worth
         private bool AuxiliaryNeeded(OpenAIChatRequest chatRequest)
         {
             int retriesCount = 0;

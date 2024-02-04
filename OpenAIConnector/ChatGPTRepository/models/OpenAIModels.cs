@@ -34,7 +34,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public List<OpenAIChatMessage> messages { get; set; }
 
         //randomness/chaos 0-2
-        public int temperature { get; set; }
+        public int? temperature { get; set; }
 
         public OpenAITool[]? tools { get; set; }
 

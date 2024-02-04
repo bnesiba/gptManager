@@ -7,12 +7,13 @@ namespace OpenAIConnector.ChatGPTRepository
     public class ChatGPTRepo
     {
         private readonly HttpClient _httpClient;
+        //TODO: get from config?
         private Uri baseUrl = new Uri("https://api.openai.com/v1/");
 
         public ChatGPTRepo(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
-            
+
             //TODO: get from config?
             _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<Bearer token goes here>");
 

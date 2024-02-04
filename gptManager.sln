@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContextManagement", "contex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAIConnector", "OpenAIConnector\OpenAIConnector.csproj", "{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolManagement", "ToolManagement\ToolManagement.csproj", "{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolManagement", "ToolManagement\ToolManagement.csproj", "{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleCloudConnector", "GoogleCloudConnector\GoogleCloudConnector.csproj", "{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

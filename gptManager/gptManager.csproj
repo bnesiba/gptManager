@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\contextManagement\ContextManagement.csproj" />
+    <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
     <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
   </ItemGroup>

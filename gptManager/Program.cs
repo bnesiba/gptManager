@@ -1,4 +1,5 @@
 using ContextManagement;
+using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
 using ToolManagement;
 
@@ -14,6 +15,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ChatGPTRepo, ChatGPTRepo>();
 builder.Services.AddSingleton<ChatContextManager, ChatContextManager>();
 builder.Services.AddSingleton<ToolDefinitionManager, ToolDefinitionManager>();
+builder.Services.AddSingleton<GmailDataAccess, GmailDataAccess>();
+builder.Services.AddSingleton<GmailConnector, GmailConnector>();
 
 var app = builder.Build();
 

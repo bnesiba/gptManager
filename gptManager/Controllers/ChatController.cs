@@ -1,4 +1,5 @@
 ﻿using ContextManagement;
+using GoogleCloudConnector.GmailAccess;
 using Microsoft.AspNetCore.Mvc;
 using OpenAIConnector.ChatGPTRepository;
 
@@ -10,11 +11,13 @@ namespace gptManager.Controllers
     {
         private readonly ChatGPTRepo _chatGPTRepo;
         private readonly ChatContextManager _chatContextManager;
+        private readonly GmailConnector _gmailConnector;
 
-        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager)
+        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager, GmailConnector gmailConnector)
         {
             _chatGPTRepo = chatGPTRepo;
             _chatContextManager = chatContextManager;
+            _gmailConnector = gmailConnector;
         }
 
         [HttpGet]
@@ -32,6 +35,22 @@ namespace gptManager.Controllers
                 {
                     return StatusCode(400, modelsResult);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred\n\n {ex}");
+                return StatusCode(500);
+            }
+        }
+
+        [Route("test")]
+        [HttpPost]
+        public virtual IActionResult TEST([FromBody] string emailBody)
+        {
+            try
+            {
+               _gmailConnector.SendEmail("bnesiba@gmail.com", "Test Email", emailBody);
+               return Ok();
             }
             catch (Exception ex)
             {
