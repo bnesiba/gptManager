@@ -7,7 +7,7 @@ using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public class InternetSearch : ToolDefinition
+    public class InternetSearch : IToolDefinition
     {
         public string Name => "InternetSearch";
 
@@ -19,7 +19,8 @@ namespace ToolManagement.ToolDefinitions
             {
                 name = "query",
                 type = "string",
-                description = "The string to send to the search engine"
+                description = "The string to send to the search engine",
+                IsRequired = true
             }
 
         };

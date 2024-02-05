@@ -23,54 +23,18 @@ namespace GoogleCloudConnector.GmailAccess
     public class GmailDataAccess
     {
         private GmailService _gmailService;
-        private string ServiceAccountUserName = "orchestragmailservice@orchestra-412904.iam.gserviceaccount.com";
         private string[] scopes = new string[3]{"https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/gmail.modify", "https://www.googleapis.com/auth/gmail.send"};
         public GmailDataAccess()
         {
-            //var json = File.ReadAllText("C:\\OtherProjects\\docs\\GmailServiceAccountCred.json");
-            //ServiceAccountCred cr = JsonConvert.DeserializeObject<ServiceAccountCred>(json); 
-            //string s = cr.private_key;
+            var json = File.ReadAllText("C:\\OtherProjects\\docs\\BackendClientSecret.json");
 
-            //var credential = new ServiceAccountCredential(new ServiceAccountCredential.Initializer(cr.client_id)
-            //{
-            //    Scopes = scopes
-            //}.FromPrivateKey(cr.private_key));
+            var cr = JsonConvert.DeserializeObject<OAuthBackendUserCred>(json);
 
-            //_gmailService = new GmailService(new BaseClientService.Initializer()
-            //{
-            //    HttpClientInitializer = credential,
-            //    ApplicationName = "OrchestraGPT"
-            //});
-
-            var json = File.ReadAllText("C:\\OtherProjects\\docs\\WebClientSecret.json");
-            var cr = JsonConvert.DeserializeObject<OauthUserCred>(json);
-            //var client_secret = cr.web.client_secret;
-            //var client_id = cr.web.client_id;
-            //var redirect_uris = cr.web.redirect_uris;
-
-
-            //Oauth2Service oauthService = new Oauth2Service(new BaseClientService.Initializer()
-            //{
-            //    HttpClientInitializer = GoogleCredential.FromFile("C:\\OtherProjects\\docs\\WebClientSecret.json"),
-            //    ApplicationName = "OrchestraGPT"
-            //});
-
-            //var token = oauthService.Tokeninfo().Execute();
-
-            //TODO: solve invalid redirect error
             UserCredential credential2 =  GoogleWebAuthorizationBroker.AuthorizeAsync(
-                new ClientSecrets(){ClientId = cr.web.client_id, ClientSecret = cr.web.client_secret},
+                new ClientSecrets(){ClientId = cr.installed.client_id, ClientSecret = cr.installed.client_secret},
                 scopes,
             "bnesiba@gmail.com",
             default).Result;
-
-
-            //UserCredential credential = new UserCredential(new AuthorizationCodeFlow(
-            //                        new AuthorizationCodeFlow.Initializer(cr.installed.auth_uri, cr.installed.token_uri)), "bnesiba@gmail.com", token);
-
-            //var oAuth2Client = GoogleCredential.FromFile("C:\\OtherProjects\\docs\\gmail_client_secret.json")
-            //    .CreateScoped(scopes);
-            //oAuth2Client.Impersonate(new ImpersonatedCredential.Initializer("bnesiba@gmail.com"));
 
             _gmailService = new GmailService(new BaseClientService.Initializer()
             {
@@ -101,7 +65,7 @@ namespace GoogleCloudConnector.GmailAccess
             if (MailAddress.TryCreate(toRecipient.EmailAddress ,out _))
             {
                 var email = new MimeKit.MimeMessage();
-                email.From.Add(new MimeKit.MailboxAddress("OrchestraGPT", "bnesiba@gmail.com"));
+                email.From.Add(new MimeKit.MailboxAddress("Ai Assistant - Brandon Nesiba", "bnesiba@gmail.com"));
                 email.To.Add(new MimeKit.MailboxAddress(toRecipient.Name ?? "emailRecipient", toRecipient.EmailAddress));
                 if (ccRecipient != null)
                 {
@@ -110,8 +74,8 @@ namespace GoogleCloudConnector.GmailAccess
                 email.Subject = subject;
 
                 email.Body = new MimeKit.TextPart(MimeKit.Text.TextFormat.Text)
-                {
-                    Text = emailContent
+                { 
+                    Text = emailContent + "\n\nThis email was assembled and sent by AI systems. Hopefully it worked"
                 };
                
                 var gmailMessage = ConvertToGmailMessage(email);

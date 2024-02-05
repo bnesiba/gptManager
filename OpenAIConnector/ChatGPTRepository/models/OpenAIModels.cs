@@ -39,6 +39,20 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public OpenAITool[]? tools { get; set; }
 
         public int? max_tokens { get; set; }
+
+        public OpenAIChatRequest Copy()
+        {
+            var copiedRequest =  new OpenAIChatRequest()
+            {
+                model = this.model,
+                temperature = this.temperature,
+                tools = this.tools,
+                messages = new List<OpenAIChatMessage>(),
+                max_tokens = this.max_tokens
+            };
+            this.messages.ForEach(m => copiedRequest.messages.Add(m));
+            return copiedRequest;
+        }
     }
 
     public class OpenAITool

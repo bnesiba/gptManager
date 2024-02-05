@@ -11,13 +11,11 @@ namespace gptManager.Controllers
     {
         private readonly ChatGPTRepo _chatGPTRepo;
         private readonly ChatContextManager _chatContextManager;
-        private readonly GmailConnector _gmailConnector;
 
-        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager, GmailConnector gmailConnector)
+        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager)
         {
             _chatGPTRepo = chatGPTRepo;
             _chatContextManager = chatContextManager;
-            _gmailConnector = gmailConnector;
         }
 
         [HttpGet]
@@ -49,7 +47,6 @@ namespace gptManager.Controllers
         {
             try
             {
-               _gmailConnector.SendEmail("bnesiba@gmail.com", "Test Email", emailBody);
                return Ok();
             }
             catch (Exception ex)

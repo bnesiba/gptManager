@@ -35,9 +35,14 @@ namespace GoogleCloudConnector.GmailAccess.models
         public string universe_domain { get; set; }
     }
 
-    internal class OauthUserCred
+    internal class OAuthWebUserCred
     {
         public OauthCred web { get; set; }
+    }
+
+    internal class OAuthBackendUserCred
+    {
+        public OauthCred installed { get; set; }
     }
 
     internal class OauthCred

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public interface ToolDefinition
+    public interface IToolDefinition
     {
         public string Name { get; }
         public string Description { get; }
@@ -20,7 +20,7 @@ namespace ToolManagement.ToolDefinitions
 
     public static class ToolDefinitionExtensions
     {
-        public static OpenAITool GetToolRequestDefinition(this ToolDefinition toolDefinition)
+        public static OpenAITool GetToolRequestDefinition(this IToolDefinition toolDefinition)
         {
             OpenAiToolFunction toolFunction = new OpenAiToolFunction()
             {
@@ -38,6 +38,31 @@ namespace ToolManagement.ToolDefinitions
                 type = "function",
                 function = toolFunction
             };
+        }
+
+        public static Dictionary<string, string>? GetToolRequestParameters(this IToolDefinition toolDefinition,
+            OpenAIToolCall toolCall)
+        {
+            Dictionary<string, string>? requestParameters = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(toolCall.function.arguments);
+            return requestParameters;
+        }
+
+        public static bool RequestArgumentsValid(this IToolDefinition toolDefinition,
+            Dictionary<string, string>? requestParameters)
+        {
+            if (requestParameters == null)
+            {
+                return false;
+            }
+
+            foreach (var parameter in toolDefinition.InputParameters)
+            {
+                if (parameter.IsRequired && !requestParameters.ContainsKey(parameter.name))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

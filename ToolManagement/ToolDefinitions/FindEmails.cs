@@ -7,31 +7,27 @@ using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public class SendEmail: ToolDefinition
+    public class FindEmails: IToolDefinition
     {
-        public string Name => "SendEmail";
+        public string Name => "FindEmails";
 
-        public string Description => "Send an email from the preconfigured address";
+        public string Description => "Get the latest emails that contain the search string or from address";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
             new ToolProperty()
             {
-                name = "ToAddress",
+                name = "SearchString",
                 type = "string",
-                description = "The email address to send the email to"
-            },
-            new ToolProperty()
+                description = "Used to search the subject and body of the emails",
+                IsRequired = true
+            }
+            ,new ToolProperty()
             {
-                name = "Subject",
+                name = "FromAddress",
                 type = "string",
-                description = "The subject of the email"
-            },
-            new ToolProperty()
-            {
-                name = "Content",
-                type = "string",
-                description = "The body of the email"
+                description = "The from address of the emails to search for",
+                IsRequired = false
             }
 
         };

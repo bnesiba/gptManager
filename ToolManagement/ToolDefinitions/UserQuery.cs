@@ -7,7 +7,7 @@ using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public class UserQuery: ToolDefinition
+    public class UserQuery: IToolDefinition
     {
         public string Name => "UserPersonalInfo";
 
@@ -19,7 +19,8 @@ namespace ToolManagement.ToolDefinitions
             {
                 name = "query",
                 type = "string",
-                description = "The information that you need"
+                description = "The information that you need",
+                IsRequired = true
             }
 
         };

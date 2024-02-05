@@ -3,36 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public class FindEmails: ToolDefinition
+    public class SendEmail: IToolDefinition
     {
-        public string Name => "FindEmails";
+        private readonly GmailConnector _emailConnector;
 
-        public string Description => "Get the latest emails that contain the search string or from address";
+        public SendEmail(GmailConnector emailConnector)
+        {
+            _emailConnector = emailConnector;
+        }
+        public string Name => "SendEmail";
+
+        public string Description => "Send an email from the preconfigured address by defining the ToAddress, Subject and Body of the email";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
             new ToolProperty()
             {
-                name = "SearchString",
+                name = "ToAddress",
                 type = "string",
-                description = "Used to search the subject and body of the emails"
-            }
-            ,new ToolProperty()
+                description = "The email address to send the email to",
+                IsRequired = true
+            },
+            new ToolProperty()
             {
-                name = "FromAddress",
+                name = "Subject",
                 type = "string",
-                description = "The from address of the emails to search for"
+                description = "The subject of the email",
+                IsRequired = true
+            },
+            new ToolProperty()
+            {
+                name = "Content",
+                type = "string",
+                description = "The body of the email",
+                IsRequired = true
             }
 
         };
 
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
         {
-            return new OpenAIToolMessage("stuff", toolCall.id);
+            Dictionary<string, string>? requestParameters = this.GetToolRequestParameters(toolCall);
+            if (requestParameters != null)
+            {
+                bool toolCallArgumentsValid = this.RequestArgumentsValid(requestParameters);
+
+                if (toolCallArgumentsValid)
+                {
+                    _emailConnector.SendEmail(requestParameters["ToAddress"], requestParameters["Subject"], requestParameters["Content"]);
+                    return new OpenAIToolMessage($"Successfully Sent Email.\nDetails: To: {requestParameters["ToAddress"]}, Subject: {requestParameters["Subject"]}", toolCall.id);
+                }
+                return new OpenAIToolMessage("ERROR: Arguments to 'SendEmail' tool were invalid or missing", toolCall.id);
+            }
+
+            return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
         }
     }
 }

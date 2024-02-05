@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -181,18 +182,38 @@ namespace ContextManagement
 
         private OpenAIChatResponse? ProcessChatRequest(OpenAIChatRequest chatRequest)
         {
-            if (true || AuxiliaryNeeded(chatRequest))
+            var tooledChatRequest = ManageToolUse(chatRequest);
+            string toolInfoString = string.Empty;
+            tooledChatRequest.messages.ForEach(m =>
             {
-                var toolUserId = GenerateToolManager();
-                var toolCalls = GetToolCalls(toolUserId,chatRequest);
-                if (toolCalls.Any())
+                if (m is OpenAIToolMessage)
                 {
-                    var toolResults = _toolManager.ExecuteTools(chatRequest.messages, toolCalls);
-                    toolResults.ForEach(tm => chatRequest.messages.Add(tm));
+                    toolInfoString += m.content += "\n";
                 }
+            });
+            if (!string.IsNullOrEmpty(toolInfoString))
+            {
+                chatRequest.messages.Add(new OpenAIAssistantMessage("ToolManager", toolInfoString));
             }
 
+            //TODO: seems like there might be some coherence issues from keeping a non-tool instance around.
             return _chatGptRepo.Chat(chatRequest);
+        }
+
+        private OpenAIChatRequest ManageToolUse(OpenAIChatRequest chatRequest)
+        {
+            var toolChatRequest = chatRequest.Copy();
+            var toolUserId = GenerateToolManager();
+            var toolCalls = GetToolCalls(toolUserId, toolChatRequest);
+            if (toolCalls.Any())
+            {
+                var toolResults = _toolManager.ExecuteTools(toolChatRequest.messages, toolCalls);
+                toolCalls.ForEach(tc => toolChatRequest.messages.Add(new OpenAIAssistantMessage("ToolManager", "Tools", toolCalls)));
+                toolResults.ForEach(tm => toolChatRequest.messages.Add(tm));
+                ManageToolUse(toolChatRequest);
+            }
+
+            return toolChatRequest;
         }
 
 
