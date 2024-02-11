@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository.models;
@@ -46,6 +47,7 @@ namespace ToolManagement.ToolDefinitions
 
         };
 
+        //TODO: abstract more of this out? everything except the actual call and the response object is shared across tools
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
         {
             Dictionary<string, string>? requestParameters = this.GetToolRequestParameters(toolCall);
@@ -56,7 +58,14 @@ namespace ToolManagement.ToolDefinitions
                 if (toolCallArgumentsValid)
                 {
                     _emailConnector.SendEmail(requestParameters["ToAddress"], requestParameters["Subject"], requestParameters["Content"]);
-                    return new OpenAIToolMessage($"Successfully Sent Email.\nDetails: To: {requestParameters["ToAddress"]}, Subject: {requestParameters["Subject"]}", toolCall.id);
+                    var outputObject = new
+                    {
+                        sendEmailSuccess = true,
+                        toAddress = requestParameters["ToAddress"],
+                        subject = requestParameters["Subject"]
+
+                    };
+                    return new OpenAIToolMessage($"sendEmailResponse: " + JsonSerializer.Serialize(outputObject), toolCall.id);
                 }
                 return new OpenAIToolMessage("ERROR: Arguments to 'SendEmail' tool were invalid or missing", toolCall.id);
             }

@@ -91,7 +91,7 @@ namespace ContextManagement
                 if (response != null)
                 {
                     _chatSessions[id].AddUserMessage(message);
-                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.name, response.choices[0].message.content);
+                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.content);
                     return response.choices[0].message.content;
                 }
 
@@ -129,7 +129,7 @@ namespace ContextManagement
                 if (response != null)
                 {
                     _chatSessions[id].AddUserMessage(message);
-                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.name, response.choices[0].message.content);
+                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.content);
                     return response.choices[0].message.content;
                 }
 
@@ -169,7 +169,7 @@ namespace ContextManagement
                     if (!ephemeral)
                     {
                         _chatSessions[id].AddMessages(additionalContext);
-                        _chatSessions[id].AddAssistantMessage(response.choices[0].message.name, response.choices[0].message.content);
+                        _chatSessions[id].AddAssistantMessage(response.choices[0].message.content);
                     }
 
                     return response;
@@ -188,12 +188,12 @@ namespace ContextManagement
             {
                 if (m is OpenAIToolMessage)
                 {
-                    toolInfoString += m.content += "\n";
+                    toolInfoString +=  m.content += "\n";
                 }
             });
             if (!string.IsNullOrEmpty(toolInfoString))
             {
-                chatRequest.messages.Add(new OpenAIAssistantMessage("ToolManager", toolInfoString));
+                chatRequest.messages.Add(new OpenAIUserMessage(toolInfoString));
             }
 
             //TODO: seems like there might be some coherence issues from keeping a non-tool instance around.
@@ -203,13 +203,25 @@ namespace ContextManagement
         private OpenAIChatRequest ManageToolUse(OpenAIChatRequest chatRequest)
         {
             var toolChatRequest = chatRequest.Copy();
+            toolChatRequest.messages.RemoveAll(m => m.role == OpenAIMessageRoles.system);
             var toolUserId = GenerateToolManager();
-            var toolCalls = GetToolCalls(toolUserId, toolChatRequest);
+            OpenAIAssistantMessage? chatResponse = null;
+
+            var toolCalls = GetToolCalls(toolUserId, toolChatRequest,out chatResponse);
             if (toolCalls.Any())
             {
                 var toolResults = _toolManager.ExecuteTools(toolChatRequest.messages, toolCalls);
-                toolCalls.ForEach(tc => toolChatRequest.messages.Add(new OpenAIAssistantMessage("ToolManager", "Tools", toolCalls)));
+
+                if (chatResponse != null)
+                {
+                    toolChatRequest.messages.Add(chatResponse);
+                }
+                //toolCalls.ForEach(tc => toolChatRequest.messages.Add(new OpenAIAssistantMessage("ToolManager",toolCalls:toolCalls)));
+                //var testToolMsg = new OpenAIToolMessage("testing", toolResults.First().tool_call_id);
+                //toolChatRequest.messages.Add(testToolMsg);
                 toolResults.ForEach(tm => toolChatRequest.messages.Add(tm));
+                //toolResults.ForEach(tm => toolChatRequest.messages.Add(new OpenAIUserMessage($"tool_call_id: {tm.tool_call_id}\ncontent:{tm.content}")));
+
                 ManageToolUse(toolChatRequest);
             }
 
@@ -252,16 +264,18 @@ namespace ContextManagement
             return auxiliaryNeeded;
         }
 
-        private List<OpenAIToolCall> GetToolCalls(Guid toolUseContextId, OpenAIChatRequest chatRequest)
+        private List<OpenAIToolCall> GetToolCalls(Guid toolUseContextId, OpenAIChatRequest chatRequest, out OpenAIAssistantMessage? responseMessage)
         {
-            List<OpenAIChatMessage> toolContext = new List<OpenAIChatMessage>()
-            { new OpenAISystemMessage("ToolManager", this._toolUseIdentity) };
+            List<OpenAIChatMessage> toolContext = new List<OpenAIChatMessage>();
+            //{ new OpenAISystemMessage("ToolManager", this._toolUseIdentity) };
             var messageEvaluationContext = chatRequest.messages.FindAll(m => m.role != OpenAIMessageRoles.system);
             toolContext.AddRange(messageEvaluationContext);
 
             var toolResponse = GetChatResponse(toolUseContextId, toolContext,tools: _toolManager.GetToolDefinitions());
+            responseMessage = null;
             if (toolResponse != null && toolResponse.choices.Any())
             {
+                responseMessage = toolResponse.choices[0].message;
                 return toolResponse.choices[0].message.tool_calls ?? new List<OpenAIToolCall>();
             }
             else

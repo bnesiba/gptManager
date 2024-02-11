@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using OpenAIConnector.ChatGPTRepository.models;
 
 namespace OpenAIConnector.ChatGPTRepository
@@ -26,7 +26,7 @@ namespace OpenAIConnector.ChatGPTRepository
             {
                 var responseContent = response.Content;
                 var responseString = responseContent.ReadAsStringAsync().Result;
-                var models = JsonSerializer.Deserialize<OpenAIModelsResponse>(responseString);
+                var models = JsonConvert.DeserializeObject<OpenAIModelsResponse>(responseString);
                 return models;
             }
             else
@@ -67,18 +67,23 @@ namespace OpenAIConnector.ChatGPTRepository
 
         public OpenAIChatResponse? Chat(OpenAIChatRequest chatRequest)
         {
-            var json = JsonSerializer.Serialize(chatRequest);
+            var json = JsonConvert.SerializeObject(chatRequest);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = _httpClient.PostAsync(baseUrl + "chat/completions", content).Result;
+            var responseContent1 = response.Content.ReadAsStringAsync().Result;
+
+
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = response.Content;
-                var responseString = responseContent.ReadAsStringAsync().Result;
-                var chatResponse = JsonSerializer.Deserialize<OpenAIChatResponse>(responseString);
+                //var responseString = responseContent.ReadAsStringAsync().Result;
+                var responseString = responseContent1;
+                var chatResponse = JsonConvert.DeserializeObject<OpenAIChatResponse>(responseString);
                 return chatResponse;
             }
             else
             {
+                //var responseContent = response.Content.ReadAsStringAsync().Result;
                 //TODO: should probably throw here?
                 return null;
             }

@@ -30,9 +30,9 @@ namespace ContextManagement.Models
             chatContext.Add(new OpenAISystemMessage(systemName, message));
         }
 
-        public void AddAssistantMessage(string? name, string message)
+        public void AddAssistantMessage(string message)
         {
-            chatContext.Add(new OpenAIAssistantMessage(name, message));
+            chatContext.Add(new OpenAIAssistantMessage(message));
         }
 
         public void AddMessage(OpenAIChatMessage message)

@@ -26,6 +26,7 @@ namespace GoogleCloudConnector.GmailAccess
         private string[] scopes = new string[3]{"https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/gmail.modify", "https://www.googleapis.com/auth/gmail.send"};
         public GmailDataAccess()
         {
+            //TODO: get from config?
             var json = File.ReadAllText("C:\\OtherProjects\\docs\\BackendClientSecret.json");
 
             var cr = JsonConvert.DeserializeObject<OAuthBackendUserCred>(json);

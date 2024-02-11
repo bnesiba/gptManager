@@ -43,11 +43,17 @@ namespace gptManager.Controllers
 
         [Route("test")]
         [HttpPost]
-        public virtual IActionResult TEST([FromBody] string emailBody)
+        public virtual IActionResult TEST([FromBody] string emailBody = "hello")
         {
             try
             {
-               return Ok();
+                string msg =
+                    "how is the news? find and summarize some of the latest news, then email me (bnesiba@gmail.com) the summary and an analysis of how worries I ought to be";
+                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                return this.StructuredChat(msg, chatSession.Id);
+
+
+                return Ok();
             }
             catch (Exception ex)
             {

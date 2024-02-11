@@ -102,15 +102,17 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public string role { get; set; }
         public string content { get; set; }
         public string tool_call_id { get; set; }
+        //public string? name { get; set; }
 
         public OpenAIToolMessage()
         {
         }
 
-        public OpenAIToolMessage(string content, string tool_call_id)
+        public OpenAIToolMessage(string content/*,string name*/, string tool_call_id)
         {
             this.role = "tool";
             this.content = content;
+            //this.name = name;
             this.tool_call_id = tool_call_id;
         }
     }
@@ -134,18 +136,18 @@ namespace OpenAIConnector.ChatGPTRepository.models
     public class OpenAIAssistantMessage : OpenAIChatMessage
     {
         public string role { get; set; }
-        public string content { get; set; }
-        public string? name { get; set; }
+        public string? content { get; set; }
+        //public string? name { get; set; }
         public List<OpenAIToolCall>? tool_calls { get; set; }
 
         public OpenAIAssistantMessage()
         {
         }
-        public OpenAIAssistantMessage(string? name, string content, List<OpenAIToolCall>? toolCalls = null)
+        public OpenAIAssistantMessage(/*string? name, */string? content = null, List<OpenAIToolCall>? toolCalls = null)
         {
             this.role = OpenAIMessageRoles.assistant;
             this.content = content;
-            this.name = name;
+            //this.name = name;
             this.tool_calls = toolCalls;
         }
     }
