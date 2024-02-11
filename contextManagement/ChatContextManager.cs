@@ -50,7 +50,6 @@ namespace ContextManagement
             };
             if (systemMessage != null)
             {
-                //chatSession.AddAssistantMessage("assistant", "I am an assistant that only return json objects. Those objects only contain type and message properties");
                 chatSession.AddSystemMessage("system", systemMessage);
             }
             _chatSessions.Add(chatSession.Id, chatSession);
@@ -129,8 +128,8 @@ namespace ContextManagement
                 if (response != null)
                 {
                     _chatSessions[id].AddUserMessage(message);
-                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.content);
-                    return response.choices[0].message.content;
+                    _chatSessions[id].AddAssistantMessage(response?.content ?? "");
+                    return response?.content;
                 }
 
             }
@@ -180,24 +179,10 @@ namespace ContextManagement
             return null;
         }
 
-        private OpenAIChatResponse? ProcessChatRequest(OpenAIChatRequest chatRequest)
+        private OpenAIAssistantMessage? ProcessChatRequest(OpenAIChatRequest chatRequest)
         {
             var tooledChatRequest = ManageToolUse(chatRequest);
-            string toolInfoString = string.Empty;
-            tooledChatRequest.messages.ForEach(m =>
-            {
-                if (m is OpenAIToolMessage)
-                {
-                    toolInfoString +=  m.content += "\n";
-                }
-            });
-            if (!string.IsNullOrEmpty(toolInfoString))
-            {
-                chatRequest.messages.Add(new OpenAIUserMessage(toolInfoString));
-            }
-
-            //TODO: seems like there might be some coherence issues from keeping a non-tool instance around.
-            return _chatGptRepo.Chat(chatRequest);
+            return tooledChatRequest.messages.FindLast(f => f.role == OpenAIMessageRoles.assistant) as OpenAIAssistantMessage;
         }
 
         private OpenAIChatRequest ManageToolUse(OpenAIChatRequest chatRequest)
@@ -216,13 +201,12 @@ namespace ContextManagement
                 {
                     toolChatRequest.messages.Add(chatResponse);
                 }
-                //toolCalls.ForEach(tc => toolChatRequest.messages.Add(new OpenAIAssistantMessage("ToolManager",toolCalls:toolCalls)));
-                //var testToolMsg = new OpenAIToolMessage("testing", toolResults.First().tool_call_id);
-                //toolChatRequest.messages.Add(testToolMsg);
                 toolResults.ForEach(tm => toolChatRequest.messages.Add(tm));
-                //toolResults.ForEach(tm => toolChatRequest.messages.Add(new OpenAIUserMessage($"tool_call_id: {tm.tool_call_id}\ncontent:{tm.content}")));
-
-                ManageToolUse(toolChatRequest);
+                return ManageToolUse(toolChatRequest);
+            }
+            else if(chatResponse != null)
+            {
+                toolChatRequest.messages.Add(chatResponse);
             }
 
             return toolChatRequest;
