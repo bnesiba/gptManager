@@ -16,4 +16,9 @@ namespace ToolManagement.ToolDefinitions
         [IgnoreDataMember]
         public bool IsRequired { get; init; }
     }
+
+    public class ArrayToolProperty : ToolProperty
+    {
+        public ToolProperty items { get; init; }
+    }
 }

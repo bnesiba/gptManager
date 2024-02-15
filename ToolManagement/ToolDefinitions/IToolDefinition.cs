@@ -40,15 +40,40 @@ namespace ToolManagement.ToolDefinitions
             };
         }
 
-        public static Dictionary<string, string>? GetToolRequestParameters(this IToolDefinition toolDefinition,
+        public static Dictionary<string, string>? GetToolRequestStringParameters(this IToolDefinition toolDefinition,
             OpenAIToolCall toolCall)
         {
             Dictionary<string, string>? requestParameters = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(toolCall.function.arguments);
             return requestParameters;
         }
 
+        public static Dictionary<string, object>? GetToolRequestObjectParameters(this IToolDefinition toolDefinition,
+            OpenAIToolCall toolCall)
+        {
+            Dictionary<string, object>? requestParameters = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(toolCall.function.arguments);
+            return requestParameters;
+        }
+
         public static bool RequestArgumentsValid(this IToolDefinition toolDefinition,
             Dictionary<string, string>? requestParameters)
+        {
+            if (requestParameters == null)
+            {
+                return false;
+            }
+
+            foreach (var parameter in toolDefinition.InputParameters)
+            {
+                if (parameter.IsRequired && !requestParameters.ContainsKey(parameter.name))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool RequestArgumentsValid(this IToolDefinition toolDefinition,
+            Dictionary<string, object>? requestParameters)
         {
             if (requestParameters == null)
             {

@@ -21,7 +21,6 @@ namespace ContextManagement
         private Guid _evaluationContextId;
         private string _evaluatorIdentity;
 
-        //private Guid _toolUseContextId;
         private string _toolUseIdentity;
 
         public ChatContextManager(ChatGPTRepo chatGptRepo, ToolDefinitionManager toolManager)
@@ -32,7 +31,6 @@ namespace ContextManagement
             _evaluationContextId = CreateChatSession("Evaluator", "gpt-3.5-turbo", _evaluatorIdentity).Id;
 
             _toolUseIdentity = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "FixedIdentities/ToolUserIdentity.txt");
-            //_toolUseContextId = CreateChatSession("ToolManager", "gpt-3.5-turbo", _toolUseIdentity).Id;
         }
 
         public ChatSession CreateStructuredChatSession(string name, string model)
@@ -90,8 +88,8 @@ namespace ContextManagement
                 if (response != null)
                 {
                     _chatSessions[id].AddUserMessage(message);
-                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.content);
-                    return response.choices[0].message.content;
+                    _chatSessions[id].AddAssistantMessage(response.choices[0].message.content.ToString());
+                    return response.choices[0].message.content.ToString();
                 }
 
             }
@@ -101,7 +99,7 @@ namespace ContextManagement
 
         public string? Chat(Guid id, List<OpenAIChatMessage> additionalContext, int chaos = 1, bool ephemeral = false, int? maxTokens = null)
         {
-            return GetChatResponse(id, additionalContext, chaos, ephemeral, maxTokens: maxTokens)?.choices[0].message.content;
+            return GetChatResponse(id, additionalContext, chaos, ephemeral, maxTokens: maxTokens)?.choices[0].message.content.ToString();
         }
 
 
@@ -128,8 +126,8 @@ namespace ContextManagement
                 if (response != null)
                 {
                     _chatSessions[id].AddUserMessage(message);
-                    _chatSessions[id].AddAssistantMessage(response?.content ?? "");
-                    return response?.content;
+                    _chatSessions[id].AddAssistantMessage(response?.content.ToString() ?? "");
+                    return response?.content.ToString();
                 }
 
             }
@@ -168,7 +166,7 @@ namespace ContextManagement
                     if (!ephemeral)
                     {
                         _chatSessions[id].AddMessages(additionalContext);
-                        _chatSessions[id].AddAssistantMessage(response.choices[0].message.content);
+                        _chatSessions[id].AddAssistantMessage(response.choices[0].message.content.ToString());
                     }
 
                     return response;
@@ -210,42 +208,6 @@ namespace ContextManagement
             }
 
             return toolChatRequest;
-        }
-
-
-
-
-
-        //TODO: this seems like more trouble than it's worth
-        private bool AuxiliaryNeeded(OpenAIChatRequest chatRequest)
-        {
-            int retriesCount = 0;
-            bool auxiliaryNeeded = false;
-            List<OpenAIChatMessage> evaluationContext = new List<OpenAIChatMessage>()
-                { new OpenAISystemMessage("Evaluator", this._evaluatorIdentity) };
-            var messageEvaluationContext =chatRequest.messages.FindAll(m => m.role != OpenAIMessageRoles.system);
-            var mostRecentMessage = messageEvaluationContext.Last();
-            messageEvaluationContext.Remove(mostRecentMessage);
-            evaluationContext.AddRange(messageEvaluationContext);
-
-            //generate query message
-            var queryMessage = new OpenAIUserMessage("'yes' or 'no', is this something you would need the internet or external systems for? " + mostRecentMessage.content);
-            evaluationContext.Add(queryMessage);
-
-            do
-            {
-                string? auxDecisionString = Chat(this._evaluationContextId, evaluationContext, 0, true, maxTokens:1);
-                if (string.Equals(auxDecisionString, "yes",StringComparison.CurrentCultureIgnoreCase) || string.Equals(auxDecisionString, "no", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    auxiliaryNeeded = string.Equals(auxDecisionString, "yes", StringComparison.CurrentCultureIgnoreCase);
-                    break;
-                }
-
-                retriesCount++;
-
-            } while (retriesCount<4);
-            Console.WriteLine("auxiliary needed: " + auxiliaryNeeded);
-            return auxiliaryNeeded;
         }
 
         private List<OpenAIToolCall> GetToolCalls(Guid toolUseContextId, OpenAIChatRequest chatRequest, out OpenAIAssistantMessage? responseMessage)

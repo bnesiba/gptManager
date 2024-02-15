@@ -26,9 +26,10 @@ namespace ToolManagement.ToolDefinitions
 
         };
 
+        //TODO: abstract more of this out? everything except the actual call and the response object is shared across tools
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
         {
-            Dictionary<string, string>? requestParameters = this.GetToolRequestParameters(toolCall);
+            Dictionary<string, string>? requestParameters = this.GetToolRequestStringParameters(toolCall);
             if (requestParameters != null)
             {
                 bool toolCallArgumentsValid = this.RequestArgumentsValid(requestParameters);
@@ -62,7 +63,7 @@ namespace ToolManagement.ToolDefinitions
 
                     };
                     //return new OpenAIToolMessage($"InternetSearchResponse: " + JsonSerializer.Serialize(outputObject),this.Name, toolCall.id);
-                    return new OpenAIToolMessage($"" + JsonSerializer.Serialize(outputObject), toolCall.id);
+                    return new OpenAIToolMessage($"InternetSearchResponse:" + JsonSerializer.Serialize(outputObject), toolCall.id);
                 }
                 return new OpenAIToolMessage("ERROR: Arguments to 'SendEmail' tool were invalid or missing", toolCall.id);
             }

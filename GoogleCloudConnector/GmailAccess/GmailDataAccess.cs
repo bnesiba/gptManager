@@ -76,7 +76,7 @@ namespace GoogleCloudConnector.GmailAccess
 
                 email.Body = new MimeKit.TextPart(MimeKit.Text.TextFormat.Text)
                 { 
-                    Text = emailContent + "\n\nThis email was assembled and sent by AI systems. Hopefully it worked"
+                    Text = emailContent + "\n\nThis email was assembled and sent by an AI system. Hopefully it worked"
                 };
                
                 var gmailMessage = ConvertToGmailMessage(email);
@@ -92,7 +92,6 @@ namespace GoogleCloudConnector.GmailAccess
 
         private Message ConvertToGmailMessage(MimeMessage emailMessage)
         {
-            //convert to gmail message
             MemoryStream stream = new MemoryStream();
             emailMessage.WriteTo(stream, new CancellationToken());
             var bytes = stream.ToArray();

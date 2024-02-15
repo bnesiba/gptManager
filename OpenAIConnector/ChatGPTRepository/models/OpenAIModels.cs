@@ -75,14 +75,14 @@ namespace OpenAIConnector.ChatGPTRepository.models
 
         //content can be an array rather than a string if needed
 
-        public string content { get; set; }
+        public object content { get; set; }
 
     }
 
     public class OpenAISystemMessage : OpenAIChatMessage
     {
         public string role { get; set; }
-        public string content { get; set; }
+        public object content { get; set; }
 
         public string? name { get; set; }
 
@@ -100,7 +100,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
     public class OpenAIToolMessage : OpenAIChatMessage
     {
         public string role { get; set; }
-        public string content { get; set; }
+        public object content { get; set; }
         public string tool_call_id { get; set; }
         //public string? name { get; set; }
 
@@ -120,7 +120,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
     public class OpenAIUserMessage : OpenAIChatMessage
     {
         public string role { get; set; }
-        public string content { get; set; }
+        public object content { get; set; }
 
         public OpenAIUserMessage()
         {
@@ -133,10 +133,103 @@ namespace OpenAIConnector.ChatGPTRepository.models
         }
     }
 
+    public class OpenAIUserImageMessage : OpenAIChatMessage
+    {
+        public string role { get; set; }
+        public object content { get; set; }
+
+        public OpenAIUserImageMessage()
+        {
+            role = OpenAIMessageRoles.user;
+            content = new List<OpenAIMessageContent>();
+        }
+
+        public OpenAIUserImageMessage(string content, string urlOrBase64)
+        {
+            this.role = OpenAIMessageRoles.user;
+            this.content = new List<OpenAIMessageContent>()
+            {
+                new OpenAITextContent(content),
+                new OpenAIImageContent(urlOrBase64, true)//high detail
+            };
+        }
+
+        public OpenAIUserImageMessage(string content, List<string> urlsOrBase64s, bool highDetail = false)
+        {
+            this.role = OpenAIMessageRoles.user;
+            this.content = new List<OpenAIMessageContent>()
+            {
+                new OpenAITextContent(content)
+            };
+            urlsOrBase64s.ForEach(urlOrBase64 => ((List<OpenAIMessageContent>)this.content).Add(new OpenAIImageContent(urlOrBase64, highDetail)));
+        }
+    }
+
+    public interface OpenAIMessageContent
+    {
+        public string type { get; set; }
+    }
+
+    public class OpenAITextContent : OpenAIMessageContent
+    {
+        public string type { get; set; }
+        public string text { get; set; }
+
+        public OpenAITextContent()
+        {
+            type = "text";
+            text = string.Empty;
+        }
+
+        public OpenAITextContent(string text)
+        {
+            type = "text";
+            this.text = text;
+        }
+    }
+
+    public class OpenAIImageContent : OpenAIMessageContent
+    {
+        public string type { get; set; }
+        public OpenAIImagePart image_url { get; set; }
+
+        public OpenAIImageContent()
+        {
+            type = "image_url";
+            image_url = new OpenAIImagePart();
+        }
+
+        public OpenAIImageContent(string urlOrBase64, bool highDetail = false)
+        {
+            type = "image_url";
+            image_url = new OpenAIImagePart(urlOrBase64, highDetail);
+        }
+
+    }
+
+    public class OpenAIImagePart
+    {
+        public string url { get; set; }
+        public string detail { get; set; }
+
+        public OpenAIImagePart()
+        {
+            url = string.Empty;
+            detail = "low";
+        }
+
+        public OpenAIImagePart(string url, bool highDetail = false)
+        {
+            this.url = url;
+            detail = highDetail ? "high" : "low";
+        }
+    }
+
+
     public class OpenAIAssistantMessage : OpenAIChatMessage
     {
         public string role { get; set; }
-        public string? content { get; set; }
+        public object? content { get; set; }
         //public string? name { get; set; }
         public List<OpenAIToolCall>? tool_calls { get; set; }
 
