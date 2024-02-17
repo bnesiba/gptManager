@@ -21,7 +21,7 @@ namespace ToolManagement.ToolDefinitions
         }
         public string Name => "ImageEvaluate";
 
-        public string Description => "Interact with an AI vision model to query and understand the content of images";
+        public string Description => "Query an advanced image AI for info about images. YOU MUST PROVIDE: 'InputPrompt' and 'ImageArray' parameters. USE THIS ON IMAGES and image urls";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
@@ -40,7 +40,7 @@ namespace ToolManagement.ToolDefinitions
                 {
                     type = "string",
                 },
-                description = "An Array of strings containing the urls or base64 encoded strings of an image",
+                description = "An Array of strings containing the urls or base64 encoded strings of images",
                 IsRequired = true
             },
 
@@ -49,15 +49,15 @@ namespace ToolManagement.ToolDefinitions
         //TODO: abstract more of this out? almost everything except the actual call and the response object is shared across tools
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
         {
-            Dictionary<string, string>? requestParameters = this.GetToolRequestStringParameters(toolCall);
-            if (requestParameters != null)
+            Dictionary<string, string>? requestStringParameters = this.GetToolRequestStringParameters(toolCall);
+            Dictionary<string, List<string>>? requestArrayParameters = this.GetToolRequestArrayParameters(toolCall);
+            if (requestStringParameters != null && requestArrayParameters != null)
             {
-                bool toolCallArgumentsValid = this.RequestArgumentsValid(requestParameters);
+                bool toolCallArgumentsValid = this.RequestArgumentsValid(requestStringParameters, requestArrayParameters);
 
-                //TODO: try-catch vv
-                var urlsAndBase64Strings = JsonSerializer.Deserialize<List<string>>(requestParameters["ImageArray"]);
+                var urlsAndBase64Strings = requestArrayParameters["ImageArray"];
 
-                var inputPrompt = requestParameters["InputPrompt"];
+                var inputPrompt = requestStringParameters["InputPrompt"];
                 if (toolCallArgumentsValid)
                 {
                     var  imageResponse = _chatGPTRepo.Chat(BuildVisionRequest(chatContext, inputPrompt, urlsAndBase64Strings));
@@ -83,13 +83,14 @@ namespace ToolManagement.ToolDefinitions
             return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
         }
 
-        private OpenAIChatRequest BuildVisionRequest(List<OpenAIChatMessage> chatContext, string promptString, List<string> urlsAndBase64)
+        //TODO: find a way to avoid having to use this type?
+        private OpenAIImageChatRequest BuildVisionRequest(List<OpenAIChatMessage> chatContext, string promptString, List<string> urlsAndBase64)
         {
             var visionContext = chatContext.FindAll(x => x.role != OpenAIMessageRoles.system).ToList();
 
             visionContext.Add(new OpenAIUserImageMessage(promptString, urlsAndBase64, true));
 
-            OpenAIChatRequest visionRequest = new OpenAIChatRequest()
+            OpenAIImageChatRequest visionRequest = new OpenAIImageChatRequest()
             {
                 model = "gpt-4-vision-preview",
                 messages = visionContext,

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using ContextManagement.Models;
 using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
@@ -135,6 +130,43 @@ namespace ContextManagement
             return null;
         }
 
+        public string? StructuredImageChat(Guid id, string userMessage, List<string> imageUrls, int chaos = 1)
+        {
+            if (_chatSessions.ContainsKey(id))
+            {
+                //copy the context so we can add the new message without committing the user message until we get a success response
+                //this might be unnecessary/easier to do another way
+                List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
+                _chatSessions[id].chatContext.ForEach(m => newContext.Add(m));
+                string imagePrompt = "The user has provided images as a part of their prompt. *Use the the ImageEvaluate tool to process the ImageArray and InputPrompt*.";
+                imagePrompt += "The user has provided the following ImageArray: [ ";
+                imagePrompt += string.Join(", ", imageUrls);
+                imagePrompt += " ]";
+
+                newContext.Add(new OpenAIUserMessage(imagePrompt));
+                newContext.Add(new OpenAIUserMessage(userMessage));
+
+                var chatRequest = new OpenAIChatRequest()
+                {
+                    model = _chatSessions[id].model,
+                    messages = newContext,
+                    temperature = chaos
+                };
+                var response = ProcessChatRequest(chatRequest);
+
+                //only update the chat context if we get a success response
+                if (response != null)
+                {
+                    _chatSessions[id].AddUserMessage(userMessage);
+                    _chatSessions[id].AddAssistantMessage(response?.content.ToString() ?? "");
+                    return response?.content.ToString();
+                }
+
+            }
+
+            return null;
+        }
+
         private OpenAIChatResponse? GetChatResponse(Guid id, 
                                                     List<OpenAIChatMessage> additionalContext, 
                                                     int chaos = 1, 
@@ -166,7 +198,7 @@ namespace ContextManagement
                     if (!ephemeral)
                     {
                         _chatSessions[id].AddMessages(additionalContext);
-                        _chatSessions[id].AddAssistantMessage(response.choices[0].message.content.ToString());
+                        _chatSessions[id].AddMessage(response.choices[0].message);
                     }
 
                     return response;

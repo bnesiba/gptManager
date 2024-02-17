@@ -15,7 +15,7 @@ namespace OpenAIConnector.ChatGPTRepository
             _httpClient = httpClientFactory.CreateClient();
 
             //TODO: get from config?
-            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "Token Goes Here");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<Bearer Token Goes Here>");
 
         }
 
@@ -84,6 +84,29 @@ namespace OpenAIConnector.ChatGPTRepository
             else
             {
                 //var responseContent = response.Content.ReadAsStringAsync().Result;
+                //TODO: should probably throw here?
+                return null;
+            }
+        }
+
+        //TODO: find a way to avoid having to use the image request
+        public OpenAIChatResponse? Chat(OpenAIImageChatRequest chatRequest)
+        {
+            var json = JsonConvert.SerializeObject(chatRequest);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = _httpClient.PostAsync(baseUrl + "chat/completions", content).Result;
+            var responseContent1 = response.Content.ReadAsStringAsync().Result;
+
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = response.Content;
+                var responseString = responseContent1;
+                var chatResponse = JsonConvert.DeserializeObject<OpenAIChatResponse>(responseString);
+                return chatResponse;
+            }
+            else
+            {
                 //TODO: should probably throw here?
                 return null;
             }

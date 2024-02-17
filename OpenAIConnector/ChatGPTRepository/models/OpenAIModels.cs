@@ -55,6 +55,21 @@ namespace OpenAIConnector.ChatGPTRepository.models
         }
     }
 
+    //It is absurd that I had to make this. 
+    //Apparently the vision preview completions blow up if the tools parameter exists at all (even if null)
+    public class OpenAIImageChatRequest
+    {
+        public string model { get; set; }
+        public List<OpenAIChatMessage> messages { get; set; }
+
+        //randomness/chaos 0-2
+        public int? temperature { get; set; }
+
+        public int? max_tokens { get; set; }
+    }
+
+
+
     public class OpenAITool
     {
         public string type { get; set; }

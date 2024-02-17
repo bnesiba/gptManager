@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoogleCloudConnector.GmailAccess;
+﻿using GoogleCloudConnector.GmailAccess;
+using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagement.ToolDefinitions;
 
@@ -14,12 +10,13 @@ namespace ToolManagement
        private List<IToolDefinition> tools = new List<IToolDefinition>();
 
        //TODO: figure out how to inject/access external tools from the tools themselves - could inject all of them
-       public ToolDefinitionManager(GmailConnector gmailConnector)
+       public ToolDefinitionManager(GmailConnector gmailConnector, ChatGPTRepo chatRepo)
        {
             tools.Add(new UserQuery());
             tools.Add(new InternetSearch());
             tools.Add(new FindEmails());
             tools.Add(new SendEmail(gmailConnector));
+            tools.Add(new ImageEvaluate(chatRepo));
        }
 
         public OpenAITool[] GetToolDefinitions()

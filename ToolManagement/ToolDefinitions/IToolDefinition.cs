@@ -1,9 +1,5 @@
-﻿using OpenAIConnector.ChatGPTRepository.models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using OpenAIConnector.ChatGPTRepository.models;
 
 namespace ToolManagement.ToolDefinitions
 {
@@ -22,6 +18,19 @@ namespace ToolManagement.ToolDefinitions
     {
         public static OpenAITool GetToolRequestDefinition(this IToolDefinition toolDefinition)
         {
+            Dictionary<string, object> toolProperties = toolDefinition.InputParameters.Where(p => p.type != "array")
+                .ToDictionary(p => p.name, p => new { type = p.type, description = p.description } as object);
+
+            if (toolDefinition.InputParameters.Any(p => p.type == "array"))
+            {
+                var arrayTools = toolDefinition.InputParameters.Where(p => p.type == "array").ToList();
+                foreach (var arrayTool in arrayTools)
+                {
+                    var arTool = arrayTool as ArrayToolProperty;
+                    toolProperties.Add(arTool.name, new { type = arTool.type, description = arTool.description, items = arTool.items });
+                }
+            }
+
             OpenAiToolFunction toolFunction = new OpenAiToolFunction()
             {
                 description = toolDefinition.Description,
@@ -29,7 +38,8 @@ namespace ToolManagement.ToolDefinitions
                 parameters = new
                 {
                     type = "object",
-                    properties = toolDefinition.InputParameters.ToDictionary(p => p.name, p => new { type = p.type, description = p.description })
+                    properties = toolDefinition.InputParameters.Where(p => p.type != "array").ToDictionary(p => p.name, p => new { type = p.type, description = p.description }),
+                    required = toolDefinition.InputParameters.Where(p => p.IsRequired).Select(p => p.name).ToArray()
                 }
             };
 
@@ -43,19 +53,50 @@ namespace ToolManagement.ToolDefinitions
         public static Dictionary<string, string>? GetToolRequestStringParameters(this IToolDefinition toolDefinition,
             OpenAIToolCall toolCall)
         {
-            Dictionary<string, string>? requestParameters = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(toolCall.function.arguments);
-            return requestParameters;
+            Dictionary<string, object>? requestParameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(toolCall.function.arguments);
+
+            Dictionary<string, string> resultsDictionary = new Dictionary<string, string>();
+            if (requestParameters != null)
+            {
+                toolDefinition.InputParameters.Where(p => p.type != "array").ToList().ForEach(p =>
+                {
+                    string? valueString = requestParameters[p.name].ToString();
+                    if (valueString != null)
+                    {
+                        resultsDictionary.Add(p.name, valueString);
+                    }
+                });
+
+            }
+
+            return resultsDictionary;
         }
 
-        public static Dictionary<string, object>? GetToolRequestObjectParameters(this IToolDefinition toolDefinition,
+        public static Dictionary<string, List<string>>? GetToolRequestArrayParameters(this IToolDefinition toolDefinition,
             OpenAIToolCall toolCall)
         {
-            Dictionary<string, object>? requestParameters = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(toolCall.function.arguments);
-            return requestParameters;
+            Dictionary<string, object>? requestParameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(toolCall.function.arguments);
+
+            Dictionary<string, List<string>> resultsDictionary = new Dictionary<string, List<string>>();
+            if (requestParameters != null)
+            {
+                toolDefinition.InputParameters.Where(p => p.type == "array").ToList().ForEach(p =>
+                {
+                    if (requestParameters.ContainsKey(p.name))
+                    {
+                        var arrayThing = JsonConvert.DeserializeObject<List<string>>(requestParameters[p.name].ToString() ?? string.Empty);
+                        if (arrayThing != null)
+                        {
+                            resultsDictionary.Add(p.name, arrayThing);
+                        }
+                    }
+                });
+            }
+            return resultsDictionary;
         }
 
-        public static bool RequestArgumentsValid(this IToolDefinition toolDefinition,
-            Dictionary<string, string>? requestParameters)
+        public static bool RequestArgumentsValid<T>(this IToolDefinition toolDefinition,
+            Dictionary<string, T>? requestParameters)
         {
             if (requestParameters == null)
             {
@@ -72,19 +113,23 @@ namespace ToolManagement.ToolDefinitions
             return true;
         }
 
-        public static bool RequestArgumentsValid(this IToolDefinition toolDefinition,
-            Dictionary<string, object>? requestParameters)
+        public static bool RequestArgumentsValid<T1, T2>(this IToolDefinition toolDefinition,
+            Dictionary<string, T1>? requestStringParameters, Dictionary<string, T2>? requestArrayParameters)
         {
-            if (requestParameters == null)
+            if (requestStringParameters == null && requestArrayParameters == null)
             {
                 return false;
             }
 
             foreach (var parameter in toolDefinition.InputParameters)
             {
-                if (parameter.IsRequired && !requestParameters.ContainsKey(parameter.name))
+                if (parameter.IsRequired)
                 {
-                    return false;
+                    if ((requestStringParameters == null || !requestStringParameters.ContainsKey(parameter.name))
+                        && (requestArrayParameters == null || !requestArrayParameters.ContainsKey(parameter.name)))
+                    {
+                        return false;
+                    }
                 }
             }
             return true;

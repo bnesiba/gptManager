@@ -2,6 +2,7 @@
 using GoogleCloudConnector.GmailAccess;
 using Microsoft.AspNetCore.Mvc;
 using OpenAIConnector.ChatGPTRepository;
+using static System.Net.WebRequestMethods;
 
 namespace gptManager.Controllers
 {
@@ -41,7 +42,7 @@ namespace gptManager.Controllers
             }
         }
 
-        [Route("test")]
+        [Route("newstest")]
         [HttpPost]
         public virtual IActionResult TEST([FromBody] string emailBody = "hello")
         {
@@ -54,6 +55,36 @@ namespace gptManager.Controllers
 
 
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred\n\n {ex}");
+                return StatusCode(500);
+            }
+        }
+
+        [Route("imageTest")]
+        [HttpPost]
+        public virtual IActionResult IMGTEST()
+        {
+            try
+            {
+                
+                var imageBytes = System.IO.File.ReadAllBytes("C:\\OtherProjects\\docs\\image.jpg");
+                var base64Image = Convert.ToBase64String(imageBytes);
+                //var imageURL = "https://photos.app.goo.gl/5GkrkUy3PzV3Jtmn7";
+                var imageURL =
+                    "https://i.ibb.co/rfktQ2M/image.png";
+
+                string msg =
+                    "please describe the content and emotional feel of the image";
+                
+
+                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                var result =  _chatContextManager.StructuredImageChat(chatSession.Id, msg, new List<string>(){ imageURL });
+
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
