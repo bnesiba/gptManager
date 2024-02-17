@@ -87,6 +87,7 @@ namespace ToolManagement.ToolDefinitions
         private OpenAIImageChatRequest BuildVisionRequest(List<OpenAIChatMessage> chatContext, string promptString, List<string> urlsAndBase64)
         {
             var visionContext = chatContext.FindAll(x => x.role != OpenAIMessageRoles.system).ToList();
+            //var visionContext = new List<OpenAIChatMessage>();
 
             visionContext.Add(new OpenAIUserImageMessage(promptString, urlsAndBase64, true));
 
@@ -94,7 +95,7 @@ namespace ToolManagement.ToolDefinitions
             {
                 model = "gpt-4-vision-preview",
                 messages = visionContext,
-                max_tokens = 300
+                max_tokens = 1500
             };
             return visionRequest;
         }

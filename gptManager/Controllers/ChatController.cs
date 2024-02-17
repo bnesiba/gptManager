@@ -76,12 +76,18 @@ namespace gptManager.Controllers
                 var imageURL =
                     "https://i.ibb.co/rfktQ2M/image.png";
 
+                //var image2Url = "https://i.ibb.co/0GGRDFC/0-0.png";//apparently 0-0 is an invalid name and will cause bad requests.
+                var image2Url = "https://i.ibb.co/Jqm2KVv/image2.png";
+
+                //string msg =
+                //    "please describe the content and emotional feel of the image";
+
                 string msg =
-                    "please describe the content and emotional feel of the image";
-                
+                    "please describe the content and emotional feel of each image, then provide a comparison of the two images with an emphasis on differences in content and tone";
+
 
                 var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
-                var result =  _chatContextManager.StructuredImageChat(chatSession.Id, msg, new List<string>(){ imageURL });
+                var result =  _chatContextManager.StructuredImageChat(chatSession.Id, msg, new List<string>(){ imageURL,image2Url });
 
 
                 return Ok(result);
