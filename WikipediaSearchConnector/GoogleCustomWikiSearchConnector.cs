@@ -21,14 +21,14 @@ namespace WikipediaSearchConnector
         }
 
 
-        public WikipediaSearchResponse? Search(string query, int count = 10)
+        public GoogleCustomSearchResponse? Search(string query, int count = 10)
         {
             var response = _httpClient.GetAsync(baseUrl + "&q=" + query + "&num=" + count).Result;
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = response.Content;
                 var responseString = responseContent.ReadAsStringAsync().Result;
-                var searchResponse = JsonConvert.DeserializeObject<WikipediaSearchResponse>(responseString);
+                var searchResponse = JsonConvert.DeserializeObject<GoogleCustomSearchResponse>(responseString);
                 return searchResponse;
             }
             else

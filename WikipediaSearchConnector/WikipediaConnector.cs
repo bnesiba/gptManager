@@ -8,7 +8,7 @@ using WikipediaSearchConnector.Models;
 
 namespace WikipediaSearchConnector
 {
-    internal class WikipediaConnector
+    public class WikipediaConnector
     {
         private readonly HttpClient _httpClient;
         //TODO: get from config?
@@ -18,6 +18,24 @@ namespace WikipediaSearchConnector
         {
             _httpClient = httpClientFactory.CreateClient();
         }
+
+        public WikipediaExtractsResponse? GetExtracts(string title, bool detailed = false)
+        {
+            var response = _httpClient.GetAsync(baseUrl + $"&prop=extracts{(detailed ? "&exintro" : "")}&explaintext&redirects=1&titles=" + title).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = response.Content;
+                var responseString = responseContent.ReadAsStringAsync().Result;
+                var extracts = JsonConvert.DeserializeObject<WikipediaExtractsResponse>(responseString);
+                return extracts;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
 
     }
 }

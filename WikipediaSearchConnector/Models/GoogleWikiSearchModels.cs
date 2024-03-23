@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace WikipediaSearchConnector.Models
 {
-    public class WikipediaSearchResponse
+    public class GoogleCustomSearchResponse
     {
-        public List<WikipediaSearchResult> items { get; set; }
+        public List<GoogleCustomSearchResult> items { get; set; }
     }
 
-    public class WikipediaSearchResult
+    public class GoogleCustomSearchResult
     {
         public string title { get; set; }
         public Uri link { get; set; }
