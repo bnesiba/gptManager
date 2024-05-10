@@ -70,20 +70,14 @@ namespace gptManager.Controllers
             try
             {
                 
-                var imageBytes = System.IO.File.ReadAllBytes("C:\\OtherProjects\\docs\\image.jpg");
-                var base64Image = Convert.ToBase64String(imageBytes);
-                //var imageURL = "https://photos.app.goo.gl/5GkrkUy3PzV3Jtmn7";
                 var imageURL =
-                    "https://i.ibb.co/rfktQ2M/image.png";
+                    "https://i.ibb.co/7Gccsmb/gyges-of-lydia-raccoon-wizard-programming-a-pumpkin-computer-f99ab486-7eed-4635-90a5-e64b9016601d.png";
 
                 //var image2Url = "https://i.ibb.co/0GGRDFC/0-0.png";//apparently 0-0 is an invalid name and will cause bad requests.
-                var image2Url = "https://i.ibb.co/Jqm2KVv/image2.png";
-
-                //string msg =
-                //    "please describe the content and emotional feel of the image";
+                var image2Url = "https://i.ibb.co/F6ckW20/gyges-of-lydia-Raccoon-wearing-brimmed-pointy-wizard-hat-progr-8090027b-a586-4681-829f-7070f506fa96.png";
 
                 string msg =
-                    "please describe the content and emotional feel of each image, then provide a comparison of the two images with an emphasis on differences in content and tone";
+                    "please describe the setting, content, and emotional feel of each image, then provide a comparison of the two images with an emphasis on differences in setting, content, and tone. Email the result to bnesiba@gmail.com";
 
 
                 var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");

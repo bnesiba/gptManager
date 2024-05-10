@@ -12,10 +12,10 @@ namespace AIUtilities
             _chatGptRepo = chatGptRepo;
         }
 
-        public string? Summarize(string article, string importantContext = "", List<OpenAIChatMessage>? additionalChatContext = null)
+        public string? Summarize(string article, string importantContext = "", int tokenLimit = 200, List<OpenAIChatMessage>? additionalChatContext = null)
         {
             string? summary = null;
-            string importantContextString = importantContext.Length > 0 ? $"Keep this important context in mind while summarizing: {importantContext}" : string.Empty;
+            string importantContextString = importantContext.Length > 0 ? $"Keep this important context in mind while summarizing: {importantContext}." : string.Empty;
             List<OpenAIChatMessage> summarizerContext = new List<OpenAIChatMessage>
             {
                 new OpenAISystemMessage("Summarizer", "As a document summarizer, it is your job to read and examine articles/documents and provide brief context-aware summaries of the text")
@@ -27,7 +27,7 @@ namespace AIUtilities
             }
 
             string summarizeInstruction =
-                $"Provide an accurate and concise summary of this document/article. {importantContextString}";
+                $"Provide an accurate and concise summary of the document/article. {importantContextString}. \n\n {article}";
 
             summarizerContext.Add(new OpenAIUserMessage(summarizeInstruction));
 
@@ -36,25 +36,15 @@ namespace AIUtilities
             {
                 model = "gpt-3.5-turbo",
                 messages = summarizerContext,
-                max_tokens = 800,
+                max_tokens = tokenLimit,
                 temperature = 0
 
             };
 
             OpenAIChatResponse? response = _chatGptRepo.Chat(summarizeRequest);
-            if (response != null)
+            if (response is { choices: { Count: > 0 } }) //this null checks response and choices and verifies there are choices
             {
-                response.choices.ForEach(c =>
-                {
-                    if (summary == null)
-                    {
-                        summary = c.message?.content?.ToString();
-                    }
-                    else
-                    {
-                        summary += c.message?.content?.ToString();
-                    }
-                });
+                summary = response.choices[0].message?.content?.ToString() ?? string.Empty;
             }
 
             return summary;

@@ -37,6 +37,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public int? temperature { get; set; }
 
         public OpenAITool[]? tools { get; set; }
+        public OpenAITool? tool_choice { get; set; }
 
         public int? max_tokens { get; set; }
 
@@ -47,6 +48,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
                 model = this.model,
                 temperature = this.temperature,
                 tools = this.tools,
+                tool_choice  = this.tool_choice,
                 messages = new List<OpenAIChatMessage>(),
                 max_tokens = this.max_tokens
             };
@@ -101,7 +103,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
 
         public string? name { get; set; }
 
-        public OpenAISystemMessage()
+        public OpenAISystemMessage(string s): this("system", s)
         {
         }
 

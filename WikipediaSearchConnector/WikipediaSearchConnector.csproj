@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AIUtilities\AIUtilities.csproj" />
+    <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
   </ItemGroup>
 
 </Project>
