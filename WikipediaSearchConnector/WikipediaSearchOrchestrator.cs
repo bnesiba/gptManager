@@ -1,11 +1,11 @@
 ﻿using AIUtilities;
-using Newtonsoft.Json;
 using OpenAIConnector.ChatGPTRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using OpenAIConnector.ChatGPTRepository.models;
 using WikipediaSearchConnector.Models;
