@@ -38,7 +38,7 @@ namespace WikipediaSearchConnector
         /// <returns></returns>
         public string? Search(string query, int count = 3, string additionalContext = null)
         {
-            //find relevent wiki pages
+            //find relevant wiki pages
             var searchResults = _searchConnector.Search(query, count)?.items ?? new List<GoogleCustomSearchResult>();
             List<string> relevantSummaries = new List<string>();
 

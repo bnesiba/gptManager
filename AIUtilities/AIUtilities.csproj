@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
+    <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
   </ItemGroup>
 
 </Project>

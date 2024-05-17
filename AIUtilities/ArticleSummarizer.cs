@@ -1,5 +1,7 @@
-﻿using OpenAIConnector.ChatGPTRepository;
+﻿using System.Text.Json;
+using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
+using ToolManagement.ToolDefinitions;
 
 namespace AIUtilities
 {
@@ -48,6 +50,56 @@ namespace AIUtilities
             }
 
             return summary;
+        }
+
+        private class SummaryFinalizer : IToolDefinition
+        {
+            public string Name => "FinalizeSummary";
+
+            public string Description =>
+                "Provide the final summary of the document";
+
+            public List<ToolProperty> InputParameters => new List<ToolProperty>
+            {
+                new ToolProperty()
+                {
+                    name = "DocumentSummary",
+                    type = "string",
+                    description = "Your final summary of the provided document, taking any additional information into account",
+                    IsRequired = true
+                },
+                new ToolProperty()
+                {
+                    name = "SummaryDataRelationship",
+                    type = "string",
+                    description = "Your explanation of how the summary is related to the additional data if relevant",
+                    IsRequired = true
+                }
+            };
+
+            public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
+            {
+                Dictionary<string, string>? requestParameters = this.GetToolRequestStringParameters(toolCall);
+                if (requestParameters != null)
+                {
+                    bool toolCallArgumentsValid = this.RequestArgumentsValid(requestParameters);
+
+                    if (toolCallArgumentsValid)
+                    {
+
+                        var outputObject = new
+                        {
+                            sunmmary = requestParameters["DocumentSummary"],
+
+
+                        };
+                        return new OpenAIToolMessage($"sendEmailResponse: " + JsonSerializer.Serialize(outputObject), toolCall.id);
+                    }
+                    return new OpenAIToolMessage("ERROR: Arguments to 'FinalizeSummary' tool were invalid or missing", toolCall.id);
+                }
+
+                return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
+            }
         }
     }
 }
