@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikipediaSearchConnector", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIUtilities", "AIUtilities\AIUtilities.csproj", "{CB7A04A7-6B5A-4CB2-8321-F414EA76A990}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIChatOrchestration", "AIChatOrchestration\AIChatOrchestration.csproj", "{FCC12016-4E0D-4F7E-8784-5172B5CE20D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionStateFlow", "SessionStateFlow\SessionStateFlow.csproj", "{F4DDC3D6-A277-45D6-84E9-3C326E671501}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{CB7A04A7-6B5A-4CB2-8321-F414EA76A990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB7A04A7-6B5A-4CB2-8321-F414EA76A990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB7A04A7-6B5A-4CB2-8321-F414EA76A990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCC12016-4E0D-4F7E-8784-5172B5CE20D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC12016-4E0D-4F7E-8784-5172B5CE20D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC12016-4E0D-4F7E-8784-5172B5CE20D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC12016-4E0D-4F7E-8784-5172B5CE20D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
