@@ -2,6 +2,8 @@
 using GoogleCloudConnector.GmailAccess;
 using Microsoft.AspNetCore.Mvc;
 using OpenAIConnector.ChatGPTRepository;
+using SessionStateFlow;
+using SessionStateFlow.package;
 using static System.Net.WebRequestMethods;
 
 namespace gptManager.Controllers
@@ -12,11 +14,13 @@ namespace gptManager.Controllers
     {
         private readonly ChatGPTRepo _chatGPTRepo;
         private readonly ChatContextManager _chatContextManager;
+        private FlowState _flowState;
 
-        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager)
+        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager, FlowState state)
         {
             _chatGPTRepo = chatGPTRepo;
             _chatContextManager = chatContextManager;
+            _flowState = state;
         }
 
         [HttpGet]
@@ -42,16 +46,15 @@ namespace gptManager.Controllers
             }
         }
 
-        [Route("newstest")]
+        [Route("reduxTest")]
         [HttpPost]
-        public virtual IActionResult TEST([FromBody] string emailBody = "hello")
+        public virtual IActionResult TEST([FromBody] string message = "hello")
         {
             try
             {
-                string msg =
-                    "how is the news? find and summarize some of the latest news, then email me (bnesiba@gmail.com) the summary and an analysis of how worries I ought to be";
-                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
-                return this.StructuredChat(msg, chatSession.Id);
+                //var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                //return this.StructuredChat(message, chatSession.Id);
+                _flowState.ResolveAction(ProjectActions.init(message));
 
 
                 return Ok();

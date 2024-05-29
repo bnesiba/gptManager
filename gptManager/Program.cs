@@ -1,6 +1,9 @@
 using ContextManagement;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
+using SessionStateFlow;
+using SessionStateFlow.package;
+using SessionStateFlow.package.Models;
 using ToolManagement;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,12 @@ builder.Services.AddSingleton<ChatContextManager, ChatContextManager>();
 builder.Services.AddSingleton<ToolDefinitionManager, ToolDefinitionManager>();
 builder.Services.AddSingleton<GmailDataAccess, GmailDataAccess>();
 builder.Services.AddSingleton<GmailConnector, GmailConnector>();
+
+//redux stuff
+builder.Services.AddScoped<FlowState, FlowState>();
+builder.Services.AddScoped<IFlowStateReducer<ProjectStateModel>, ProjectReducer>();
+builder.Services.AddScoped<FlowStateData<ProjectStateModel>, FlowStateData<ProjectStateModel>>();
+
 
 var app = builder.Build();
 
