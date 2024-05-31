@@ -3,6 +3,7 @@ using SessionStateFlow.package.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Collections.Specialized.BitVector32;
 
 namespace SessionStateFlow.package
 {
@@ -13,9 +14,20 @@ namespace SessionStateFlow.package
         internal FlowStateActions _flowStateActions = (action) => { System.Diagnostics.Debug.WriteLine($"action: {JsonConvert.SerializeObject(action)}\n"); };
 
 
-        public FlowState(IEnumerable<IFlowStateEffects> effects)
+        public FlowState(IEnumerable<IFlowStateEffects> effects, IFlowStateDataBase flowData)
         {
-            //TODO: START HERE! effects.ForEach()
+            _flowStateActions += flowData.FlowReduce;
+
+            foreach (IFlowStateEffects effect in effects)
+            {
+                if (effect.SideEffects.Any())
+                {
+                    foreach (var sideEffect in effect.SideEffects)
+                    {
+                        RegisterEffect(sideEffect.GetSideEffect(), sideEffect.GetTriggeringActions().ToArray());
+                    }
+                }
+            }
         }
 
 
@@ -30,49 +42,23 @@ namespace SessionStateFlow.package
         }
         //Register various kinds of effects
 
-        //TODO: remove this one?
-        public void RegisterEffect(Predicate<FlowActionBase> filter, Func<FlowActionBase, FlowActionBase> effect)
+
+        internal void RegisterEffect(Func<FlowActionBase, FlowActionBase> effect, params FlowActionBase[] actions)
         {
-            _flowStateActions += (flowAction) =>
+            foreach (var flowAction in actions)
             {
-                if (filter(flowAction))
+                _flowStateActions += (action) =>
                 {
-                    _flowStateActions(effect(flowAction));
-                }
-            };
+                    if (onAction(flowAction)(action))
+                    {
+                        _flowStateActions(effect(action));
+                    }
+
+                };
+            }
         }
 
-        public void RegisterEffect(FlowAction action, Func<FlowActionBase, FlowAction> effect)
-        {
-            _flowStateActions += (flowAction) =>
-            {
-                if (flowAction is FlowAction && onAction(action)((FlowAction)flowAction))
-                {
-                    _flowStateActions(effect(flowAction));
-                }
 
-            };
-        }
-
-        public void RegisterEffect<T>(FlowAction<T> action, Func<FlowActionBase, FlowAction<T>> effect)
-        {
-            _flowStateActions += (flowAction) =>
-            {
-                if (flowAction is FlowAction<T> && onAction(action)((FlowAction<T>)flowAction))
-                {
-                    _flowStateActions(effect(flowAction));
-                }
-
-            };
-        }
-
-        //selectors
-
-        //state stuff?
-
-        //consider: on(..actions).RegisterEffect(Func())
-
-        //provided predicates?
         public static Predicate<FlowActionBase> onAction(params FlowActionBase[] actions)
         {
             return (flowAction) => actions.Any(a => a.Name == flowAction.Name);
@@ -90,7 +76,7 @@ namespace SessionStateFlow.package
             return false;
         }
 
-        public static FlowAction<T>? MatchingActionsResolving<T>(FlowActionBase currentAction, params FlowAction<T>[] matchingActions)
+        public static FlowAction<T>? GetMatchingActionsResolving<T>(FlowActionBase currentAction, params FlowAction<T>[] matchingActions)
         {
             if (onAction(matchingActions)(currentAction))
             {
@@ -99,9 +85,23 @@ namespace SessionStateFlow.package
             return null;
         }
 
-        //public static Predicate<FlowAction<T>> onAction<T>(params FlowAction<T>[] actions)
-        //{
-        //    return (flowAction) => actions.Any(a => a.Name == flowAction.Name);
-        //}
+        public static FlowAction? GetMatchingActionsResolving(FlowActionBase currentAction, params FlowAction[] matchingActions)
+        {
+            if (onAction(matchingActions)(currentAction))
+            {
+                return (FlowAction)currentAction;
+            }
+            return null;
+        }
+
+        public static bool MatchingActionsResolving(FlowActionBase currentAction, params FlowActionBase[] matchingActions)
+        {
+            if (onAction(matchingActions)(currentAction))
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

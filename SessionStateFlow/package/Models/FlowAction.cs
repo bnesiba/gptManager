@@ -18,5 +18,10 @@ namespace SessionStateFlow.package.Models
     public abstract class FlowActionBase
     {
         public required string Name { get; init; }
+
+        public static FlowActionBase GetBaseActionFromDerived(FlowActionBase action)
+        {
+            return action;
+        }
     }
 }
