@@ -1,4 +1,6 @@
-﻿using ContextManagement;
+﻿using ChatSessionFlow;
+using ChatSessionFlow.models;
+using ContextManagement;
 using GoogleCloudConnector.GmailAccess;
 using Microsoft.AspNetCore.Mvc;
 using OpenAIConnector.ChatGPTRepository;
@@ -15,12 +17,14 @@ namespace gptManager.Controllers
         private readonly ChatGPTRepo _chatGPTRepo;
         private readonly ChatContextManager _chatContextManager;
         private FlowState _flowState;
+        private FlowStateData<ChatSessionEntity> _chatStateData;
 
-        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager, FlowState state)
+        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager, FlowState state, FlowStateData<ChatSessionEntity> stateData)
         {
             _chatGPTRepo = chatGPTRepo;
             _chatContextManager = chatContextManager;
             _flowState = state;
+            _chatStateData = stateData;
         }
 
         [HttpGet]
@@ -52,12 +56,10 @@ namespace gptManager.Controllers
         {
             try
             {
-                //var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
-                //return this.StructuredChat(message, chatSession.Id);
-                _flowState.ResolveAction(ProjectActions.init(message));
+                _flowState.ResolveAction(ChatSessionActions.init(message));
+                var chatCount = _chatStateData.CurrentState(ChatSessionSelectors.GetChatCount);
 
-
-                return Ok();
+                return Ok($"ChatCount: {chatCount}");
             }
             catch (Exception ex)
             {

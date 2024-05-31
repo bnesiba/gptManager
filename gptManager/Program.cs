@@ -1,3 +1,5 @@
+using ChatSessionFlow;
+using ChatSessionFlow.models;
 using ContextManagement;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
@@ -21,10 +23,17 @@ builder.Services.AddSingleton<ToolDefinitionManager, ToolDefinitionManager>();
 builder.Services.AddSingleton<GmailDataAccess, GmailDataAccess>();
 builder.Services.AddSingleton<GmailConnector, GmailConnector>();
 
-//redux stuff
+
+//project specific redux stuff
+builder.Services.AddScoped<IFlowStateEffects, ChatSessionEffects>();
+builder.Services.AddScoped<IFlowStateReducer<ChatSessionEntity>, ChatSessionReducer>();
+
+
+//general redux stuff
 builder.Services.AddScoped<FlowState, FlowState>();
-builder.Services.AddScoped<IFlowStateReducer<ProjectStateModel>, ProjectReducer>();
-builder.Services.AddScoped<FlowStateData<ProjectStateModel>, FlowStateData<ProjectStateModel>>();
+//builder.Services.AddScoped<IFlowStateDataBase, FlowStateData<ChatSessionEntity>>();
+builder.Services.AddScoped<FlowStateData<ChatSessionEntity>>();
+builder.Services.AddScoped<IFlowStateDataBase>(sp => sp.GetService<FlowStateData<ChatSessionEntity>>());
 
 
 var app = builder.Build();

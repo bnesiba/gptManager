@@ -15,11 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloudConnector", "Goo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikipediaSearchConnector", "WikipediaSearchConnector\WikipediaSearchConnector.csproj", "{7C67F5CC-89AB-4F89-A0A8-B8C917E280C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIUtilities", "AIUtilities\AIUtilities.csproj", "{CB7A04A7-6B5A-4CB2-8321-F414EA76A990}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIUtilities", "AIUtilities\AIUtilities.csproj", "{CB7A04A7-6B5A-4CB2-8321-F414EA76A990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIChatOrchestration", "AIChatOrchestration\AIChatOrchestration.csproj", "{FCC12016-4E0D-4F7E-8784-5172B5CE20D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIChatOrchestration", "AIChatOrchestration\AIChatOrchestration.csproj", "{FCC12016-4E0D-4F7E-8784-5172B5CE20D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionStateFlow", "SessionStateFlow\SessionStateFlow.csproj", "{F4DDC3D6-A277-45D6-84E9-3C326E671501}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionStateFlow", "SessionStateFlow\SessionStateFlow.csproj", "{F4DDC3D6-A277-45D6-84E9-3C326E671501}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSessionFlow", "ChatSessionFlow\ChatSessionFlow.csproj", "{73AF270C-42B1-4EB3-8242-7217A690262D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73AF270C-42B1-4EB3-8242-7217A690262D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73AF270C-42B1-4EB3-8242-7217A690262D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73AF270C-42B1-4EB3-8242-7217A690262D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73AF270C-42B1-4EB3-8242-7217A690262D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
