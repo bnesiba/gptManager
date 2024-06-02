@@ -13,6 +13,7 @@ namespace ChatSessionFlow
         public static FlowAction<OpenAIToolMessage> ToolExecutionFailed(OpenAIToolMessage? toolMessage = null) => new FlowAction<OpenAIToolMessage> { Name = "ToolExecutionFailed", Parameters = toolMessage };
         public static FlowAction<List<OpenAIToolCall>> ToolExecutionsCompleted(List<OpenAIToolCall>? toolsRequested = null) => new FlowAction<List<OpenAIToolCall>> { Name = "ToolExecutionCompleted", Parameters = toolsRequested };
         public static FlowAction ToolsExecutionEmpty() => new FlowAction { Name = "NoToolsExecuted"};
+        //public static FlowAction ResponseValidatonRequested() => new FlowAction { Name = "ResponseValidationRequested" };
 
     }
 }

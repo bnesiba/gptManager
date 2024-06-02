@@ -15,14 +15,12 @@ namespace gptManager.Controllers
     public class ChatController : ControllerBase
     {
         private readonly ChatGPTRepo _chatGPTRepo;
-        private readonly ChatContextManager _chatContextManager;
         private FlowState _flowState;
         private FlowStateData<ChatSessionEntity> _chatStateData;
 
-        public ChatController(ChatGPTRepo chatGPTRepo, ChatContextManager chatContextManager, FlowState state, FlowStateData<ChatSessionEntity> stateData)
+        public ChatController(ChatGPTRepo chatGPTRepo, FlowState state, FlowStateData<ChatSessionEntity> stateData)
         {
             _chatGPTRepo = chatGPTRepo;
-            _chatContextManager = chatContextManager;
             _flowState = state;
             _chatStateData = stateData;
         }
@@ -57,9 +55,10 @@ namespace gptManager.Controllers
             try
             {
                 _flowState.ResolveAction(ChatSessionActions.Init(message));
-                var chatCount = _chatStateData.CurrentState(ChatSessionSelectors.GetChatCount);
+                //_flowState.ResolveAction(ChatSessionActions.ResponseValidatonRequested());
+                var lastMsg = _chatStateData.CurrentState(ChatSessionSelectors.GetLatestMessage);
 
-                return Ok($"ChatCount: {chatCount}");
+                return Ok(lastMsg);
             }
             catch (Exception ex)
             {
@@ -85,36 +84,11 @@ namespace gptManager.Controllers
                     "please describe the setting, content, and emotional feel of each image, then provide a comparison of the two images with an emphasis on differences in setting, content, and tone. Email the result to bnesiba@gmail.com";
 
 
-                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
-                var result =  _chatContextManager.StructuredImageChat(chatSession.Id, msg, new List<string>(){ imageURL,image2Url });
+                //var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                //var result =  _chatContextManager.StructuredImageChat(chatSession.Id, msg, new List<string>(){ imageURL,image2Url });
 
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error occurred\n\n {ex}");
-                return StatusCode(500);
-            }
-        }
-
-        [HttpPost]
-        public virtual IActionResult SimpleChat([FromBody] string chatMessage)
-        {
-            try
-            {
-                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
-                var chatResult = _chatContextManager.Chat(chatSession.Id, chatMessage);
-                
-                if (chatResult != null)
-                {
-                    Tuple<Guid, string> chatResponse = new Tuple<Guid, string>(chatSession.Id, chatResult);
-                    return Ok(chatResponse);
-                }
-                else
-                {
-                    return StatusCode(400, chatResult);
-                }
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -129,44 +103,10 @@ namespace gptManager.Controllers
         {
             try
             {
-                var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
+                //var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-3.5-turbo");
                 //var chatSession = _chatContextManager.CreateStructuredChatSession($"Chat-{DateTime.Now}", "gpt-4-turbo-preview");
 
-                return Ok(chatSession.Id);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error occurred\n\n {ex}");
-                return StatusCode(500);
-            }
-        }
-
-        [HttpPost]
-        [Route("structuredChat/{conversationId}")]
-        public virtual IActionResult StructuredChat([FromBody] string chatMessage, [FromRoute] Guid conversationId)
-        {
-            try
-            {
-                //TODO: consider putting an event-like layer between the api controller stuff and the context manager
-                //so that it can be used when I get around to making this an android app.
-                var chatSession = _chatContextManager.GetChatSession(conversationId);
-                if (chatSession != null)
-                {
-                    var chatResult = _chatContextManager.StructuredChat(chatSession.Id, chatMessage);
-
-                    if (chatResult != null)
-                    {
-                        return Ok(chatResult);
-                    }
-                    else
-                    {
-                        return StatusCode(400, chatResult);
-                    }
-                }
-                else
-                {
-                    return StatusCode(404, $"No chat session found for id: {conversationId}");
-                }
+                return Ok();
             }
             catch (Exception ex)
             {

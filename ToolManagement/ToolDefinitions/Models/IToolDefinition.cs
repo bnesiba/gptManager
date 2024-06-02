@@ -18,20 +18,33 @@ namespace ToolManagement.ToolDefinitions.Models
 
     public static class ToolDefinitionExtensions
     {
+        public static KeyValuePair<string, object> GetInputParametersObject(this ToolProperty toolProperty)
+        {
+            if(toolProperty is ArrayToolProperty)
+            {
+                ArrayToolProperty arrProp = (ArrayToolProperty)toolProperty;
+                return new KeyValuePair<string, object>(toolProperty.name, new ArrayToolParameter
+                {
+                    description = arrProp.description,
+                    type = arrProp.type,
+                    items = new ToolParameter { type = arrProp.items.type}
+                });
+            }
+            if(toolProperty is EnumToolProperty)
+            {
+                EnumToolProperty enumToolProperty = (EnumToolProperty)toolProperty;
+                return new KeyValuePair<string, object>(toolProperty.name, new EnumToolParameter
+                {
+                    type = enumToolProperty.type,
+                    description = enumToolProperty.description,
+                    enumValues = enumToolProperty.enumValues
+                });
+            }
+            return new KeyValuePair<string, object>(toolProperty.name, new ToolParameter { type = toolProperty.type, description = toolProperty.description });
+        }
         public static OpenAITool GetToolRequestDefinition(this IToolDefinition toolDefinition)
         {
-            Dictionary<string, object> toolProperties = toolDefinition.InputParameters.Where(p => p.type != "array")
-                .ToDictionary(p => p.name, p => new { p.type, p.description } as object);
-
-            if (toolDefinition.InputParameters.Any(p => p.type == "array"))
-            {
-                var arrayTools = toolDefinition.InputParameters.Where(p => p.type == "array").ToList();
-                foreach (var arrayTool in arrayTools)
-                {
-                    var arTool = arrayTool as ArrayToolProperty;
-                    toolProperties.Add(arTool.name, new { arTool.type, arTool.description, arTool.items });
-                }
-            }
+            Dictionary<string, object> toolParameters = toolDefinition.InputParameters.Select(p => GetInputParametersObject(p)).ToDictionary();
 
             OpenAiToolFunction toolFunction = new OpenAiToolFunction()
             {
@@ -40,7 +53,7 @@ namespace ToolManagement.ToolDefinitions.Models
                 parameters = new
                 {
                     type = "object",
-                    properties = toolDefinition.InputParameters.Where(p => p.type != "array").ToDictionary(p => p.name, p => new { p.type, p.description }),
+                    properties = toolParameters,
                     required = toolDefinition.InputParameters.Where(p => p.IsRequired).Select(p => p.name).ToArray()
                 }
             };

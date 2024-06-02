@@ -24,7 +24,8 @@ builder.Services.AddSingleton<GmailDataAccess>();
 builder.Services.AddSingleton<GmailConnector>();
 
 //tools
-builder.Services.AddSingleton<IToolDefinition, InternetSearch>();
+builder.Services.AddSingleton<IToolDefinition, KnownInformationSearch>();
+builder.Services.AddSingleton<IToolDefinition, NewsSearch>();
 //builder.Services.AddSingleton<IToolDefinition, FindEmails>();
 builder.Services.AddSingleton<IToolDefinition, SendEmail>();
 builder.Services.AddSingleton<IToolDefinition, ImageEvaluate>();

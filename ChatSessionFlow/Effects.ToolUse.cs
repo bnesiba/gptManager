@@ -55,7 +55,8 @@ namespace ChatSessionFlow
 
                         if (toolCallArgumentsValid)
                         {
-                            var toolResult = tool.ExecuteTool(currentContext, toolCall);
+                            var toolRequestParams = new ToolRequestParameters(toolCall.id, requestStringParameters, requestArrayParameters);
+                            var toolResult = tool.ExecuteTool(currentContext, toolRequestParams);
                             _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionSucceeded(toolResult));
                         }
                         else
@@ -81,7 +82,7 @@ namespace ChatSessionFlow
             //TODO: get session context eventually to populate newcontext & potentially model
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
-                model = "gpt-3.5-turbo",
+                model = "gpt-3.5-turbo", //TODO: make these a const or something - magic strings bad.
                 //model = "gpt-4o",
                 messages = currentContext,
                 temperature = 1,

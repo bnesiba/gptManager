@@ -10,7 +10,7 @@ namespace SessionStateFlow.package
     public class FlowState
     {
         internal delegate void FlowStateActions(FlowActionBase action);
-        internal FlowStateActions _flowStateActions = (action) => { System.Diagnostics.Debug.WriteLine($"action: {JsonConvert.SerializeObject(action)}\n"); };
+        internal FlowStateActions _flowStateActions = (action) => { System.Diagnostics.Debug.WriteLine($"action: {JsonConvert.SerializeObject(action.Name)}\n"); };
 
         public FlowState(IEnumerable<IFlowStateEffects> effects, IFlowStateDataBase flowData, FlowActionHandler flowActionHandler)
         {

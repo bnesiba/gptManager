@@ -10,11 +10,11 @@ using ToolManagement.ToolDefinitions.Models;
 
 namespace ToolManagement.ToolDefinitions
 {
-    public class InternetSearch : IToolDefinition
+    public class NewsSearch : IToolDefinition
     {
-        public string Name => "InternetSearch";
+        public string Name => "NewsSearch";
 
-        public string Description => "Get news from the internet";
+        public string Description => "Search NEWS SITES for NEWS articles - ONLY USE FOR NEWS";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
@@ -22,7 +22,7 @@ namespace ToolManagement.ToolDefinitions
             {
                 name = "query",
                 type = "string",
-                description = "The string to send to the search engine",
+                description = "Query string to find news related to",
                 IsRequired = true
             }
 
@@ -67,7 +67,7 @@ namespace ToolManagement.ToolDefinitions
                     //return new OpenAIToolMessage($"InternetSearchResponse: " + JsonSerializer.Serialize(outputObject),this.Name, toolCall.id);
                     return new OpenAIToolMessage($"InternetSearchResponse:" + JsonSerializer.Serialize(outputObject), toolCall.id);
                 }
-                return new OpenAIToolMessage("ERROR: Arguments to 'SendEmail' tool were invalid or missing", toolCall.id);
+                return new OpenAIToolMessage("ERROR: Arguments to 'InternetSearchResponse' tool were invalid or missing", toolCall.id);
             }
 
             return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);

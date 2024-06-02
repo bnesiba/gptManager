@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Google.Apis.Gmail.v1;
+using Newtonsoft.Json;
 
 namespace ToolManagement.ToolDefinitions.Models
 {
@@ -26,7 +27,29 @@ namespace ToolManagement.ToolDefinitions.Models
 
     public class EnumToolProperty : ToolProperty
     {
-        [JsonPropertyName("enum")]
+        [JsonProperty("enum")]
         public List<string> enumValues { get; set; }
+    }
+
+    public class TestyToolProperty: ToolProperty
+    {
+        public bool tested { get; init; }
+    }
+
+    public class ToolParameter
+    {
+        public string type { get; init; }
+        public string description { get; init; }
+    }
+
+    public class ArrayToolParameter : ToolParameter
+    {
+        public ToolParameter items { get; init; }
+    }
+
+    public class EnumToolParameter : ToolParameter
+    {
+        [JsonProperty("enum")]
+        public List<string> enumValues { get; init; }
     }
 }

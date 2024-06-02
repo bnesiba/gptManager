@@ -36,7 +36,7 @@ namespace AIUtilities
 
             OpenAIChatRequest summarizeRequest = new OpenAIChatRequest()
             {
-                model = "gpt-3.5-turbo",
+                model = "gpt-3.5-turbo", //TODO: make these a const or something - magic strings bad.
                 messages = summarizerContext,
                 max_tokens = tokenLimit,
                 temperature = 0

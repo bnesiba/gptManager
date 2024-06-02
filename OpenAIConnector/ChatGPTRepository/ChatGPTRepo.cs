@@ -67,7 +67,7 @@ namespace OpenAIConnector.ChatGPTRepository
 
         public OpenAIChatResponse? Chat(OpenAIChatRequest chatRequest)
         {
-            var json = JsonConvert.SerializeObject(chatRequest);
+            var json = JsonConvert.SerializeObject(chatRequest, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore});
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = _httpClient.PostAsync(baseUrl + "chat/completions", content).Result;
             var responseContent1 = response.Content.ReadAsStringAsync().Result;

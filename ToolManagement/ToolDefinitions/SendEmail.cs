@@ -20,7 +20,7 @@ namespace ToolManagement.ToolDefinitions
         }
         public string Name => "SendEmail";
 
-        public string Description => "Send an email from the preconfigured address by defining the ToAddress, Subject and Body of the email. ONLY SEND THE EMAIL IF YOU HAVE THE WHOLE MESSAGE TO SEND";
+        public string Description => "Send an email from the preconfigured address by defining the ToAddress, Subject and Body of the email.";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
@@ -63,7 +63,8 @@ namespace ToolManagement.ToolDefinitions
                     {
                         sendEmailSuccess = true,
                         toAddress = requestParameters["ToAddress"],
-                        subject = requestParameters["Subject"]
+                        subject = requestParameters["Subject"],
+                        body = requestParameters["Content"]
 
                     };
                     return new OpenAIToolMessage($"sendEmailResponse: " + JsonSerializer.Serialize(outputObject), toolCall.id);
@@ -84,7 +85,8 @@ namespace ToolManagement.ToolDefinitions
             {
                 sendEmailSuccess = true,
                 toAddress = toolParams.GetStringParam("ToAddress"),
-                subject = toolParams.GetStringParam("Subject")
+                subject = toolParams.GetStringParam("Subject"),
+                body = toolParams.GetStringParam("Content").Substring(0, 50)+"..."
 
             };
             return new OpenAIToolMessage($"sendEmailResponse: " + JsonSerializer.Serialize(outputObject), toolParams.ToolRequestId);
