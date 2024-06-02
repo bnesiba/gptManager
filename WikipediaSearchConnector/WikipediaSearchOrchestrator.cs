@@ -9,8 +9,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using OpenAIConnector.ChatGPTRepository.models;
 using WikipediaSearchConnector.Models;
-using ToolManagement.ToolDefinitions;
 using GoogleCloudConnector.GmailAccess;
+using ToolManagement.ToolDefinitions.Models;
 
 namespace WikipediaSearchConnector
 {
@@ -141,6 +141,11 @@ namespace WikipediaSearchConnector
                 }
 
                 return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
+            }
+
+            public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolRequestParameters)
+            {
+                throw new NotImplementedException();
             }
         }
     }

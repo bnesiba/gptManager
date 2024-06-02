@@ -56,7 +56,7 @@ namespace gptManager.Controllers
         {
             try
             {
-                _flowState.ResolveAction(ChatSessionActions.init(message));
+                _flowState.ResolveAction(ChatSessionActions.Init(message));
                 var chatCount = _chatStateData.CurrentState(ChatSessionSelectors.GetChatCount);
 
                 return Ok($"ChatCount: {chatCount}");

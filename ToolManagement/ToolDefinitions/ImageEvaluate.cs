@@ -8,6 +8,7 @@ using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
 using Org.BouncyCastle.Asn1;
+using ToolManagement.ToolDefinitions.Models;
 
 namespace ToolManagement.ToolDefinitions
 {
@@ -83,6 +84,28 @@ namespace ToolManagement.ToolDefinitions
             return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
         }
 
+        //new and improved (simplified) tool call 
+        //TODO: Eventually remove the other one
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
+        {
+
+            var imageResponse = _chatGPTRepo.Chat(BuildVisionRequest(chatContext, toolParams.GetStringParam("InputPrompt"), toolParams.GetArrayParam("ImageArray")));
+            if (imageResponse != null)
+            {
+                var outputObject = new
+                {
+                    processImageSuccess = true,
+                    visionResponse = imageResponse.choices[0].message.content
+
+                };
+                return new OpenAIToolMessage($"imageEvaluateResponse: " + JsonSerializer.Serialize(outputObject), toolParams.ToolRequestId);
+            }
+            else
+            {
+                return new OpenAIToolMessage("ERROR: The image evaluation failed", toolParams.ToolRequestId);
+            }
+        }
+
         //TODO: find a way to avoid having to use this type?
         private OpenAIImageChatRequest BuildVisionRequest(List<OpenAIChatMessage> chatContext, string promptString, List<string> urlsAndBase64)
         {
@@ -93,7 +116,8 @@ namespace ToolManagement.ToolDefinitions
 
             OpenAIImageChatRequest visionRequest = new OpenAIImageChatRequest()
             {
-                model = "gpt-4-vision-preview",
+                //model = "gpt-4-vision-preview",
+                model = "gpt-4o",
                 messages = visionContext,
                 max_tokens = 1500
             };

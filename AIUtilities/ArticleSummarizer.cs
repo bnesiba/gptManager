@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions;
+using ToolManagement.ToolDefinitions.Models;
 
 namespace AIUtilities
 {
@@ -99,6 +99,11 @@ namespace AIUtilities
                 }
 
                 return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
+            }
+
+            public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolRequestParameters)
+            {
+                throw new NotImplementedException();
             }
         }
     }

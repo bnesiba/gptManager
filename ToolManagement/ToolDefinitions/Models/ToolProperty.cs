@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Google.Apis.Gmail.v1;
 
-namespace ToolManagement.ToolDefinitions
+namespace ToolManagement.ToolDefinitions.Models
 {
     public class ToolProperty
     {

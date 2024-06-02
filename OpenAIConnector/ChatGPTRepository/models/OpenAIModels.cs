@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 
 //TODO: make a separate set of AI-system agnostic models and converters 
@@ -302,7 +303,22 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public int total_tokens { get; set; }
     }
 
+    public static class OpenAIModelExtensions
+    {
+        public static bool HasToolCalls(this OpenAIChatResponse response, out List<OpenAIToolCall> toolCalls)
+        {
+            toolCalls = new List<OpenAIToolCall>();
+            if (response == null) return false;
 
+            if (response != null && response.choices.Any())
+            {
+                toolCalls =  response.choices[0].message.tool_calls ?? new List<OpenAIToolCall>();
+            }
+
+            return toolCalls.Any();
+        }
+
+    }
 }
 
 

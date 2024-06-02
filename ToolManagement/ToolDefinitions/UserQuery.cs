@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenAIConnector.ChatGPTRepository.models;
+using ToolManagement.ToolDefinitions.Models;
 
 namespace ToolManagement.ToolDefinitions
 {
@@ -30,5 +31,11 @@ namespace ToolManagement.ToolDefinitions
             return new OpenAIToolMessage("stuff", toolCall.id);
         }
 
+        //new and improved (simplified) tool call 
+        //TODO: Eventually remove the other one
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolRequestParameters)
+        {
+            return new OpenAIToolMessage("stuff", toolRequestParameters.ToolRequestId);
+        }
     }
 }

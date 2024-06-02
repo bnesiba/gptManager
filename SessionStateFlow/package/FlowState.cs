@@ -12,9 +12,11 @@ namespace SessionStateFlow.package
         internal delegate void FlowStateActions(FlowActionBase action);
         internal FlowStateActions _flowStateActions = (action) => { System.Diagnostics.Debug.WriteLine($"action: {JsonConvert.SerializeObject(action)}\n"); };
 
-
-        public FlowState(IEnumerable<IFlowStateEffects> effects, IFlowStateDataBase flowData)
+        public FlowState(IEnumerable<IFlowStateEffects> effects, IFlowStateDataBase flowData, FlowActionHandler flowActionHandler)
         {
+            flowActionHandler.flowStateActions += (action) => _flowStateActions(action);
+
+            //TODO: allow multiple reducers
             _flowStateActions += flowData.FlowReduce;
 
             foreach (IFlowStateEffects effect in effects)
@@ -39,6 +41,12 @@ namespace SessionStateFlow.package
         {
             _flowStateActions(action);
         }
+
+        private void ResolveAction(FlowActionBase action)
+        {
+            _flowStateActions(action);
+        }
+
         //Register various kinds of effects
 
 

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenAIConnector.ChatGPTRepository.models;
 
-namespace ToolManagement.ToolDefinitions
+namespace ToolManagement.ToolDefinitions.Models
 {
     public interface IToolDefinition
     {
@@ -12,6 +12,8 @@ namespace ToolManagement.ToolDefinitions
 
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall);
 
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolRequestParameters);
+
     }
 
     public static class ToolDefinitionExtensions
@@ -19,7 +21,7 @@ namespace ToolManagement.ToolDefinitions
         public static OpenAITool GetToolRequestDefinition(this IToolDefinition toolDefinition)
         {
             Dictionary<string, object> toolProperties = toolDefinition.InputParameters.Where(p => p.type != "array")
-                .ToDictionary(p => p.name, p => new { type = p.type, description = p.description } as object);
+                .ToDictionary(p => p.name, p => new { p.type, p.description } as object);
 
             if (toolDefinition.InputParameters.Any(p => p.type == "array"))
             {
@@ -27,7 +29,7 @@ namespace ToolManagement.ToolDefinitions
                 foreach (var arrayTool in arrayTools)
                 {
                     var arTool = arrayTool as ArrayToolProperty;
-                    toolProperties.Add(arTool.name, new { type = arTool.type, description = arTool.description, items = arTool.items });
+                    toolProperties.Add(arTool.name, new { arTool.type, arTool.description, arTool.items });
                 }
             }
 
@@ -38,7 +40,7 @@ namespace ToolManagement.ToolDefinitions
                 parameters = new
                 {
                     type = "object",
-                    properties = toolDefinition.InputParameters.Where(p => p.type != "array").ToDictionary(p => p.name, p => new { type = p.type, description = p.description }),
+                    properties = toolDefinition.InputParameters.Where(p => p.type != "array").ToDictionary(p => p.name, p => new { p.type, p.description }),
                     required = toolDefinition.InputParameters.Where(p => p.IsRequired).Select(p => p.name).ToArray()
                 }
             };
@@ -116,10 +118,11 @@ namespace ToolManagement.ToolDefinitions
         public static bool RequestArgumentsValid<T1, T2>(this IToolDefinition toolDefinition,
             Dictionary<string, T1>? requestStringParameters, Dictionary<string, T2>? requestArrayParameters)
         {
-            if (requestStringParameters == null && requestArrayParameters == null)
-            {
-                return false;
-            }
+            //I think this is handled by the code below. If both are null the foreach checks will return false unles there aren't any required parameters.
+            //if (requestStringParameters == null && requestArrayParameters == null)
+            //{
+            //    return false;
+            //}
 
             foreach (var parameter in toolDefinition.InputParameters)
             {
@@ -165,5 +168,5 @@ namespace ToolManagement.ToolDefinitions
         }
 
 
-    }   
+    }
 }

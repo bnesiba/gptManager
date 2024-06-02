@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -16,7 +17,6 @@ namespace SessionStateFlow.package.Models
     {
         public List<FlowAction> TriggeringActions { get; init; }
         public Func<FlowAction, FlowActionBase> SideEffect { get; init;  }
-
         public FlowEffect(Func<FlowActionBase, FlowActionBase> sideEffect, params FlowAction[] triggeringActions)
         {
             TriggeringActions = triggeringActions.ToList();
@@ -43,10 +43,6 @@ namespace SessionStateFlow.package.Models
 
             return flowAct;
         }
-        //public Func<FlowActionBase, FlowActionBase> GetSideEffect()
-        //{
-        //    return (Func<FlowActionBase, FlowActionBase>)SideEffect;
-        //}
     }
 
     public class FlowEffect<T> : IFlowEffectBase
@@ -85,12 +81,13 @@ namespace SessionStateFlow.package.Models
 
     public interface IFlowEffectBase
     {
+        
         public List<FlowActionBase> GetTriggeringActions();
 
         public Func<FlowActionBase, FlowActionBase> GetSideEffect();
     }
 
-    public static class IFlowEffectBaseExtentions
+    public static class IFlowEffectBaseExtensions
     {
 
         public static FlowActionBase GetBaseActionFromDerived(FlowActionBase action)

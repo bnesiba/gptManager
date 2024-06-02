@@ -18,7 +18,7 @@ namespace ChatSessionFlow
             //manage context
             CurrentContext_WhenInitialMsgReceived_AddToContext(action, newState, out newState);
             CurrentContext_WhenResponseMsgReceived_AddToContext(action, newState, out newState);
-
+            CurrentContext_ToolExecutionCompleted_AddToContext(action, newState, out newState);
             //manage count
             CurrentContext_ChatRequestReceived_IncrementCount(action, newState, out newState);
             CurrentContext_ChatResponseReceived_IncrementCount(action, newState, out newState);
@@ -30,7 +30,7 @@ namespace ChatSessionFlow
         public void CurrentContext_WhenInitialMsgReceived_AddToContext(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
         {
             newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.init(), out var initAction))
+            if (FlowState.IsResolvingAction(action, ChatSessionActions.Init(), out var initAction))
             {
                 newState.CurrentContext.Add(new OpenAIUserMessage(initAction.Parameters.message));
             }
@@ -39,16 +39,24 @@ namespace ChatSessionFlow
         public void CurrentContext_WhenResponseMsgReceived_AddToContext(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
         {
             newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.chatResponseReceived(), out var responseMessage))
+            if (FlowState.IsResolvingAction(action, ChatSessionActions.ChatResponseReceived(), out var responseMessage))
             {
                 newState.CurrentContext.Add(responseMessage.Parameters.choices[0].message);
+            }
+        }
+        public void CurrentContext_ToolExecutionCompleted_AddToContext(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
+        {
+            newState = currentState;
+            if (FlowState.IsResolvingAction(action, ChatSessionActions.ToolExecutionSucceeded(), out var toolAction))
+            {
+                newState.CurrentContext.Add(toolAction.Parameters);
             }
         }
 
         public void CurrentContext_ChatRequestReceived_IncrementCount(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
         {
             newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.chatRequested(), out var _))
+            if (FlowState.IsResolvingAction(action, ChatSessionActions.ChatRequested(), out var _))
             {
 
                 newState.NumberOfChats++;
@@ -58,11 +66,12 @@ namespace ChatSessionFlow
         public void CurrentContext_ChatResponseReceived_IncrementCount(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
         {
             newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.chatResponseReceived(), out var _))
+            if (FlowState.IsResolvingAction(action, ChatSessionActions.ChatResponseReceived(), out var _))
             {
 
                 newState.NumberOfChats++;
             }
         }
+
     }
 }

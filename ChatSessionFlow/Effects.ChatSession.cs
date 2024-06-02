@@ -23,34 +23,35 @@ namespace ChatSessionFlow
 
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
-            new FlowEffect<InitialMessage>(OnInitialMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.init()),
-            new FlowEffect<OpenAIChatRequest>(OnChatRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.chatRequested())
+            new FlowEffect<InitialMessage>(OnInitialMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.Init()),
+            new FlowEffect<OpenAIChatRequest>(OnChatRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ChatRequested())
         };
 
+        //effect methods
         public FlowActionBase OnInitialMsg_CreateChatRequest_ResolveChatRequested(FlowAction<InitialMessage> initialMsg)
         {
 
             List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
+            newContext.Add(new OpenAISystemMessage("You are a tool-using AI assistant. Consider how to resolve the user's request and the use tools as needed. " +
+                "\nIf you need to run multiple tools and one isn't working, move on and do your best."));
             //TODO: get session context eventually to populate newcontext & potentially model
             newContext.Add(new OpenAIUserMessage(initialMsg.Parameters.message));
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
                 model = "gpt-3.5-turbo",
+                //model = "gpt-4o",
                 messages = newContext,
                 temperature = 1,
                 tools = _toolManager.GetToolDefinitions()
             };
-            return ChatSessionActions.chatRequested(chatRequest);
+            return ChatSessionActions.ChatRequested(chatRequest);
         }
 
         public FlowActionBase OnChatRequested_CallChatGPT_ResolveResponseReceived(FlowAction<OpenAIChatRequest> chatRequest)
         {
-            //TODO: remove me
-            var count = _flowStateData.CurrentState(ChatSessionSelectors.GetChatCount);
-            System.Diagnostics.Debug.WriteLine("ChatCount: ", count);//TODO: removeme
 
             var response = _chatGPTRepo.Chat(chatRequest.Parameters);
-            return ChatSessionActions.chatResponseReceived(response);
+            return ChatSessionActions.ChatResponseReceived(response);
         }
     }
 }

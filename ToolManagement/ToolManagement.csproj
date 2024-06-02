@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
+    <ProjectReference Include="..\SessionStateFlow\SessionStateFlow.csproj" />
   </ItemGroup>
 
 </Project>
