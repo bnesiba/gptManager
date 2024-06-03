@@ -48,35 +48,6 @@ namespace ToolManagement.ToolDefinitions
 
         };
 
-        //TODO: abstract more of this out? everything except the actual call and the response object is shared across tools
-        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
-        {
-            Dictionary<string, string>? requestParameters = this.GetToolRequestStringParameters(toolCall);
-            if (requestParameters != null)
-            {
-                bool toolCallArgumentsValid = this.RequestArgumentsValid(requestParameters);
-
-                if (toolCallArgumentsValid)
-                {
-                    _emailConnector.SendEmail(requestParameters["ToAddress"], requestParameters["Subject"], requestParameters["Content"]);
-                    var outputObject = new
-                    {
-                        sendEmailSuccess = true,
-                        toAddress = requestParameters["ToAddress"],
-                        subject = requestParameters["Subject"],
-                        body = requestParameters["Content"]
-
-                    };
-                    return new OpenAIToolMessage($"sendEmailResponse: " + JsonSerializer.Serialize(outputObject), toolCall.id);
-                }
-                return new OpenAIToolMessage("ERROR: Arguments to 'SendEmail' tool were invalid or missing", toolCall.id);
-            }
-
-            return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
-        }
-
-        //new and improved (simplified) tool call 
-        //TODO: Eventually remove the other one 
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
 

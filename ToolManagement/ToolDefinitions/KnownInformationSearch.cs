@@ -43,31 +43,6 @@ namespace ToolManagement.ToolDefinitions
             _chatGPTRepo = chatGPTRepo;
         }
 
-        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
-        {
-            Dictionary<string, string>? requestParameters = this.GetToolRequestStringParameters(toolCall);
-            if (requestParameters != null)
-            {
-                bool toolCallArgumentsValid = this.RequestArgumentsValid(requestParameters);
-
-                if (toolCallArgumentsValid)
-                {
-                    //process query here
-
-                    var outputObject = new
-                    {
-                        results = "this isn't implemented this way - sry."
-                    };
-                    return new OpenAIToolMessage($"KnownInformationSearch:" + JsonConvert.SerializeObject(outputObject), toolCall.id);
-                }
-                return new OpenAIToolMessage("ERROR: Arguments to 'KnownInformationSearch' tool were invalid or missing", toolCall.id);
-            }
-
-            return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
-        }
-
-        //new and improved (simplified) tool call 
-        //TODO: Eventually remove the other one
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
             //process query here

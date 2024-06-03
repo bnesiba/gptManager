@@ -10,8 +10,6 @@ namespace ToolManagement.ToolDefinitions.Models
 
         public List<ToolProperty> InputParameters { get; }
 
-        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall);
-
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolRequestParameters);
 
     }
@@ -158,28 +156,5 @@ namespace ToolManagement.ToolDefinitions.Models
         {
             return tools.Select(t => t.GetToolRequestDefinition()).ToArray();
         }
-
-        public static List<OpenAIToolMessage> ExecuteTools(this List<IToolDefinition> tools, List<OpenAIChatMessage> chatContext, List<OpenAIToolCall> toolCalls)
-        {
-            var invalidToolCalls = toolCalls.Where(t => tools.All(tf => tf.Name != t.function.name)).ToList();
-            if (invalidToolCalls.Any())
-            {
-                //throw new Exception($"Invalid tool call(s): {string.Join(", ", invalidToolCalls.Select(t => t.function.name))}");
-                Console.WriteLine($"WARNING There were invalid tool calls:{string.Join(", ", invalidToolCalls.Select(t => t.function.name))}");
-            }
-
-            var results = new List<OpenAIToolMessage>();
-            foreach (var toolCall in toolCalls)
-            {
-                var tool = tools.FirstOrDefault(t => t.Name == toolCall.function.name);
-                if (tool != null)
-                {
-                    results.Add(tool.ExecuteTool(chatContext, toolCall));
-                }
-            }
-            return results;
-        }
-
-
     }
 }

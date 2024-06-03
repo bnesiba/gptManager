@@ -8,6 +8,7 @@ using ToolManagement.ToolDefinitions.Models;
 
 namespace ToolManagement.ToolDefinitions
 {
+    //not in use
     public class UserQuery: IToolDefinition
     {
         public string Name => "UserPersonalInfo";
@@ -26,13 +27,6 @@ namespace ToolManagement.ToolDefinitions
 
         };
 
-        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
-        {
-            return new OpenAIToolMessage("stuff", toolCall.id);
-        }
-
-        //new and improved (simplified) tool call 
-        //TODO: Eventually remove the other one
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolRequestParameters)
         {
             return new OpenAIToolMessage("stuff", toolRequestParameters.ToolRequestId);
