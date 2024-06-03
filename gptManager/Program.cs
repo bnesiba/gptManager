@@ -18,7 +18,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ChatGPTRepo>();
-builder.Services.AddSingleton<ChatContextManager>();
 builder.Services.AddSingleton<ToolDefinitionManager>();
 builder.Services.AddSingleton<GmailDataAccess>();
 builder.Services.AddSingleton<GmailConnector>();

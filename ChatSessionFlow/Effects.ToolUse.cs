@@ -17,7 +17,7 @@ namespace ChatSessionFlow
     {
         private FlowStateData<ChatSessionEntity> _flowStateData;
         private ToolDefinitionManager _toolManager;
-        private List<IToolDefinition> _definedTools;
+        private List<IToolDefinition> _definedTools;//TODO: make dictionary?
         private FlowActionHandler _flowActionHandler;
 
 
@@ -31,13 +31,13 @@ namespace ChatSessionFlow
 
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
-            new FlowEffect<OpenAIChatResponse>(OnChatResponseReceived_IfToolCallsExist_ResolveToolCalls, ChatSessionActions.ChatResponseReceived()),
+            new FlowEffect<OpenAIChatResponse>(OnChatResponseReceived_IfToolCallsExist_ResolveToolExecutionRequested, ChatSessionActions.ChatResponseReceived()),
             new FlowEffect<ToolRequestParameters>(OnToolExecutionRequested_ExecuteTools_ResolveToolResult,ChatSessionActions.ToolExecutionRequested()),
             new FlowEffect<List<OpenAIToolCall>>(OnToolExecutionsCompleted_ResolveChatRequested, ChatSessionActions.ToolExecutionsCompleted())
         };
 
         //effect methods
-        public FlowActionBase OnChatResponseReceived_IfToolCallsExist_ResolveToolCalls(FlowAction<OpenAIChatResponse> chatResponseAction)
+        public FlowActionBase OnChatResponseReceived_IfToolCallsExist_ResolveToolExecutionRequested(FlowAction<OpenAIChatResponse> chatResponseAction)
         {
             List<OpenAIToolMessage> toolResults = new List<OpenAIToolMessage>();
 
