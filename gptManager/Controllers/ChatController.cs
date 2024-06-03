@@ -1,7 +1,5 @@
 ﻿using ChatSessionFlow;
 using ChatSessionFlow.models;
-using ContextManagement;
-using GoogleCloudConnector.GmailAccess;
 using Microsoft.AspNetCore.Mvc;
 using OpenAIConnector.ChatGPTRepository;
 using SessionStateFlow;

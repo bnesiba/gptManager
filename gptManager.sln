@@ -5,8 +5,6 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gptManager", "gptManager\gptManager.csproj", "{3933DFB5-8973-4260-92CF-97FEA5486F96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContextManagement", "contextManagement\ContextManagement.csproj", "{98D1938D-04E1-4E1D-A20E-4888FC11059E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAIConnector", "OpenAIConnector\OpenAIConnector.csproj", "{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolManagement", "ToolManagement\ToolManagement.csproj", "{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}"
@@ -21,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIChatOrchestration", "AICh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionStateFlow", "SessionStateFlow\SessionStateFlow.csproj", "{F4DDC3D6-A277-45D6-84E9-3C326E671501}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatSessionFlow", "ChatSessionFlow\ChatSessionFlow.csproj", "{73AF270C-42B1-4EB3-8242-7217A690262D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSessionFlow", "ChatSessionFlow\ChatSessionFlow.csproj", "{73AF270C-42B1-4EB3-8242-7217A690262D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{3933DFB5-8973-4260-92CF-97FEA5486F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3933DFB5-8973-4260-92CF-97FEA5486F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3933DFB5-8973-4260-92CF-97FEA5486F96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98D1938D-04E1-4E1D-A20E-4888FC11059E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98D1938D-04E1-4E1D-A20E-4888FC11059E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98D1938D-04E1-4E1D-A20E-4888FC11059E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98D1938D-04E1-4E1D-A20E-4888FC11059E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Release|Any CPU.ActiveCfg = Release|Any CPU

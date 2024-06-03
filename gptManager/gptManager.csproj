@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChatSessionFlow\ChatSessionFlow.csproj" />
-    <ProjectReference Include="..\contextManagement\ContextManagement.csproj" />
     <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
     <ProjectReference Include="..\SessionStateFlow\SessionStateFlow.csproj" />
