@@ -32,13 +32,13 @@ namespace ChatSessionFlow
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
             new FlowEffect<OpenAIChatResponse>(OnChatResponseReceived_IfToolCallsExist_ResolveToolCalls, ChatSessionActions.ChatResponseReceived()),
+            new FlowEffect<ToolRequestParameters>(OnToolExecutionRequested_ExecuteTools_ResolveToolResult,ChatSessionActions.ToolExecutionRequested()),
             new FlowEffect<List<OpenAIToolCall>>(OnToolExecutionsCompleted_ResolveChatRequested, ChatSessionActions.ToolExecutionsCompleted())
         };
 
         //effect methods
         public FlowActionBase OnChatResponseReceived_IfToolCallsExist_ResolveToolCalls(FlowAction<OpenAIChatResponse> chatResponseAction)
         {
-            var currentContext = _flowStateData.CurrentState(ChatSessionSelectors.GetChatContext);
             List<OpenAIToolMessage> toolResults = new List<OpenAIToolMessage>();
 
             List<OpenAIToolCall> toolsCalled = new List<OpenAIToolCall>();
@@ -51,18 +51,22 @@ namespace ChatSessionFlow
                     {
                         Dictionary<string, string>? requestStringParameters = tool.GetToolRequestStringParameters(toolCall);
                         Dictionary<string, List<string>>? requestArrayParameters = tool.GetToolRequestArrayParameters(toolCall);
-                        bool toolCallArgumentsValid = tool.RequestArgumentsValid(requestStringParameters, requestArrayParameters);
 
-                        if (toolCallArgumentsValid)
-                        {
-                            var toolRequestParams = new ToolRequestParameters(toolCall.id, requestStringParameters, requestArrayParameters);
-                            var toolResult = tool.ExecuteTool(currentContext, toolRequestParams);
-                            _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionSucceeded(toolResult));
-                        }
-                        else
-                        {
-                            _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionFailed(new OpenAIToolMessage($"ERROR: Arguments to '{tool.Name}' tool were invalid or missing", toolCall.id)));
-                        }
+                        var toolRequestParams = new ToolRequestParameters(tool.Name, toolCall.id, requestStringParameters, requestArrayParameters);
+                        _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionRequested(toolRequestParams));
+
+                        //bool toolCallArgumentsValid = tool.RequestArgumentsValid(requestStringParameters, requestArrayParameters);
+
+                        //if (toolCallArgumentsValid)
+                        //{
+                        //    var toolRequestParams = new ToolRequestParameters(tool.Name,toolCall.id, requestStringParameters, requestArrayParameters);
+                        //    var toolResult = tool.ExecuteTool(currentContext, toolRequestParams);
+                        //    _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionSucceeded(toolResult));
+                        //}
+                        //else
+                        //{
+                        //    _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionFailed(new OpenAIToolMessage($"ERROR: Arguments to '{tool.Name}' tool were invalid or missing", toolCall.id)));
+                        //}
                     }
                 }
             }
@@ -74,6 +78,25 @@ namespace ChatSessionFlow
             {
                 return ChatSessionActions.ToolsExecutionEmpty();
             }
+        }
+
+        public FlowActionBase OnToolExecutionRequested_ExecuteTools_ResolveToolResult(FlowAction<ToolRequestParameters> toolRequestAction)
+        {
+            var currentContext = _flowStateData.CurrentState(ChatSessionSelectors.GetChatContext);
+
+            var toolReqParams = toolRequestAction.Parameters;
+            var tool = _definedTools.FirstOrDefault(t => t.Name == toolReqParams.ToolName);
+            if (tool != null)
+            {
+                bool toolCallArgumentsValid = tool.RequestArgumentsValid(toolReqParams.StringParameters, toolReqParams.ArrayParameters);
+
+                if (toolCallArgumentsValid)
+                {
+                    var toolResult = tool.ExecuteTool(currentContext, toolReqParams);
+                    return ChatSessionActions.ToolExecutionSucceeded(toolResult);
+                }
+            }
+            return ChatSessionActions.ToolExecutionFailed(new OpenAIToolMessage($"ERROR: Arguments to '{toolReqParams.ToolName}' tool were invalid or missing", toolReqParams.ToolRequestId));
         }
 
         public FlowActionBase OnToolExecutionsCompleted_ResolveChatRequested(FlowAction<List<OpenAIToolCall>> chatResponseAction)
