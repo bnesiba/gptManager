@@ -25,7 +25,6 @@ namespace ChatSessionFlow
         {
            this.effect(OnInitialMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.Init()),
            this.effect(OnChatRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ChatRequested()),
-            //this.effect(OnResponseValidationRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ResponseValidatonRequested())
         };
 
         //Effect Methods
@@ -54,24 +53,5 @@ namespace ChatSessionFlow
             var response = _chatGPTRepo.Chat(chatRequest.Parameters);
             return ChatSessionActions.ChatResponseReceived(response);
         }
-
-        //public FlowActionBase OnResponseValidationRequested_CallChatGPT_ResolveResponseReceived(FlowActionBase flowAction)
-        //{
-        //    var currentContext = _flowStateData.CurrentState(ChatSessionSelectors.GetChatContext);
-        //    List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
-        //    newContext.Add(new OpenAIUserMessage("Agressively audit your response. Did you successfully, fully, completely resolve the original prompt?\n " +
-        //        "IF YOU FAILED - PLEASE TRY AGAIN AND SKIP TOOL CALLS THAT DIDN'T WORK"));
-        //    //TODO: get session context eventually to populate newcontext & potentially model
-        //    //newContext.Add(new OpenAIUserMessage(initialMsg.Parameters.message));
-        //    OpenAIChatRequest chatRequest = new OpenAIChatRequest
-        //    {
-        //        model = "gpt-3.5-turbo",
-        //        //model = "gpt-4o",
-        //        messages = newContext,
-        //        temperature = 1,
-        //        tools = _toolManager.GetToolDefinitions()
-        //    };
-        //    return ChatSessionActions.ChatRequested(chatRequest);
-        //}
     }
 }
