@@ -28,18 +28,11 @@ builder.Services.AddSingleton<IToolDefinition, NewsSearch>();
 builder.Services.AddSingleton<IToolDefinition, SendEmail>();
 builder.Services.AddSingleton<IToolDefinition, ImageEvaluate>();
 
-
-//project specific redux stuff
-builder.Services.AddScoped<IFlowStateEffects, ChatSessionEffects>();
-builder.Services.AddScoped<IFlowStateEffects, ToolUseEffects>();
-builder.Services.AddScoped<IFlowStateReducer<ChatSessionEntity>, ChatSessionReducer>();
-
-
-//general redux stuff
-builder.Services.AddScoped<FlowActionHandler>();
-builder.Services.AddScoped<FlowState>();
-builder.Services.AddScoped<FlowStateData<ChatSessionEntity>>();
-builder.Services.AddScoped<IFlowStateDataCore>(sp => sp.GetService<FlowStateData<ChatSessionEntity>>());
+//redux flow stuff
+builder.Services.UseFlowState();
+builder.Services.UseEffects<ChatSessionEffects>();
+builder.Services.UseEffects<ToolUseEffects>();
+builder.Services.UseReducer<ChatSessionReducer, ChatSessionEntity>();
 
 
 var app = builder.Build();
