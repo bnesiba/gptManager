@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 
 //TODO: make a separate set of AI-system agnostic models and converters 
@@ -37,6 +38,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public int? temperature { get; set; }
 
         public OpenAITool[]? tools { get; set; }
+        public OpenAITool? tool_choice { get; set; }
 
         public int? max_tokens { get; set; }
 
@@ -47,6 +49,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
                 model = this.model,
                 temperature = this.temperature,
                 tools = this.tools,
+                tool_choice  = this.tool_choice,
                 messages = new List<OpenAIChatMessage>(),
                 max_tokens = this.max_tokens
             };
@@ -101,7 +104,7 @@ namespace OpenAIConnector.ChatGPTRepository.models
 
         public string? name { get; set; }
 
-        public OpenAISystemMessage()
+        public OpenAISystemMessage(string s): this("system", s)
         {
         }
 
@@ -300,7 +303,22 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public int total_tokens { get; set; }
     }
 
+    public static class OpenAIModelExtensions
+    {
+        public static bool HasToolCalls(this OpenAIChatResponse response, out List<OpenAIToolCall> toolCalls)
+        {
+            toolCalls = new List<OpenAIToolCall>();
+            if (response == null) return false;
 
+            if (response != null && response.choices.Any())
+            {
+                toolCalls =  response.choices[0].message.tool_calls ?? new List<OpenAIToolCall>();
+            }
+
+            return toolCalls.Any();
+        }
+
+    }
 }
 
 

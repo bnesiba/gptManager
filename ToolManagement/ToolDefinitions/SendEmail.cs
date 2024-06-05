@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository.models;
+using ToolManagement.ToolDefinitions.Models;
 
 namespace ToolManagement.ToolDefinitions
 {
@@ -19,7 +20,7 @@ namespace ToolManagement.ToolDefinitions
         }
         public string Name => "SendEmail";
 
-        public string Description => "Send an email from the preconfigured address by defining the ToAddress, Subject and Body of the email";
+        public string Description => "Send an email from the preconfigured address by defining the ToAddress, Subject and Body of the email.";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
@@ -47,30 +48,19 @@ namespace ToolManagement.ToolDefinitions
 
         };
 
-        //TODO: abstract more of this out? everything except the actual call and the response object is shared across tools
-        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
-            Dictionary<string, string>? requestParameters = this.GetToolRequestStringParameters(toolCall);
-            if (requestParameters != null)
+
+            _emailConnector.SendEmail(toolParams.GetStringParam("ToAddress"), toolParams.GetStringParam("Subject"), toolParams.GetStringParam("Content"));
+            var outputObject = new
             {
-                bool toolCallArgumentsValid = this.RequestArgumentsValid(requestParameters);
+                sendEmailSuccess = true,
+                toAddress = toolParams.GetStringParam("ToAddress"),
+                subject = toolParams.GetStringParam("Subject"),
+                body = toolParams.GetStringParam("Content").Substring(0, 50)+"..."
 
-                if (toolCallArgumentsValid)
-                {
-                    _emailConnector.SendEmail(requestParameters["ToAddress"], requestParameters["Subject"], requestParameters["Content"]);
-                    var outputObject = new
-                    {
-                        sendEmailSuccess = true,
-                        toAddress = requestParameters["ToAddress"],
-                        subject = requestParameters["Subject"]
-
-                    };
-                    return new OpenAIToolMessage($"sendEmailResponse: " + JsonSerializer.Serialize(outputObject), toolCall.id);
-                }
-                return new OpenAIToolMessage("ERROR: Arguments to 'SendEmail' tool were invalid or missing", toolCall.id);
-            }
-
-            return new OpenAIToolMessage("ERROR: No Arguments were provided", toolCall.id);
+            };
+            return new OpenAIToolMessage($"sendEmailResponse: " + JsonSerializer.Serialize(outputObject), toolParams.ToolRequestId);
         }
     }
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenAIConnector.ChatGPTRepository.models;
+using ToolManagement.ToolDefinitions.Models;
 
 namespace ToolManagement.ToolDefinitions
 {
+    //not in use
     public class UserQuery: IToolDefinition
     {
         public string Name => "UserPersonalInfo";
@@ -25,10 +27,9 @@ namespace ToolManagement.ToolDefinitions
 
         };
 
-        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, OpenAIToolCall toolCall)
+        public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolRequestParameters)
         {
-            return new OpenAIToolMessage("stuff", toolCall.id);
+            return new OpenAIToolMessage("stuff", toolRequestParameters.ToolRequestId);
         }
-
     }
 }

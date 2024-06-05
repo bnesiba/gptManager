@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
-    <ProjectReference Include="..\SessionStateFlow\SessionStateFlow.csproj" />
   </ItemGroup>
 
 </Project>
