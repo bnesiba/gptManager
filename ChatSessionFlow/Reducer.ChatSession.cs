@@ -6,71 +6,43 @@ using ChatSessionFlow.models;
 
 namespace ChatSessionFlow
 {
-    //TODO: update to be more like effects?
     //Reducer
     public class ChatSessionReducer : IFlowStateReducer<ChatSessionEntity>
     {
         public ChatSessionEntity InitialState => new ChatSessionEntity();
 
-        public ChatSessionEntity Reduce(FlowActionBase action, ChatSessionEntity currentState)
+        public List<IFlowReductionBase<ChatSessionEntity>> Reductions => new List<IFlowReductionBase<ChatSessionEntity>>
         {
-            ChatSessionEntity newState = currentState;
-            //manage context
-            CurrentContext_WhenInitialMsgReceived_AddToContext(action, newState, out newState);
-            CurrentContext_WhenResponseMsgReceived_AddToContext(action, newState, out newState);
-            CurrentContext_ToolExecutionCompleted_AddToContext(action, newState, out newState);
-            //manage count
-            CurrentContext_ChatRequestReceived_IncrementCount(action, newState, out newState);
-            CurrentContext_ChatResponseReceived_IncrementCount(action, newState, out newState);
+            this.reduce(CurrentContext_WhenInitialMsgReceived_AddToContext,ChatSessionActions.Init()),
+            this.reduce(CurrentContext_WhenChatResponseReceived_AddToContext, ChatSessionActions.ChatResponseReceived()),
+            this.reduce(CurrentContext_ToolExecutionCompleted_AddToContext, ChatSessionActions.ToolExecutionSucceeded()),
+            this.reduce(CurrentContext_ChatRequestReceived_IncrementCount, ChatSessionActions.ChatRequested())
+        };
 
-            return newState;
+
+        //Reducer Methods
+        public ChatSessionEntity CurrentContext_WhenInitialMsgReceived_AddToContext(FlowAction<InitialMessage> initAction,ChatSessionEntity currentState)
+        {
+            currentState.CurrentContext.Add(new OpenAIUserMessage(initAction.Parameters.message));
+            return currentState;
         }
 
-
-        public void CurrentContext_WhenInitialMsgReceived_AddToContext(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
+        public ChatSessionEntity CurrentContext_WhenChatResponseReceived_AddToContext(FlowAction<OpenAIChatResponse> responseAction,ChatSessionEntity currentState)
         {
-            newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.Init(), out var initAction))
-            {
-                newState.CurrentContext.Add(new OpenAIUserMessage(initAction.Parameters.message));
-            }
+            currentState.CurrentContext.Add(responseAction.Parameters.choices[0].message);
+            return currentState;
         }
 
-        public void CurrentContext_WhenResponseMsgReceived_AddToContext(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
+        public ChatSessionEntity CurrentContext_ToolExecutionCompleted_AddToContext(FlowAction<OpenAIToolMessage> toolExecutedAction, ChatSessionEntity currentState)
         {
-            newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.ChatResponseReceived(), out var responseMessage))
-            {
-                newState.CurrentContext.Add(responseMessage.Parameters.choices[0].message);
-            }
-        }
-        public void CurrentContext_ToolExecutionCompleted_AddToContext(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
-        {
-            newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.ToolExecutionSucceeded(), out var toolAction))
-            {
-                newState.CurrentContext.Add(toolAction.Parameters);
-            }
+            currentState.CurrentContext.Add(toolExecutedAction.Parameters);
+            return currentState;
         }
 
-        public void CurrentContext_ChatRequestReceived_IncrementCount(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
+        public ChatSessionEntity CurrentContext_ChatRequestReceived_IncrementCount(FlowAction<OpenAIChatRequest> chatRequestAction, ChatSessionEntity currentState)
         {
-            newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.ChatRequested(), out var _))
-            {
-
-                newState.NumberOfChats++;
-            }
-        }
-
-        public void CurrentContext_ChatResponseReceived_IncrementCount(FlowActionBase action, ChatSessionEntity currentState, out ChatSessionEntity newState)
-        {
-            newState = currentState;
-            if (FlowState.IsResolvingAction(action, ChatSessionActions.ChatResponseReceived(), out var _))
-            {
-
-                newState.NumberOfChats++;
-            }
+            currentState.NumberOfChats++;
+            return currentState;
         }
 
     }

@@ -23,12 +23,12 @@ namespace ChatSessionFlow
 
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
-            new FlowEffect<InitialMessage>(OnInitialMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.Init()),
-            new FlowEffect<OpenAIChatRequest>(OnChatRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ChatRequested()),
-            //new FlowEffect(OnResponseValidationRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ResponseValidatonRequested())
+           this.effect(OnInitialMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.Init()),
+           this.effect(OnChatRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ChatRequested()),
+            //this.effect(OnResponseValidationRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ResponseValidatonRequested())
         };
 
-        //effect methods
+        //Effect Methods
         public FlowActionBase OnInitialMsg_CreateChatRequest_ResolveChatRequested(FlowAction<InitialMessage> initialMsg)
         {
 

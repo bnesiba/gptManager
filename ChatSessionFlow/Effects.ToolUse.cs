@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using ToolManagement;
 using ToolManagement.ToolDefinitions.Models;
 
+
 namespace ChatSessionFlow
 {
     public class ToolUseEffects : IFlowStateEffects
@@ -31,12 +32,12 @@ namespace ChatSessionFlow
 
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
-            new FlowEffect<OpenAIChatResponse>(OnChatResponseReceived_IfToolCallsExist_ResolveToolExecutionRequested, ChatSessionActions.ChatResponseReceived()),
-            new FlowEffect<ToolRequestParameters>(OnToolExecutionRequested_ExecuteTools_ResolveToolResult,ChatSessionActions.ToolExecutionRequested()),
-            new FlowEffect<List<OpenAIToolCall>>(OnToolExecutionsCompleted_ResolveChatRequested, ChatSessionActions.ToolExecutionsCompleted())
+            this.effect(OnChatResponseReceived_IfToolCallsExist_ResolveToolExecutionRequested, ChatSessionActions.ChatResponseReceived()),
+            this.effect(OnToolExecutionRequested_ExecuteTools_ResolveToolResult,ChatSessionActions.ToolExecutionRequested()),
+            this.effect(OnToolExecutionsCompleted_ResolveChatRequested, ChatSessionActions.ToolExecutionsCompleted())
         };
 
-        //effect methods
+        //Effect Methods
         public FlowActionBase OnChatResponseReceived_IfToolCallsExist_ResolveToolExecutionRequested(FlowAction<OpenAIChatResponse> chatResponseAction)
         {
             List<OpenAIToolMessage> toolResults = new List<OpenAIToolMessage>();
@@ -54,19 +55,6 @@ namespace ChatSessionFlow
 
                         var toolRequestParams = new ToolRequestParameters(tool.Name, toolCall.id, requestStringParameters, requestArrayParameters);
                         _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionRequested(toolRequestParams));
-
-                        //bool toolCallArgumentsValid = tool.RequestArgumentsValid(requestStringParameters, requestArrayParameters);
-
-                        //if (toolCallArgumentsValid)
-                        //{
-                        //    var toolRequestParams = new ToolRequestParameters(tool.Name,toolCall.id, requestStringParameters, requestArrayParameters);
-                        //    var toolResult = tool.ExecuteTool(currentContext, toolRequestParams);
-                        //    _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionSucceeded(toolResult));
-                        //}
-                        //else
-                        //{
-                        //    _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionFailed(new OpenAIToolMessage($"ERROR: Arguments to '{tool.Name}' tool were invalid or missing", toolCall.id)));
-                        //}
                     }
                 }
             }
@@ -102,7 +90,7 @@ namespace ChatSessionFlow
         public FlowActionBase OnToolExecutionsCompleted_ResolveChatRequested(FlowAction<List<OpenAIToolCall>> chatResponseAction)
         {
             var currentContext = _flowStateData.CurrentState(ChatSessionSelectors.GetChatContext);
-            //TODO: get session context eventually to populate newcontext & potentially model
+            
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
                 model = "gpt-3.5-turbo", //TODO: make these a const or something - magic strings bad.

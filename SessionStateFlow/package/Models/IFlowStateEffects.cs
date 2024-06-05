@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OpenAIConnector.ChatGPTRepository.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,16 @@ namespace SessionStateFlow.package.Models
 
     public class FlowEffect : IFlowEffectBase
     {
-        public List<FlowAction> TriggeringActions { get; init; }
+        public FlowAction[] TriggeringActions { get; init; }
         public Func<FlowAction, FlowActionBase> SideEffect { get; init;  }
-        public FlowEffect(Func<FlowActionBase, FlowActionBase> sideEffect, params FlowAction[] triggeringActions)
+        public FlowEffect(Func<FlowAction, FlowActionBase> sideEffect, params FlowAction[] triggeringActions)
         {
-            TriggeringActions = triggeringActions.ToList();
+            TriggeringActions = triggeringActions;
             SideEffect = sideEffect;
         }
-        public List<FlowActionBase> GetTriggeringActions()
+        public FlowActionBase[] GetTriggeringActions()
         {
-            return TriggeringActions.ToList<FlowActionBase>();
+            return TriggeringActions;
         }
 
         public Func<FlowActionBase, FlowActionBase> GetSideEffect()
@@ -47,18 +48,18 @@ namespace SessionStateFlow.package.Models
 
     public class FlowEffect<T> : IFlowEffectBase
     {
-        public List<FlowAction<T>> TriggeringActions { get; init; }
+        public FlowAction<T>[] TriggeringActions { get; init; }
         public Func<FlowAction<T>, FlowActionBase> SideEffect { get; init; }
 
         public FlowEffect(Func<FlowAction<T>, FlowActionBase> sideEffect, params FlowAction<T>[] triggeringActions)
         {
-            TriggeringActions = triggeringActions.ToList();
+            TriggeringActions = triggeringActions;
             SideEffect = sideEffect;
         }
 
-        public List<FlowActionBase> GetTriggeringActions()
+        public FlowActionBase[] GetTriggeringActions()
         {
-            return TriggeringActions.ToList<FlowActionBase>();
+            return TriggeringActions;
         }
 
         public Func<FlowActionBase, FlowActionBase> GetSideEffect()
@@ -82,17 +83,22 @@ namespace SessionStateFlow.package.Models
     public interface IFlowEffectBase
     {
         
-        public List<FlowActionBase> GetTriggeringActions();
+        public FlowActionBase[] GetTriggeringActions();
 
         public Func<FlowActionBase, FlowActionBase> GetSideEffect();
     }
 
-    public static class IFlowEffectBaseExtensions
+    public static class FlowEffectUtil
     {
 
-        public static FlowActionBase GetBaseActionFromDerived(FlowActionBase action)
+        public static IFlowEffectBase effect<T>(this IFlowStateEffects effects, Func<FlowAction<T>, FlowActionBase> sideEffect, params FlowAction<T>[] triggeringActions)
         {
-            return action;
+            return new FlowEffect<T>(sideEffect, triggeringActions);
+        }
+
+        public static IFlowEffectBase effect(this IFlowStateEffects effects, Func<FlowAction, FlowActionBase> sideEffect, params FlowAction[] triggeringActions)
+        {
+            return new FlowEffect(sideEffect, triggeringActions);
         }
 
     }

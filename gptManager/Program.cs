@@ -39,7 +39,7 @@ builder.Services.AddScoped<IFlowStateReducer<ChatSessionEntity>, ChatSessionRedu
 builder.Services.AddScoped<FlowActionHandler>();
 builder.Services.AddScoped<FlowState>();
 builder.Services.AddScoped<FlowStateData<ChatSessionEntity>>();
-builder.Services.AddScoped<IFlowStateDataBase>(sp => sp.GetService<FlowStateData<ChatSessionEntity>>());
+builder.Services.AddScoped<IFlowStateDataCore>(sp => sp.GetService<FlowStateData<ChatSessionEntity>>());
 
 
 var app = builder.Build();
