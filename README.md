@@ -1,4 +1,4 @@
-Mostly an playground project for me to mess around with chatGPT and tool integrations.   
+Mostly a playground project for me to mess around with chatGPT and tool integrations.   
 
 
 
