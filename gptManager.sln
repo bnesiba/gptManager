@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolManagement", "ToolManag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloudConnector", "GoogleCloudConnector\GoogleCloudConnector.csproj", "{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionStateFlow", "SessionStateFlow\SessionStateFlow.csproj", "{F4DDC3D6-A277-45D6-84E9-3C326E671501}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSessionFlow", "ChatSessionFlow\ChatSessionFlow.csproj", "{73AF270C-42B1-4EB3-8242-7217A690262D}"
 EndProject
 Global
@@ -37,10 +35,6 @@ Global
 		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4DDC3D6-A277-45D6-84E9-3C326E671501}.Release|Any CPU.Build.0 = Release|Any CPU
 		{73AF270C-42B1-4EB3-8242-7217A690262D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{73AF270C-42B1-4EB3-8242-7217A690262D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73AF270C-42B1-4EB3-8242-7217A690262D}.Release|Any CPU.ActiveCfg = Release|Any CPU
