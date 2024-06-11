@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SessionStateFlow\SessionStateFlow.csproj" />
+    <PackageReference Include="bcn.ActionFlow" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
   </ItemGroup>
 

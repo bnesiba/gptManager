@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="bcn.ActionFlow" Version="1.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -19,7 +20,6 @@
     <ProjectReference Include="..\ChatSessionFlow\ChatSessionFlow.csproj" />
     <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
-    <ProjectReference Include="..\SessionStateFlow\SessionStateFlow.csproj" />
     <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
   </ItemGroup>
 
