@@ -31,5 +31,16 @@ namespace ToolManagement
             return tools.Where(t => defaultChatTools.Contains(t.Name)).Select(t => t.GetToolRequestDefinition()).ToArray();
         }
 
+        public void AddDefaultTool(IToolDefinition tool)
+        {
+            tools.Add(tool);
+            defaultChatTools.Add(tool.Name);
+        }
+
+        public void RemoveDefaultTool(string toolName)
+        {
+            defaultChatTools.Remove(toolName);
+            tools.RemoveAll(t => t.Name == toolName);
+        }
     }
 }
