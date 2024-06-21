@@ -14,11 +14,14 @@ namespace ToolManagement.ToolDefinitions
     {
         private readonly GmailConnector _emailConnector;
 
+        //static accessor for Tool Management
+        public static string ToolName => "SendEmail";
+
         public SendEmail(GmailConnector emailConnector)
         {
             _emailConnector = emailConnector;
         }
-        public string Name => "SendEmail";
+        public string Name => ToolName;
 
         public string Description => "Send an email from the preconfigured address by defining the ToAddress, Subject and Body of the email.";
 

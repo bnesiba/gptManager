@@ -12,7 +12,10 @@ namespace ToolManagement.ToolDefinitions
 {
     public class NewsSearch : IToolDefinition
     {
-        public string Name => "NewsSearch";
+        //static accessor for Tool Management
+        public static string ToolName => "NewsSearch";
+
+        public string Name => ToolName;
 
         public string Description => "Search NEWS SITES for NEWS articles - ONLY USE FOR NEWS";
 

@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ChatManagement\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ChatSessionFlow\ChatSessionFlow.csproj" />
     <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />

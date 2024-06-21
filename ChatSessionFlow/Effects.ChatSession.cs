@@ -42,7 +42,7 @@ namespace ChatSessionFlow
                 //model = "gpt-4o",
                 messages = newContext,
                 temperature = 1,
-                tools = _toolManager.GetToolDefinitions()
+                tools = _toolManager.GetDefaultToolDefinitions()
             };
             return ChatSessionActions.ChatRequested(chatRequest);
         }

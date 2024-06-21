@@ -15,7 +15,10 @@ namespace ToolManagement.ToolDefinitions
     {
         private ChatGPTRepo _chatGPTRepo;
 
-        public string Name => "KnownInformationSearch";
+        //static accessor for Too
+        public static string ToolName => "KnownInformationSearch";
+
+        public string Name => ToolName;
 
         public string Description => "Ask ChatGPT for information - This can only return information that ChatGPT is aware of.";
 
@@ -45,18 +48,7 @@ namespace ToolManagement.ToolDefinitions
 
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
-            //process query here
-            List<OpenAIChatMessage> newChatContext = new List<OpenAIChatMessage>();
-            newChatContext.Add(new OpenAIUserMessage(toolParams.GetStringParam("query")));
-
-            OpenAIChatRequest openAIChatRequest = new OpenAIChatRequest
-            {
-                model = "gpt-3.5-turbo",//TODO: make these a const or something - magic strings bad.
-                                        //model = "gpt-4o",
-                messages = newChatContext,
-                temperature = 1,
-                max_tokens = GetMaxTokens(toolParams.GetStringParam("responseLength"))
-            };
+            var openAIChatRequest = BuildKnownInformationRequest(chatContext, toolParams);
             object outputObject;
             var knowledgeResponse = _chatGPTRepo.Chat(openAIChatRequest);
             if (knowledgeResponse != null)
@@ -77,6 +69,21 @@ namespace ToolManagement.ToolDefinitions
             }
             return new OpenAIToolMessage($"KnownInformationSearchResponse: " + JsonConvert.SerializeObject(outputObject), toolParams.ToolRequestId);
 
+        }
+
+        private OpenAIChatRequest BuildKnownInformationRequest(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
+        {
+            List<OpenAIChatMessage> newChatContext = [new OpenAIUserMessage(toolParams.GetStringParam("query"))];
+
+            OpenAIChatRequest openAIChatRequest = new OpenAIChatRequest
+            {
+                model = "gpt-3.5-turbo",//TODO: make these a const or something - magic strings bad.
+                                        //model = "gpt-4o",
+                messages = newChatContext,
+                temperature = 1,
+                max_tokens = GetMaxTokens(toolParams.GetStringParam("responseLength"))
+            };
+            return openAIChatRequest;
         }
 
         private int GetMaxTokens(string responseLength)

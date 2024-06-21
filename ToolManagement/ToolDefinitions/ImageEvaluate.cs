@@ -16,11 +16,14 @@ namespace ToolManagement.ToolDefinitions
     {
         private readonly ChatGPTRepo _chatGPTRepo;
 
+        //static accessor for Tool Management
+        public static string ToolName => "ImageEvaluate";
+
         public ImageEvaluate(ChatGPTRepo chatGPTRepo)
         {
             _chatGPTRepo = chatGPTRepo;
         }
-        public string Name => "ImageEvaluate";
+        public string Name => ToolName;
 
         public string Description => "Query an advanced image AI for info about images. YOU MUST PROVIDE: 'InputPrompt' and 'ImageArray' parameters. USE THIS ON IMAGES and image urls";
 
