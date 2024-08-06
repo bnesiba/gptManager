@@ -87,8 +87,7 @@ namespace ChatSessionFlow
             
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
-                model = "gpt-3.5-turbo", //TODO: make these a const or something - magic strings bad.
-                //model = "gpt-4o",
+                model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
                 messages = currentContext,
                 temperature = 1,
                 tools = _toolManager.GetDefaultToolDefinitions()

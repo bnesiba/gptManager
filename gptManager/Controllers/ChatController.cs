@@ -50,7 +50,7 @@ namespace gptManager.Controllers
         {
             try
             {
-                _flowState.ResolveAction(ChatSessionActions.Init(message));
+                _flowState.ResolveAction(ChatSessionActions.InitAssistantChat(message));
                 //_flowState.ResolveAction(ChatSessionActions.ResponseValidatonRequested());
                 var lastMsg = _chatStateData.CurrentState(ChatSessionSelectors.GetLatestMessage);
 

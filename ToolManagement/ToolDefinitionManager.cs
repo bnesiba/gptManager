@@ -20,6 +20,14 @@ namespace ToolManagement
             NewsSearch.ToolName
         };
 
+        private HashSet<string> storyProcTools = new HashSet<string>
+        {
+            //KnownInformationSearch.ToolName,
+            //ImageEvaluate.ToolName,
+            //SendEmail.ToolName,
+            //NewsSearch.ToolName
+        };
+
 
         public ToolDefinitionManager(IEnumerable<IToolDefinition> definedTools)
         {
@@ -41,6 +49,16 @@ namespace ToolManagement
         {
             defaultChatTools.Remove(toolName);
             tools.RemoveAll(t => t.Name == toolName);
+        }
+
+        public void ClearDefaultTools()
+        {
+            defaultChatTools.Clear();
+        }
+
+        public void UseStoryExampleTools()
+        {
+            defaultChatTools = storyProcTools;
         }
     }
 }
