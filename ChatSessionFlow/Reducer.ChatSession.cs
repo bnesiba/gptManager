@@ -29,7 +29,10 @@ namespace ChatSessionFlow
 
         public ChatSessionEntity CurrentContext_OnChatResponseReceived_AddToContext(FlowAction<OpenAIChatResponse> responseAction,ChatSessionEntity currentState)
         {
-            currentState.CurrentContext.Add(responseAction.Parameters.choices[0].message);
+            if (responseAction.Parameters?.choices != null && responseAction.Parameters.choices.Count > 0)
+            {
+                currentState.CurrentContext.Add(responseAction.Parameters.choices[0].message);
+            }
             return currentState;
         }
 

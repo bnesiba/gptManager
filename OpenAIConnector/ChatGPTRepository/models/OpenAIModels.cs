@@ -85,6 +85,8 @@ namespace OpenAIConnector.ChatGPTRepository.models
         public string description { get; set; }
         public string name { get; set; }
         public object parameters { get; set; }
+
+        public bool strict { get; set; }
     }
 
     public interface OpenAIChatMessage

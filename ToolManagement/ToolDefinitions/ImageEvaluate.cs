@@ -53,7 +53,7 @@ namespace ToolManagement.ToolDefinitions
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
 
-            var imageResponse = _chatGPTRepo.Chat(BuildVisionRequest(chatContext, toolParams.GetStringParam("InputPrompt"), toolParams.GetArrayParam("ImageArray")));
+            var imageResponse = _chatGPTRepo.Chat(BuildVisionRequest(chatContext, toolParams.GetStringParam("InputPrompt"), toolParams.GetStringArrayParam("ImageArray")));
             if (imageResponse != null)
             {
                 var outputObject = new

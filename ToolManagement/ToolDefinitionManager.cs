@@ -10,9 +10,8 @@ namespace ToolManagement
     {
         private List<IToolDefinition> tools = new List<IToolDefinition>();
 
-        //TODO: define other tool sets?
-        //base tools for the chat session. - is static strings the way to go here? no contract enforcement.
-        private HashSet<string> defaultChatTools = new HashSet<string>
+
+        private HashSet<string> assistantChatTools = new HashSet<string>
         {
             KnownInformationSearch.ToolName,
             ImageEvaluate.ToolName,
@@ -22,16 +21,17 @@ namespace ToolManagement
 
         private HashSet<string> storyProcTools = new HashSet<string>
         {
-            //KnownInformationSearch.ToolName,
-            //ImageEvaluate.ToolName,
-            //SendEmail.ToolName,
-            //NewsSearch.ToolName
+            SetCharacterList.ToolName
         };
+
+
+        private HashSet<string> defaultChatTools;
 
 
         public ToolDefinitionManager(IEnumerable<IToolDefinition> definedTools)
         {
             tools = definedTools.ToList();
+            defaultChatTools = assistantChatTools;//default to assistant tools for now
         }
 
         public OpenAITool[] GetDefaultToolDefinitions()
@@ -59,6 +59,11 @@ namespace ToolManagement
         public void UseStoryExampleTools()
         {
             defaultChatTools = storyProcTools;
+        }
+
+        public void UseAssistantTools()
+        {
+            defaultChatTools = assistantChatTools;
         }
     }
 }

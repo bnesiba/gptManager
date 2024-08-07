@@ -11,27 +11,43 @@ namespace ToolManagement.ToolDefinitions.Models
         public string ToolName { get; set; }
         public string ToolRequestId { get; set; }
         public Dictionary<string,string>? StringParameters { get; set; }
-        public Dictionary<string, List<string>>? ArrayParameters { get; set; }
 
-        public ToolRequestParameters(string name, string id, Dictionary<string,string>? strParams, Dictionary<string, List<string>>? arrayParams)
+        public Dictionary<string, object>? ObjectParameters { get; set; }
+        public Dictionary<string, List<string>>? StringArrayParameters { get; set; }
+        public Dictionary<string, List<object>>? ObjectArrayParameters { get; set; }
+
+        public ToolRequestParameters(string name, string id, Dictionary<string,string>? strParams,Dictionary<string, object>? objectParameters,  Dictionary<string, List<string>>? stringArrayParams, Dictionary<string, List<object>>? objectArrayParameters)
         {
             ToolName = name;
             ToolRequestId = id;
             StringParameters = strParams;
-            ArrayParameters = arrayParams;
+            ObjectParameters = objectParameters;
+            StringArrayParameters = stringArrayParams;
+            ObjectArrayParameters = objectArrayParameters;
         }
 
-        public string GetStringParam(string key)
+        public string? GetStringParam(string key)
         {
             if (this.StringParameters == null) return null;
             return this.StringParameters.ContainsKey(key) ? this.StringParameters[key] : null;
         }
 
-        public List<string> GetArrayParam(string key)
+        public T? GetObjectParam<T>(string key)
         {
-            if (this.ArrayParameters == null) return null;
-            return this.ArrayParameters.ContainsKey(key) ? this.ArrayParameters[key] : null;
+            if (this.ObjectParameters == null) return default(T);
+            return this.ObjectParameters.ContainsKey(key) ? (T)this.ObjectParameters[key]: default(T);
         }
 
+        public List<string>? GetStringArrayParam(string key)
+        {
+            if (this.StringArrayParameters == null) return null;
+            return this.StringArrayParameters.ContainsKey(key) ? this.StringArrayParameters[key] : null;
+        }
+
+        public List<T>? GetObjectArrayParam<T>(string key)
+        {
+            if (this.ObjectArrayParameters == null) return null;
+            return this.ObjectArrayParameters.ContainsKey(key) ? this.ObjectArrayParameters[key] as List<T> : null;
+        }
     }
 }

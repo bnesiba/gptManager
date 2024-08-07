@@ -26,11 +26,13 @@ builder.Services.AddSingleton<IToolDefinition, NewsSearch>();
 //builder.Services.AddSingleton<IToolDefinition, FindEmails>();
 builder.Services.AddSingleton<IToolDefinition, SendEmail>();
 builder.Services.AddSingleton<IToolDefinition, ImageEvaluate>();
+builder.Services.AddSingleton<IToolDefinition, SetCharacterList>();
 
 //redux flow stuff
 builder.Services.UseFlowState();
 builder.Services.UseEffects<ChatSessionEffects>();
 builder.Services.UseEffects<ToolUseEffects>();
+builder.Services.UseEffects<StoryEvalEffects>();
 builder.Services.UseReducer<ChatSessionReducer, ChatSessionEntity>();
 
 

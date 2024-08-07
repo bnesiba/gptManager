@@ -17,5 +17,10 @@ namespace ChatSessionFlow
         public static FlowAction<List<OpenAIToolCall>> ToolsExecutionEmpty() => new FlowAction<List<OpenAIToolCall>> { Name = "ToolExecutionEmpty", Parameters = new List<OpenAIToolCall>() };
         //public static FlowAction ResponseValidatonRequested() => new FlowAction { Name = "ResponseValidationRequested" };
 
+
+        //TODO: move to storyEvalActions
+        public static FlowAction<InitialMessage> InitStoryEval(string story = "", Guid? chatSessionId = null) => new FlowAction<InitialMessage> { Name = "InitialStoryMessage", Parameters = new InitialMessage { message = story, sessionId = chatSessionId ?? Guid.NewGuid() } };
+
+
     }
 }
