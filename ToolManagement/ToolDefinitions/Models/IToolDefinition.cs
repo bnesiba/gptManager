@@ -25,7 +25,7 @@ namespace ToolManagement.ToolDefinitions.Models
                 {
                     description = arrProp.description,
                     type = arrProp.type,
-                    items = GetInputParametersObject(arrProp.items).Value as ToolParameter,
+                    items = GetInputParametersObject(arrProp.items).Value,
                 });
             }
             if(toolProperty is EnumToolProperty)

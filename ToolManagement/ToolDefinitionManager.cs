@@ -1,6 +1,7 @@
 ﻿using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagement.ToolDefinitions;
 using ToolManagement.ToolDefinitions.Models;
+using ToolManagement.ToolDefinitions.StoryEvalTools;
 
 namespace ToolManagement
 {
@@ -21,7 +22,8 @@ namespace ToolManagement
 
         private HashSet<string> storyProcTools = new HashSet<string>
         {
-            SetCharacterList.ToolName
+            SetCharacterList.ToolName,
+            SetStoryTags.ToolName
         };
 
 

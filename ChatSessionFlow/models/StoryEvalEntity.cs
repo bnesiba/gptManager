@@ -9,7 +9,7 @@ namespace ChatSessionFlow.models
 
         public string ShortSummary { get; set; }
 
-        public List<string> StoryTags { get; set; }
+        public HashSet<string> StoryTags { get; set; }
 
         public List<string> evalComments { get; set; }
 
@@ -18,7 +18,7 @@ namespace ChatSessionFlow.models
         {
             StoryCharacters = new List<StoryCharacter>();
             ShortSummary = "";
-            StoryTags = new List<string>();
+            StoryTags = new HashSet<string>();
             evalComments = new List<string>();
         }
 
@@ -27,14 +27,14 @@ namespace ChatSessionFlow.models
             var copy = new StoryEvalEntity();
             copy.StoryCharacters = StoryCharacters.ToList();
             copy.ShortSummary = ShortSummary;
-            copy.StoryTags = StoryTags.ToList();
+            copy.StoryTags = StoryTags.ToHashSet();
             copy.evalComments = evalComments;
             return copy;
         }
 
         public override string ToString()
         {
-            return $"";
+            return $"CharacterCount: {StoryCharacters.Count} Tags: [{string.Join(',',StoryTags)}]";
         }
     }
 
@@ -44,5 +44,5 @@ namespace ChatSessionFlow.models
         public string CharacterDescription { get; set; }
         public string CharacterRole { get; set; }
     }
-    }
+
 }

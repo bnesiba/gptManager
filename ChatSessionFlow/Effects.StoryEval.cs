@@ -43,7 +43,7 @@ namespace ChatSessionFlow
                 messages = newContext,
                 temperature = 1,
                 tools = _toolManager.GetDefaultToolDefinitions(),
-                tool_choice = _toolManager.GetDefaultToolDefinitions().First()
+                //tool_choice = _toolManager.GetDefaultToolDefinitions().First() //If this is commented out, both tools still seem to get used correctly.
             };
             return ChatSessionActions.ChatRequested(chatRequest);
         }

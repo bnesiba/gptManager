@@ -6,6 +6,7 @@ using OpenAIConnector.ChatGPTRepository;
 using ToolManagement;
 using ToolManagement.ToolDefinitions;
 using ToolManagement.ToolDefinitions.Models;
+using ToolManagement.ToolDefinitions.StoryEvalTools;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,9 @@ builder.Services.AddSingleton<IToolDefinition, NewsSearch>();
 //builder.Services.AddSingleton<IToolDefinition, FindEmails>();
 builder.Services.AddSingleton<IToolDefinition, SendEmail>();
 builder.Services.AddSingleton<IToolDefinition, ImageEvaluate>();
+
 builder.Services.AddSingleton<IToolDefinition, SetCharacterList>();
+builder.Services.AddSingleton<IToolDefinition, SetStoryTags>();
 
 //redux flow stuff
 builder.Services.UseFlowState();
