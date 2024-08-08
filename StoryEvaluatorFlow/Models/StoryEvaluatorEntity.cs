@@ -1,40 +1,44 @@
-﻿using OpenAIConnector.ChatGPTRepository.models;
-using System.Linq;
-
-namespace ChatSessionFlow.models
+﻿
+namespace StoryEvaluatorFlow.Models
 {
-    public class StoryEvalEntity
+    public class StoryEvaluatorEntity
     {
+        public string StoryTitle { get; set; }
+        public List<string> StoryAuthors { get; set; }
         public List<StoryCharacter> StoryCharacters { get; set; }
 
-        public string ShortSummary { get; set; }
+        public string StorySummary { get; set; }
 
         public HashSet<string> StoryTags { get; set; }
 
         public List<string> evalComments { get; set; }
 
 
-        public StoryEvalEntity()
+        public StoryEvaluatorEntity()
         {
+            StoryTitle = "";
+            StoryAuthors = new List<string>();
             StoryCharacters = new List<StoryCharacter>();
-            ShortSummary = "";
+            StorySummary = "";
             StoryTags = new HashSet<string>();
             evalComments = new List<string>();
         }
 
-        public StoryEvalEntity Copy()
+        public StoryEvaluatorEntity Copy()
         {
-            var copy = new StoryEvalEntity();
+            var copy = new StoryEvaluatorEntity();
+            copy.StoryTitle = StoryTitle;
+            copy.StoryAuthors = StoryAuthors.ToList();
             copy.StoryCharacters = StoryCharacters.ToList();
-            copy.ShortSummary = ShortSummary;
+            copy.StorySummary = StorySummary;
             copy.StoryTags = StoryTags.ToHashSet();
-            copy.evalComments = evalComments;
+            copy.evalComments = evalComments.ToList();
             return copy;
         }
 
         public override string ToString()
         {
-            return $"CharacterCount: {StoryCharacters.Count} Tags: [{string.Join(',',StoryTags)}]";
+            return $"Title: {StoryTitle} CharacterCount: {StoryCharacters.Count} Tags: [{string.Join(',',StoryTags)}]";
         }
     }
 

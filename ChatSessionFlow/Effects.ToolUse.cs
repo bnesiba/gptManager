@@ -77,10 +77,11 @@ namespace ChatSessionFlow
                 if (toolCallArgumentsValid)
                 {
                     var toolResult = tool.ExecuteTool(currentContext, toolReqParams);
-                    return ChatSessionActions.ToolExecutionSucceeded(toolResult);//TODO: update to include tool name
+                    return ChatSessionActions.ToolExecutionSucceeded(new CompletedToolResult{toolName = toolReqParams.ToolName, toolMessage = toolResult, toolRequestParameters = toolReqParams});
                 }
             }
-            return ChatSessionActions.ToolExecutionFailed(new OpenAIToolMessage($"ERROR: Arguments to '{toolReqParams.ToolName}' tool were invalid or missing", toolReqParams.ToolRequestId));
+            return ChatSessionActions.ToolExecutionFailed(new CompletedToolResult { toolName = toolReqParams.ToolName, 
+                toolMessage = new OpenAIToolMessage($"ERROR: Arguments to '{toolReqParams.ToolName}' tool were invalid or missing", toolReqParams.ToolRequestId), toolRequestParameters = toolReqParams });
         }
 
         public FlowActionBase OnToolExecutionsCompleted_ResolveChatRequested(FlowAction<List<OpenAIToolCall>> chatResponseAction)

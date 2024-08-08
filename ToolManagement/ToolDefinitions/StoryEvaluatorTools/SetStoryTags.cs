@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using GoogleCloudConnector.GmailAccess;
-using OpenAIConnector.ChatGPTRepository;
-using OpenAIConnector.ChatGPTRepository.models;
-using Org.BouncyCastle.Asn1;
+﻿using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagement.ToolDefinitions.Models;
 
-namespace ToolManagement.ToolDefinitions.StoryEvalTools
+namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
 {
     public class SetStoryTags : IToolDefinition
     {
 
         //static accessor for Tool Management
         public static string ToolName => "SetStoryTags";
+
+        public static List<string> animalTags = new List<string> { "dog", "cat", "songbird", "snake", "bug", "wolf", "pig", "cow", "goat", "chicken", "sheep", "other" };
+        public static List<string> vechicleTags = new List<string> { "car", "truck", "boat", "plane", "bike", "other" };
+        public static List<string> readingLevelTags = new List<string> { "newborn", "toddler", "older-child", "young-adult", "adult", "old-person" };
 
         public string Name => ToolName;
 
@@ -31,8 +26,8 @@ namespace ToolManagement.ToolDefinitions.StoryEvalTools
                 items =  new EnumToolProperty()
                 {
                     type = "string",
-                    description = "What kinds of animals were present in the story",
-                    enumValues = new List<string>{"dog", "cat", "bird", "snake", "bug"},
+                    description = "What kinds of animals were present in the story. Only pick \"other\" if there isn't a close option (for example: a puppy is a dog, a robin is a songbird) ",
+                    enumValues = animalTags,
                     IsRequired = true
                 },
                 description = "An array of strings representing types of animals that were present in the story",
@@ -46,7 +41,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvalTools
                 {
                     type = "string",
                     description = "What kinds of vehicles were present in the story",
-                    enumValues = new List<string>{"car", "truck", "boat", "plane", "bike"},
+                    enumValues = vechicleTags,
                     IsRequired = true
                 },
                 description = "An array of strings representing types of vehicles that were present in the story",
@@ -54,10 +49,25 @@ namespace ToolManagement.ToolDefinitions.StoryEvalTools
             },
             new EnumToolProperty()
             {
+                name = "Monsters",
+                type = "string",
+                description = "Does this story include a monster?",
+                enumValues = new List<string>{"true", "false"},
+                IsRequired = true
+            },
+            new EnumToolProperty()
+            {
                 name = "ReadingLevel",
                 type = "string",
                 description = "What age-group is this story most appropriate for?",
-                enumValues = new List<string>{"newborn", "toddler", "child", "young adult", "adult", "old person"},
+                enumValues = readingLevelTags,
+                IsRequired = true
+            },
+            new ToolProperty()
+            {
+                name = "AdditionalInformation",
+                type = "string",
+                description = "Were there any complications listing the story tags? what were they?",
                 IsRequired = true
             }
 

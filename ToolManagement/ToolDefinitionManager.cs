@@ -1,7 +1,7 @@
 ﻿using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagement.ToolDefinitions;
 using ToolManagement.ToolDefinitions.Models;
-using ToolManagement.ToolDefinitions.StoryEvalTools;
+using ToolManagement.ToolDefinitions.StoryEvaluatorTools;
 
 namespace ToolManagement
 {
@@ -20,10 +20,12 @@ namespace ToolManagement
             NewsSearch.ToolName
         };
 
-        private HashSet<string> storyProcTools = new HashSet<string>
+        private HashSet<string> storyEvaluatorTools = new HashSet<string>
         {
             SetCharacterList.ToolName,
-            SetStoryTags.ToolName
+            SetStoryTags.ToolName,
+            SetGeneralInfo.ToolName,
+            SetStorySummary.ToolName
         };
 
 
@@ -58,9 +60,9 @@ namespace ToolManagement
             defaultChatTools.Clear();
         }
 
-        public void UseStoryExampleTools()
+        public void UseStoryEvaluatorTools()
         {
-            defaultChatTools = storyProcTools;
+            defaultChatTools = storyEvaluatorTools;
         }
 
         public void UseAssistantTools()

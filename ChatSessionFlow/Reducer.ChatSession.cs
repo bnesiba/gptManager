@@ -29,16 +29,13 @@ namespace ChatSessionFlow
 
         public ChatSessionEntity CurrentContext_OnChatResponseReceived_AddToContext(FlowAction<OpenAIChatResponse> responseAction,ChatSessionEntity currentState)
         {
-            if (responseAction.Parameters?.choices != null && responseAction.Parameters.choices.Count > 0)
-            {
-                currentState.CurrentContext.Add(responseAction.Parameters.choices[0].message);
-            }
+            currentState.CurrentContext.Add(responseAction.Parameters.choices[0].message);
             return currentState;
         }
 
-        public ChatSessionEntity CurrentContext_OnToolExecutionCompleted_AddToContext(FlowAction<OpenAIToolMessage> toolExecutedAction, ChatSessionEntity currentState)
+        public ChatSessionEntity CurrentContext_OnToolExecutionCompleted_AddToContext(FlowAction<CompletedToolResult> toolExecutedAction, ChatSessionEntity currentState)
         {
-            currentState.CurrentContext.Add(toolExecutedAction.Parameters);
+            currentState.CurrentContext.Add(toolExecutedAction.Parameters.toolMessage);
             return currentState;
         }
 

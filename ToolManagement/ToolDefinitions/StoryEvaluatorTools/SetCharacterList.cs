@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using GoogleCloudConnector.GmailAccess;
-using OpenAIConnector.ChatGPTRepository;
-using OpenAIConnector.ChatGPTRepository.models;
-using Org.BouncyCastle.Asn1;
+﻿using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagement.ToolDefinitions.Models;
 
-namespace ToolManagement.ToolDefinitions.StoryEvalTools
+namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
 {
     public class SetCharacterList : IToolDefinition
     {
@@ -66,7 +57,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvalTools
                 type = "string",
                 description = "Were there any complications listing all of the characters? what were they?",
                 IsRequired = true
-            },
+            }
 
         };
 

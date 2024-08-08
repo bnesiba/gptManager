@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ToolManagement.ToolDefinitions.Models
 {
@@ -28,26 +29,39 @@ namespace ToolManagement.ToolDefinitions.Models
 
         public string? GetStringParam(string key)
         {
-            if (this.StringParameters == null) return null;
-            return this.StringParameters.ContainsKey(key) ? this.StringParameters[key] : null;
+            if (StringParameters == null) return null;
+            return StringParameters.ContainsKey(key) ? StringParameters[key] : null;
         }
 
         public T? GetObjectParam<T>(string key)
         {
-            if (this.ObjectParameters == null) return default(T);
-            return this.ObjectParameters.ContainsKey(key) ? (T)this.ObjectParameters[key]: default(T);
+            if (ObjectParameters == null) return default(T);
+            if (ObjectParameters.ContainsKey(key))
+            {
+                var valueObject = ObjectParameters[key];
+                T? convertedObject = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(valueObject));
+                return convertedObject;
+            }
+            return default(T);
         }
 
         public List<string>? GetStringArrayParam(string key)
         {
-            if (this.StringArrayParameters == null) return null;
-            return this.StringArrayParameters.ContainsKey(key) ? this.StringArrayParameters[key] : null;
+            if (StringArrayParameters == null) return null;
+            return StringArrayParameters.ContainsKey(key) ? StringArrayParameters[key] : null;
         }
 
         public List<T>? GetObjectArrayParam<T>(string key)
         {
-            if (this.ObjectArrayParameters == null) return null;
-            return this.ObjectArrayParameters.ContainsKey(key) ? this.ObjectArrayParameters[key] as List<T> : null;
+            if (ObjectArrayParameters == null) return null;
+            if (ObjectArrayParameters.ContainsKey(key))
+            {
+                var objectList = ObjectArrayParameters[key];
+                List<T>? convertedList = JsonConvert.DeserializeObject<List<T>>(JsonConvert.SerializeObject(objectList));
+                return convertedList;
+            }
+
+            return null;
         }
     }
 }

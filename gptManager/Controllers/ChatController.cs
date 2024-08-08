@@ -3,6 +3,7 @@ using ChatSessionFlow;
 using ChatSessionFlow.models;
 using Microsoft.AspNetCore.Mvc;
 using OpenAIConnector.ChatGPTRepository;
+using StoryEvaluatorFlow;
 
 namespace gptManager.Controllers
 {
@@ -52,25 +53,6 @@ namespace gptManager.Controllers
             {
                 _flowState.ResolveAction(ChatSessionActions.InitAssistantChat(message));
                 //_flowState.ResolveAction(ChatSessionActions.ResponseValidatonRequested());
-                var lastMsg = _chatStateData.CurrentState(ChatSessionSelectors.GetLatestMessage);
-
-                return Ok(lastMsg);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error occurred\n\n {ex}");
-                return StatusCode(500);
-            }
-        }
-
-
-        [Route("storyTest")]
-        [HttpPost]
-        public virtual IActionResult StoryTest([FromBody] string message = "Once upon a time there was a dog named spot")
-        {
-            try
-            {
-                _flowState.ResolveAction(ChatSessionActions.InitStoryEval(message));
                 var lastMsg = _chatStateData.CurrentState(ChatSessionSelectors.GetLatestMessage);
 
                 return Ok(lastMsg);
