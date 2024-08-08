@@ -26,7 +26,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
                 {
                     type = "string",
                     description = "A story tag you want to find stories tagged with",
-                    enumValues = SetStoryTags.animalTags.Concat(SetStoryTags.vechicleTags).Concat(SetStoryTags.readingLevelTags).ToList(),
+                    enumValues = SetStoryTags.animalTags.Concat(SetStoryTags.vechicleTags).Concat(SetStoryTags.peopleTags).Concat(SetStoryTags.readingLevelTags).Concat(new List<string>{"ContainsMonsters"}).ToList(),
                     IsRequired = true
                 },
                 description = "An array of strings representing tags to search for stories by",
@@ -60,7 +60,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
             var searchAuthors = toolParams.GetStringArrayParam("SearchAuthors") ?? new List<string>();
             var results = _definitelyADatabase.GetSerializedResultsByTagsAndAuthors(searchTags, searchAuthors);
 
-            return new OpenAIToolMessage($"SearchForStories: " + string.Join("\r\n",results), toolParams.ToolRequestId);
+            return new OpenAIToolMessage($"SearchForStories: \r\n" + string.Join("\r\n",results), toolParams.ToolRequestId);
         }
     }
 }

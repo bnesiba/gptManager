@@ -68,16 +68,19 @@ namespace StoryEvaluatorFlow
             if (toolResult.Parameters.toolName == SetStoryTags.ToolName)
             {
                 var animalTags =
-                    toolResult.Parameters.toolRequestParameters.GetStringArrayParam("Animals") ?? new List<string>(); //TODO: constants...or maybe extensions on the tool?
+                    toolResult.Parameters.toolRequestParameters.GetStringArrayParam("AnimalsInTheStory") ?? new List<string>(); //TODO: constants...or maybe extensions on the tool?
 
                 var vehicleTags =
-                    toolResult.Parameters.toolRequestParameters.GetStringArrayParam("Vehicles") ?? new List<string>(); 
+                    toolResult.Parameters.toolRequestParameters.GetStringArrayParam("VehiclesInTheStory") ?? new List<string>(); 
+
+                var peopleTags =
+                    toolResult.Parameters.toolRequestParameters.GetStringArrayParam("PeopleInTheStory") ?? new List<string>();
 
                 var readingLevelTag = 
                     toolResult.Parameters.toolRequestParameters.GetStringParam("ReadingLevel"); 
 
                 bool containsMonsters =
-                    toolResult.Parameters.toolRequestParameters.GetStringParam("Monsters") == "true";
+                    toolResult.Parameters.toolRequestParameters.GetStringParam("ContainsMonster") == "true";
 
                 if (animalTags.Count > 0)
                 {
@@ -89,6 +92,11 @@ namespace StoryEvaluatorFlow
                     vehicleTags.ForEach(tag => currentState.SearchTags.Add(tag));
                 }
 
+                if (peopleTags.Count > 0)
+                {
+                    peopleTags.ForEach(tag => currentState.SearchTags.Add(tag));
+                }
+
                 if (readingLevelTag != null)
                 {
                     currentState.SearchTags.Add(readingLevelTag);
@@ -96,7 +104,7 @@ namespace StoryEvaluatorFlow
 
                 if (containsMonsters)
                 {
-                    currentState.SearchTags.Add("ContainsMonsters");
+                    currentState.SearchTags.Add("ContainsMonsters");//TODO: <- make these into constants? also centralize them 
                 }
             }
             return currentState;

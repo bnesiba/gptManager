@@ -8,50 +8,65 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
 
         //static accessor for Tool Management
         public static string ToolName => "SetStoryTags";
-
-        public static List<string> animalTags = new List<string> { "dog", "cat", "songbird", "snake", "insect", "wolf", "pig", "cow", "goat", "chicken", "sheep", "human", "mongoose", "other-animal" };
+        //TODO: ↓↓↓ make these into constants? also centralize them 
+        public static List<string> animalTags = new List<string> { "dog", "cat", "bird", "pig", "mongoose", "snake", "other-animal" };
         public static List<string> vechicleTags = new List<string> { "car", "truck", "boat", "plane","train", "bike", "other-vehicle" };
-        public static List<string> readingLevelTags = new List<string> { "newborn", "toddler", "older-child", "young-adult", "adult", "old-person" };
+        public static List<string> peopleTags = new List<string> { "boy", "girl", "mother", "father", "king", "queen", "farmer", "somethingelse-person" };
+        public static List<string> readingLevelTags = new List<string> { "appropriate-for-newborns", "appropriate-for-toddler", "appropriate-for-older-child", "appropriate-for-young-adult", "appropriate-for-adult", "appropriate-for-old-person" };
 
         public string Name => ToolName;
 
-        public string Description => "Add various types of tags to the story. These tags identify themes and objects of interest in the story and are used to relate and filter different stories.";
+        public string Description => "Add various types of tags to the story. These tags identify objects of interest in the story and are used to relate and filter different stories.";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
             new ArrayToolProperty()
             {
-                name = "Animals",
+                name = "AnimalsInTheStory",
                 type = "array",
                 items =  new EnumToolProperty()
                 {
                     type = "string",
-                    description = "What kinds of animals were present in the story. Only pick \"other-animal\" if there isn't a close option (for example: a puppy is a dog, a robin is a songbird) ",
+                    description = "tag representing a type of animal in the provided story - generalize if you have to (owls are birds, etc.)",
                     enumValues = animalTags,
                     IsRequired = true
                 },
-                description = "An array of strings representing types of animals that were present in the story",
+                description = "An array of strings representing types of animals that were characters in the provided story. Only include values provided by the enum - other values are \"other-animal\"",
                 IsRequired = true
             },
             new ArrayToolProperty()
             {
-                name = "Vehicles",
+                name = "VehiclesInTheStory",
                 type = "array",
                 items =  new EnumToolProperty()
                 {
                     type = "string",
-                    description = "What kinds of vehicles were present in the story",
+                    description = "vehicles in the story",
                     enumValues = vechicleTags,
                     IsRequired = true
                 },
-                description = "An array of strings representing types of vehicles that were present in the story",
+                description = "An array of strings representing types of vehicles that were in the provided story. Only include values provided by the enum - other values are \"other-vehicle\"",
+                IsRequired = true
+            },
+            new ArrayToolProperty()
+            {
+                name = "PeopleInTheStory",
+                type = "array",
+                items =  new EnumToolProperty()
+                {
+                    type = "string",
+                    description = "kinds of HUMAN people in the story",
+                    enumValues = peopleTags,
+                    IsRequired = true
+                },
+                description = "An array of strings representing types of HUMAN people in the provided story (empty if no humans in the story)",
                 IsRequired = true
             },
             new EnumToolProperty()
             {
-                name = "Monsters",
+                name = "ContainsMonster",
                 type = "string",
-                description = "Does this story include a monster?",
+                description = "Does this story include a fictional monster?",
                 enumValues = new List<string>{"true", "false"},
                 IsRequired = true
             },

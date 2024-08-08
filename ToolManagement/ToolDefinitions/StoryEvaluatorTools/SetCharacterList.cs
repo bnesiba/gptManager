@@ -11,7 +11,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
 
         public string Name => ToolName;
 
-        public string Description => "Set up the cast of characters from the current story - Make sure to include all of the characters in the story";
+        public string Description => "Set up the cast of characters from the current story - Make sure to include all of the characters in the story.";
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
         {
@@ -48,7 +48,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
                         }
                     }
                 },
-                description = "An Array of character objects containing the name, description, and role of each of the characters in the story",
+                description = "An Array of character objects containing the name, description, and role of every character in the story. Make sure to include even minor characters, but don't make up any characters.",
                 IsRequired = true
             },
             new ToolProperty()

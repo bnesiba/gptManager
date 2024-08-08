@@ -36,7 +36,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
             var storyToEvaluate = toolParams.GetStringParam("StoryToEvaluate");
-            //_flowState.AddStory(storyToEvaluate); //TODO: figure out circular dependency issues preventing import of FlowState so action impl doesnt have to be in effects
+            //_flowState.ResolveAction(InitStoryEval(storyToEvaluate)); //TODO: figure out circular dependency issues preventing import of FlowState so action impl doesnt have to be in effects. Maybe move actions out somewhere?
             return new OpenAIToolMessage($"EvaluateNewStory: " + "Evaluation Executed!", toolParams.ToolRequestId);
         }
 

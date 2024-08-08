@@ -38,7 +38,6 @@ namespace ChatSessionFlow
         };
 
         //Effect Methods
-
         public FlowActionBase OnInitialStoryMsg_CreateChatRequest_ResolveChatRequestedAndStoryEvalComplete(FlowAction<InitialMessage> initialMsg)
         {
 
@@ -49,11 +48,10 @@ namespace ChatSessionFlow
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
                 model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
-                //model = "gpt-4o",
                 messages = newContext,
                 temperature = 1,
                 tools = _toolManager.GetDefaultToolDefinitions(),
-                //tool_choice = _toolManager.GetDefaultToolDefinitions().First() //If this is commented out, both tools still seem to get used correctly.
+                //tool_choice = _toolManager.GetDefaultToolDefinitions().First() //If this is commented out, all tools still seem to get used correctly.
             };
 
             _flowActionHandler.ResolveAction(ChatSessionActions.ChatRequested(chatRequest));
@@ -78,20 +76,8 @@ namespace ChatSessionFlow
         public FlowActionBase OnInitialStoryChat_CreateChatRequest_ResolveChatRequested(
             FlowAction<InitialMessage> initialMessage)
         {
-            //            List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
-            //newContext.Add(new OpenAISystemMessage("You are a helpful AI assistant. Consider the steps involved in resolving the prompt and if the tools need to be run in order. \" +\r\n\"\\nIf a tool doesn't work, consider whether or not you can provide the content yourself.\""));
-            //newContext.Add(new OpenAIUserMessage(initialMessage.Parameters.message));
-            _toolManager.UseStoryChatTools();
-            //OpenAIChatRequest chatRequest = new OpenAIChatRequest
-            //{
-            //    model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
-            //    //model = "gpt-4o",
-            //    messages = newContext,
-            //    temperature = 1,
-            //    tools = _toolManager.GetDefaultToolDefinitions(),
-            //};
 
-            //return ChatSessionActions.ChatRequested(chatRequest);
+            _toolManager.UseStoryChatTools();
             return ChatSessionActions.InitAssistantChat(initialMessage.Parameters.message, initialMessage.Parameters.sessionId);
         
         }
