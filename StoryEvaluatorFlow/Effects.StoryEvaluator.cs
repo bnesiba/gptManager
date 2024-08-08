@@ -78,20 +78,21 @@ namespace ChatSessionFlow
         public FlowActionBase OnInitialStoryChat_CreateChatRequest_ResolveChatRequested(
             FlowAction<InitialMessage> initialMessage)
         {
-                        List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
-            newContext.Add(new OpenAISystemMessage("You are a helpful AI assistant. Consider the steps involved in resolving the prompt and if the tools need to be run in order. \" +\r\n\"\\nIf a tool doesn't work, consider whether or not you can provide the content yourself.\""));
-            newContext.Add(new OpenAIUserMessage(initialMessage.Parameters.message));
+            //            List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
+            //newContext.Add(new OpenAISystemMessage("You are a helpful AI assistant. Consider the steps involved in resolving the prompt and if the tools need to be run in order. \" +\r\n\"\\nIf a tool doesn't work, consider whether or not you can provide the content yourself.\""));
+            //newContext.Add(new OpenAIUserMessage(initialMessage.Parameters.message));
             _toolManager.UseStoryChatTools();
-            OpenAIChatRequest chatRequest = new OpenAIChatRequest
-            {
-                model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
-                //model = "gpt-4o",
-                messages = newContext,
-                temperature = 1,
-                tools = _toolManager.GetDefaultToolDefinitions(),
-            };
+            //OpenAIChatRequest chatRequest = new OpenAIChatRequest
+            //{
+            //    model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
+            //    //model = "gpt-4o",
+            //    messages = newContext,
+            //    temperature = 1,
+            //    tools = _toolManager.GetDefaultToolDefinitions(),
+            //};
 
-            return ChatSessionActions.ChatRequested(chatRequest);
+            //return ChatSessionActions.ChatRequested(chatRequest);
+            return ChatSessionActions.InitAssistantChat(initialMessage.Parameters.message, initialMessage.Parameters.sessionId);
         
         }
 
