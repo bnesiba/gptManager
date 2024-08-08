@@ -1,6 +1,7 @@
 using ActionFlow;
 using ChatSessionFlow;
 using ChatSessionFlow.models;
+using FakeDataStorageManager;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
 using StoryEvaluatorFlow;
@@ -36,6 +37,10 @@ builder.Services.AddSingleton<IToolDefinition, SetStoryTags>();
 builder.Services.AddSingleton<IToolDefinition, SetGeneralInfo>();
 builder.Services.AddSingleton<IToolDefinition, SetStorySummary>();
 
+//story search tools
+builder.Services.AddSingleton<IToolDefinition, EvaluateNewStory>();
+builder.Services.AddSingleton<IToolDefinition, SearchForStories>();
+
 //redux flow stuff
 builder.Services.UseFlowState();
 builder.Services.UseEffects<ChatSessionEffects>();
@@ -46,6 +51,8 @@ builder.Services.UseReducer<ChatSessionReducer, ChatSessionEntity>();
 builder.Services.UseEffects<StoryEvaluatorEffects>();
 builder.Services.UseReducer<StoryEvaluationReducer, StoryEvaluatorEntity>();
 
+builder.Services.AddSingleton<TotallyRealDatabase<StoryEvaluatorEntity>>();
+builder.Services.AddSingleton<ITotallyADatabase>(s => s.GetRequiredService<TotallyRealDatabase<StoryEvaluatorEntity>>());
 
 var app = builder.Build();
 

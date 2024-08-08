@@ -9,8 +9,8 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
         //static accessor for Tool Management
         public static string ToolName => "SetStoryTags";
 
-        public static List<string> animalTags = new List<string> { "dog", "cat", "songbird", "snake", "bug", "wolf", "pig", "cow", "goat", "chicken", "sheep", "other" };
-        public static List<string> vechicleTags = new List<string> { "car", "truck", "boat", "plane", "bike", "other" };
+        public static List<string> animalTags = new List<string> { "dog", "cat", "songbird", "snake", "insect", "wolf", "pig", "cow", "goat", "chicken", "sheep", "human", "mongoose", "other-animal" };
+        public static List<string> vechicleTags = new List<string> { "car", "truck", "boat", "plane","train", "bike", "other-vehicle" };
         public static List<string> readingLevelTags = new List<string> { "newborn", "toddler", "older-child", "young-adult", "adult", "old-person" };
 
         public string Name => ToolName;
@@ -26,7 +26,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
                 items =  new EnumToolProperty()
                 {
                     type = "string",
-                    description = "What kinds of animals were present in the story. Only pick \"other\" if there isn't a close option (for example: a puppy is a dog, a robin is a songbird) ",
+                    description = "What kinds of animals were present in the story. Only pick \"other-animal\" if there isn't a close option (for example: a puppy is a dog, a robin is a songbird) ",
                     enumValues = animalTags,
                     IsRequired = true
                 },

@@ -13,23 +13,25 @@ namespace gptManager.Controllers
     public class StoryEvaluationController : ControllerBase
     {
         private FlowState _flowState;
-        private FlowStateData<StoryEvaluatorEntity> _storyStateData;
+        private FlowStateData<StoryEvaluatorEntity> _storyStoryStateData;
+        private FlowStateData<ChatSessionEntity> _chatStateData;
 
-        public StoryEvaluationController(FlowState state, FlowStateData<StoryEvaluatorEntity> stateData)
+        public StoryEvaluationController(FlowState state, FlowStateData<StoryEvaluatorEntity> storyStateData, FlowStateData<ChatSessionEntity> chatStateData)
         {
             _flowState = state;
-            _storyStateData = stateData;
+            _storyStoryStateData = storyStateData;
+            _chatStateData = chatStateData;
         }
 
 
-        [Route("storyTest")]
+        [Route("storyEvalTest")]
         [HttpPost]
         public virtual IActionResult StoryTest([FromBody] string message = "Once upon a time there was a dog named spot")
         {
             try
             {
                 _flowState.ResolveAction(StoryEvaluatorActions.InitStoryEval(message));
-                var output = _storyStateData.CurrentState(StoryEvaluatorSelectors.GetStoryEvaluation);
+                var output = _storyStoryStateData.CurrentState(StoryEvaluatorSelectors.GetStoryEvaluation);
 
                 return Ok(output);
             }
@@ -39,5 +41,26 @@ namespace gptManager.Controllers
                 return StatusCode(500);
             }
         }
+
+        [Route("storyRAGTest")]
+        [HttpPost]
+        public virtual IActionResult StorySearchTest([FromBody] string message = "Find some stories with dogs...")
+        {
+            try
+            {
+                _flowState.ResolveAction(StoryEvaluatorActions.InitStoryChat(message));
+                var output = _chatStateData.CurrentState(ChatSessionSelectors.GetLatestMessage);
+
+                return Ok(output);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred\n\n {ex}");
+                return StatusCode(500);
+            }
+        }
+
+
+
     }
 }

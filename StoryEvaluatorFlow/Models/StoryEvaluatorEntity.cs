@@ -1,15 +1,17 @@
 ﻿
+using FakeDataStorageManager;
+
 namespace StoryEvaluatorFlow.Models
 {
-    public class StoryEvaluatorEntity
+    public class StoryEvaluatorEntity: ITagSearchable
     {
         public string StoryTitle { get; set; }
-        public List<string> StoryAuthors { get; set; }
+        public List<string> Authors { get; set; }
         public List<StoryCharacter> StoryCharacters { get; set; }
 
         public string StorySummary { get; set; }
 
-        public HashSet<string> StoryTags { get; set; }
+        public HashSet<string> SearchTags { get; set; }
 
         public List<string> evalComments { get; set; }
 
@@ -17,10 +19,10 @@ namespace StoryEvaluatorFlow.Models
         public StoryEvaluatorEntity()
         {
             StoryTitle = "";
-            StoryAuthors = new List<string>();
+            Authors = new List<string>();
             StoryCharacters = new List<StoryCharacter>();
             StorySummary = "";
-            StoryTags = new HashSet<string>();
+            SearchTags = new HashSet<string>();
             evalComments = new List<string>();
         }
 
@@ -28,17 +30,17 @@ namespace StoryEvaluatorFlow.Models
         {
             var copy = new StoryEvaluatorEntity();
             copy.StoryTitle = StoryTitle;
-            copy.StoryAuthors = StoryAuthors.ToList();
+            copy.Authors = Authors.ToList();
             copy.StoryCharacters = StoryCharacters.ToList();
             copy.StorySummary = StorySummary;
-            copy.StoryTags = StoryTags.ToHashSet();
+            copy.SearchTags = SearchTags.ToHashSet();
             copy.evalComments = evalComments.ToList();
             return copy;
         }
 
         public override string ToString()
         {
-            return $"Title: {StoryTitle} CharacterCount: {StoryCharacters.Count} Tags: [{string.Join(',',StoryTags)}]";
+            return $"Title: {StoryTitle} CharacterCount: {StoryCharacters.Count} Tags: [{string.Join(',',SearchTags)}]";
         }
     }
 

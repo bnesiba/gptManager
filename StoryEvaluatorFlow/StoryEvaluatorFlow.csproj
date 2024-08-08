@@ -11,6 +11,7 @@
   </ItemGroup>
   
     <ItemGroup>
+    <ProjectReference Include="..\FakeDataStorageManager\FakeDataStorageManager.csproj" />
     <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
 	<ProjectReference Include="..\ChatSessionFlow\ChatSessionFlow.csproj" />
   </ItemGroup>

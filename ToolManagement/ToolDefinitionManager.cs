@@ -28,6 +28,12 @@ namespace ToolManagement
             SetStorySummary.ToolName
         };
 
+        private HashSet<string> storyChatTools = new HashSet<string>
+        {
+            SearchForStories.ToolName,
+            EvaluateNewStory.ToolName
+        };
+
 
         private HashSet<string> defaultChatTools;
 
@@ -60,14 +66,19 @@ namespace ToolManagement
             defaultChatTools.Clear();
         }
 
+        public void UseAssistantTools()
+        {
+            defaultChatTools = assistantChatTools;
+        }
+
         public void UseStoryEvaluatorTools()
         {
             defaultChatTools = storyEvaluatorTools;
         }
 
-        public void UseAssistantTools()
+        public void UseStoryChatTools()
         {
-            defaultChatTools = assistantChatTools;
+            defaultChatTools = storyChatTools;
         }
     }
 }

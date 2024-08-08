@@ -13,7 +13,7 @@ namespace StoryEvaluatorFlow
 
         public static FlowDataSelector<StoryEvaluatorEntity, List<StoryCharacter>> GetStoryCharacters = new FlowDataSelector<StoryEvaluatorEntity, List<StoryCharacter>>((stateData) => stateData.StoryCharacters.ToList());
 
-        public static FlowDataSelector<StoryEvaluatorEntity, List<string>> GetCurrentStoryTags = new FlowDataSelector<StoryEvaluatorEntity, List<string>>((stateData) => stateData.StoryTags.ToList());
+        public static FlowDataSelector<StoryEvaluatorEntity, List<string>> GetCurrentStoryTags = new FlowDataSelector<StoryEvaluatorEntity, List<string>>((stateData) => stateData.SearchTags.ToList());
 
         public static FlowDataSelector<StoryEvaluatorEntity, string> GetShortSummmary = new FlowDataSelector<StoryEvaluatorEntity, string>((stateData) => stateData.StorySummary);
 

@@ -81,22 +81,22 @@ namespace StoryEvaluatorFlow
 
                 if (animalTags.Count > 0)
                 {
-                    animalTags.ForEach(tag => currentState.StoryTags.Add(tag));
+                    animalTags.ForEach(tag => currentState.SearchTags.Add(tag));
                 }
 
                 if (vehicleTags.Count > 0)
                 {
-                    vehicleTags.ForEach(tag => currentState.StoryTags.Add(tag));
+                    vehicleTags.ForEach(tag => currentState.SearchTags.Add(tag));
                 }
 
                 if (readingLevelTag != null)
                 {
-                    currentState.StoryTags.Add(readingLevelTag);
+                    currentState.SearchTags.Add(readingLevelTag);
                 }
 
                 if (containsMonsters)
                 {
-                    currentState.StoryTags.Add("ContainsMonsters");
+                    currentState.SearchTags.Add("ContainsMonsters");
                 }
             }
             return currentState;
@@ -146,7 +146,7 @@ namespace StoryEvaluatorFlow
 
                 if (authors.Count > 0)
                 {
-                    authors.ForEach(author => currentState.StoryAuthors.Add(author));
+                    authors.ForEach(author => currentState.Authors.Add(author));
                 }
             }
             return currentState;

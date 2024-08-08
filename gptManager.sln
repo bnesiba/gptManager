@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloudConnector", "Goo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSessionFlow", "ChatSessionFlow\ChatSessionFlow.csproj", "{73AF270C-42B1-4EB3-8242-7217A690262D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryEvaluatorFlow", "StoryEvaluatorFlow\StoryEvaluatorFlow.csproj", "{A3C76D5B-C00E-4E3E-ACC4-A3DA064E7A08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryEvaluatorFlow", "StoryEvaluatorFlow\StoryEvaluatorFlow.csproj", "{A3C76D5B-C00E-4E3E-ACC4-A3DA064E7A08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeDataStorageManager", "FakeDataStorageManager\FakeDataStorageManager.csproj", "{97D5D752-52DE-435B-AB69-8FF1028DFC17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{A3C76D5B-C00E-4E3E-ACC4-A3DA064E7A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3C76D5B-C00E-4E3E-ACC4-A3DA064E7A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3C76D5B-C00E-4E3E-ACC4-A3DA064E7A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97D5D752-52DE-435B-AB69-8FF1028DFC17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97D5D752-52DE-435B-AB69-8FF1028DFC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97D5D752-52DE-435B-AB69-8FF1028DFC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97D5D752-52DE-435B-AB69-8FF1028DFC17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
