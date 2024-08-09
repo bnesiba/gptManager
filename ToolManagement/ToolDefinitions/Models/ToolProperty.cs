@@ -20,6 +20,11 @@ namespace ToolManagement.ToolDefinitions.Models
         public bool IsRequired { get; init; }
     }
 
+    public class ObjectToolProperty : ToolProperty
+    {
+        public List<ToolProperty> properties { get; init; }
+    }
+
     public class ArrayToolProperty : ToolProperty
     {
         public ToolProperty items { get; init; }
@@ -51,5 +56,14 @@ namespace ToolManagement.ToolDefinitions.Models
     {
         [JsonProperty("enum")]
         public List<string> enumValues { get; init; }
+    }
+
+    public class ObjectToolParameter : ToolParameter
+    {
+        public Dictionary<string, ToolParameter> properties { get; init; }
+        public bool additionalProperties { get; set; } = false; //TODO: figure out -> required for object parameters using strict i think? (this could be for optional properties maybe?)
+        
+        public string[] required { get; init; }
+
     }
 }

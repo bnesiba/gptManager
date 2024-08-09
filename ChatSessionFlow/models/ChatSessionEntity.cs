@@ -1,4 +1,5 @@
 ﻿using OpenAIConnector.ChatGPTRepository.models;
+using System.Linq;
 
 namespace ChatSessionFlow.models
 {
@@ -6,7 +7,7 @@ namespace ChatSessionFlow.models
     {
         public List<OpenAIChatMessage> CurrentContext { get; set; }
 
-        public List<string> RelatedLinks { get; set; }
+        public Stack<OpenAIChatRequest> ChatRequestStack { get; set; }
 
         //TODO: remove me - testing param
         public int NumberOfChats { get; set; }
@@ -14,7 +15,7 @@ namespace ChatSessionFlow.models
         public ChatSessionEntity()
         {
             CurrentContext = new List<OpenAIChatMessage>();
-            RelatedLinks = new List<string>();
+            ChatRequestStack = new Stack<OpenAIChatRequest>();
             NumberOfChats = 0;
         }
 
@@ -22,15 +23,15 @@ namespace ChatSessionFlow.models
         {
             var copy = new ChatSessionEntity();
             copy.CurrentContext = CurrentContext;
-            copy.RelatedLinks = new List<string>();
+            copy.ChatRequestStack = new Stack<OpenAIChatRequest>();
             copy.NumberOfChats = NumberOfChats;
-            RelatedLinks.ForEach(l => copy.RelatedLinks.Add(l));
+            ChatRequestStack.ToList().ForEach(r => copy.ChatRequestStack.Push(r.Copy()));
             return copy;
         }
 
         public override string ToString()
         {
-            return $"ContextLength: {CurrentContext.Count} LinksLen: {RelatedLinks.Count} NumberOfChats: {NumberOfChats}";
+            return $"ContextLength: {CurrentContext.Count} LinksLen: {ChatRequestStack.Count} NumberOfChats: {NumberOfChats}";
         }
     }
 }

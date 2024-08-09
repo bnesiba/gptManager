@@ -23,12 +23,12 @@ namespace ChatSessionFlow
 
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
-           this.effect(OnInitialMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.Init()),
+           this.effect(OnInitialChatMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.InitAssistantChat()),
            this.effect(OnChatRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ChatRequested()),
         };
 
         //Effect Methods
-        public FlowActionBase OnInitialMsg_CreateChatRequest_ResolveChatRequested(FlowAction<InitialMessage> initialMsg)
+        public FlowActionBase OnInitialChatMsg_CreateChatRequest_ResolveChatRequested(FlowAction<InitialMessage> initialMsg)
         {
 
             List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
@@ -38,7 +38,7 @@ namespace ChatSessionFlow
             newContext.Add(new OpenAIUserMessage(initialMsg.Parameters.message));
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
-                model = "gpt-3.5-turbo", //TODO: make these a const or something - magic strings bad.
+                model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
                 //model = "gpt-4o",
                 messages = newContext,
                 temperature = 1,

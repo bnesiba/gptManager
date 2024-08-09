@@ -13,6 +13,7 @@ namespace ChatSessionFlow
     {
         public static FlowDataSelector<ChatSessionEntity, int> GetChatCount = new FlowDataSelector<ChatSessionEntity, int>((stateData) => stateData.NumberOfChats);
 
+        public static FlowDataSelector<ChatSessionEntity, OpenAIChatRequest?> GetCurrentChatRequest = new FlowDataSelector<ChatSessionEntity, OpenAIChatRequest?>((stateData) => stateData.ChatRequestStack.FirstOrDefault());
         public static FlowDataSelector<ChatSessionEntity, List<OpenAIChatMessage>> GetChatContext 
             = new FlowDataSelector<ChatSessionEntity, List<OpenAIChatMessage>>((stateData) => stateData.CurrentContext);
 

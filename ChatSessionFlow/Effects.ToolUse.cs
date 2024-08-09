@@ -45,9 +45,11 @@ namespace ChatSessionFlow
                     if (tool != null)
                     {
                         Dictionary<string, string>? requestStringParameters = tool.GetToolRequestStringParameters(toolCall);
-                        Dictionary<string, List<string>>? requestArrayParameters = tool.GetToolRequestArrayParameters(toolCall);
+                        Dictionary<string, object>? requestObjectParameters = tool.GetToolRequestObjectParameters(toolCall);
+                        Dictionary<string, List<string>>? requestStringArrayParameters = tool.GetToolRequestStringArrayParameters(toolCall);
+                        Dictionary<string, List<object>>? requestObjectArrayParameters = tool.GetToolRequestObjArrayParameters(toolCall);
 
-                        var toolRequestParams = new ToolRequestParameters(tool.Name, toolCall.id, requestStringParameters, requestArrayParameters);
+                        var toolRequestParams = new ToolRequestParameters(tool.Name, toolCall.id, requestStringParameters, requestObjectParameters, requestStringArrayParameters, requestObjectArrayParameters);
                         _flowActionHandler.ResolveAction(ChatSessionActions.ToolExecutionRequested(toolRequestParams));
                     }
                 }
@@ -70,15 +72,16 @@ namespace ChatSessionFlow
             var tool = _definedTools.FirstOrDefault(t => t.Name == toolReqParams.ToolName);
             if (tool != null)
             {
-                bool toolCallArgumentsValid = tool.RequestArgumentsValid(toolReqParams.StringParameters, toolReqParams.ArrayParameters);
+                bool toolCallArgumentsValid = tool.RequestArgumentsValid(toolReqParams.StringParameters,toolReqParams.ObjectParameters, toolReqParams.StringArrayParameters, toolReqParams.ObjectArrayParameters);
 
                 if (toolCallArgumentsValid)
                 {
                     var toolResult = tool.ExecuteTool(currentContext, toolReqParams);
-                    return ChatSessionActions.ToolExecutionSucceeded(toolResult);
+                    return ChatSessionActions.ToolExecutionSucceeded(new CompletedToolResult{toolName = toolReqParams.ToolName, toolMessage = toolResult, toolRequestParameters = toolReqParams});
                 }
             }
-            return ChatSessionActions.ToolExecutionFailed(new OpenAIToolMessage($"ERROR: Arguments to '{toolReqParams.ToolName}' tool were invalid or missing", toolReqParams.ToolRequestId));
+            return ChatSessionActions.ToolExecutionFailed(new CompletedToolResult { toolName = toolReqParams.ToolName, 
+                toolMessage = new OpenAIToolMessage($"ERROR: Arguments to '{toolReqParams.ToolName}' tool were invalid or missing", toolReqParams.ToolRequestId), toolRequestParameters = toolReqParams });
         }
 
         public FlowActionBase OnToolExecutionsCompleted_ResolveChatRequested(FlowAction<List<OpenAIToolCall>> chatResponseAction)
@@ -87,8 +90,7 @@ namespace ChatSessionFlow
             
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
-                model = "gpt-3.5-turbo", //TODO: make these a const or something - magic strings bad.
-                //model = "gpt-4o",
+                model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
                 messages = currentContext,
                 temperature = 1,
                 tools = _toolManager.GetDefaultToolDefinitions()

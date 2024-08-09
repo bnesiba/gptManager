@@ -1,6 +1,7 @@
 ﻿using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagement.ToolDefinitions;
 using ToolManagement.ToolDefinitions.Models;
+using ToolManagement.ToolDefinitions.StoryEvaluatorTools;
 
 namespace ToolManagement
 {
@@ -10,9 +11,8 @@ namespace ToolManagement
     {
         private List<IToolDefinition> tools = new List<IToolDefinition>();
 
-        //TODO: define other tool sets?
-        //base tools for the chat session. - is static strings the way to go here? no contract enforcement.
-        private HashSet<string> defaultChatTools = new HashSet<string>
+
+        private HashSet<string> assistantChatTools = new HashSet<string>
         {
             KnownInformationSearch.ToolName,
             ImageEvaluate.ToolName,
@@ -20,10 +20,28 @@ namespace ToolManagement
             NewsSearch.ToolName
         };
 
+        private HashSet<string> storyEvaluatorTools = new HashSet<string>
+        {
+            SetCharacterList.ToolName,
+            SetStoryTags.ToolName,
+            SetGeneralInfo.ToolName,
+            SetStorySummary.ToolName
+        };
+
+        private HashSet<string> storyChatTools = new HashSet<string>
+        {
+            SearchForStories.ToolName,
+            EvaluateNewStory.ToolName
+        };
+
+
+        private HashSet<string> defaultChatTools;
+
 
         public ToolDefinitionManager(IEnumerable<IToolDefinition> definedTools)
         {
             tools = definedTools.ToList();
+            defaultChatTools = assistantChatTools;//default to assistant tools for now
         }
 
         public OpenAITool[] GetDefaultToolDefinitions()
@@ -41,6 +59,26 @@ namespace ToolManagement
         {
             defaultChatTools.Remove(toolName);
             tools.RemoveAll(t => t.Name == toolName);
+        }
+
+        public void ClearDefaultTools()
+        {
+            defaultChatTools.Clear();
+        }
+
+        public void UseAssistantTools()
+        {
+            defaultChatTools = assistantChatTools;
+        }
+
+        public void UseStoryEvaluatorTools()
+        {
+            defaultChatTools = storyEvaluatorTools;
+        }
+
+        public void UseStoryChatTools()
+        {
+            defaultChatTools = storyChatTools;
         }
     }
 }
