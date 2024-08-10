@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
 namespace ToolManagement.ToolDefinitions
 {

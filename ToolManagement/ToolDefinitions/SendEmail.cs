@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
 namespace ToolManagement.ToolDefinitions
 {

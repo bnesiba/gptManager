@@ -6,26 +6,27 @@ using ActionFlow;
 using ChatSessionFlow.models;
 using StoryEvaluatorFlow;
 using StoryEvaluatorFlow.Models;
-using ToolManagement.ToolDefinitions.Models;
-using ToolManagement.ToolDefinitions.StoryEvaluatorTools;
+using ToolManagementFlow.Models;
 using FakeDataStorageManager;
+using StoryEvaluatorFlow.Tools;
+using ToolManagementFlow;
 
 namespace ChatSessionFlow
 {
     public class StoryEvaluatorEffects : IFlowStateEffects
     {
-        private ToolDefinitionManager _toolManager;
         private FlowStateData<StoryEvaluatorEntity> _storyEvaluatorState;
+        private FlowStateData<ToolManagementStateEntity> _toolStateData;
         private FlowActionHandler _flowActionHandler;
         private TotallyRealDatabase<StoryEvaluatorEntity> _totallyADatabase;
 
 
 
-        public StoryEvaluatorEffects(FlowActionHandler flowHandler, ToolDefinitionManager toolManager, FlowStateData<StoryEvaluatorEntity> storyState, TotallyRealDatabase<StoryEvaluatorEntity> storyDatabase)
+        public StoryEvaluatorEffects(FlowActionHandler flowHandler, FlowStateData<StoryEvaluatorEntity> storyState, FlowStateData<ToolManagementStateEntity> toolState, TotallyRealDatabase<StoryEvaluatorEntity> storyDatabase)
         {
-            _toolManager = toolManager;
             _flowActionHandler = flowHandler;
             _storyEvaluatorState = storyState;
+            _toolStateData = toolState;
             _totallyADatabase = storyDatabase;
 
         }
@@ -40,17 +41,24 @@ namespace ChatSessionFlow
         //Effect Methods
         public FlowActionBase OnInitialStoryMsg_CreateChatRequest_ResolveChatRequestedAndStoryEvalComplete(FlowAction<InitialMessage> initialMsg)
         {
+            //set tools
+            _flowActionHandler.ResolveAction(ToolManagementActions.SetToolset(new List<string> {
+                SetCharacterList.ToolName,
+                SetStoryTags.ToolName, 
+                SetGeneralInfo.ToolName, 
+                SetStorySummary.ToolName 
+            }));
+            var tools = _toolStateData.CurrentState(ToolManagementSelectors.GetToolset);
 
             List<OpenAIChatMessage> newContext = new List<OpenAIChatMessage>();
             newContext.Add(new OpenAISystemMessage("You are a story tracker. You evaluate stories and extract/provide information about the story such as authors, characters, content-tags, and themes"));
             newContext.Add(new OpenAIUserMessage(initialMsg.Parameters.message));
-            _toolManager.UseStoryEvaluatorTools();
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
                 model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
                 messages = newContext,
                 temperature = 1,
-                tools = _toolManager.GetDefaultToolDefinitions(),
+                tools = tools
                 //tool_choice = _toolManager.GetDefaultToolDefinitions().First() //If this is commented out, all tools still seem to get used correctly.
             };
 
@@ -77,7 +85,11 @@ namespace ChatSessionFlow
             FlowAction<InitialMessage> initialMessage)
         {
 
-            _toolManager.UseStoryChatTools();
+            //_toolManager.UseStoryChatTools();
+            _flowActionHandler.ResolveAction(ToolManagementActions.SetToolset(new List<string>{
+                SearchForStories.ToolName,
+                EvaluateNewStory.ToolName
+            }));
             return ChatSessionActions.InitAssistantChat(initialMessage.Parameters.message, initialMessage.Parameters.sessionId);
         
         }

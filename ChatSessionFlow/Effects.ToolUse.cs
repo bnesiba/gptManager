@@ -3,7 +3,8 @@ using ActionFlow.Models;
 using ChatSessionFlow.models;
 using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagement;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow;
+using ToolManagementFlow.Models;
 
 
 namespace ChatSessionFlow
@@ -11,16 +12,16 @@ namespace ChatSessionFlow
     public class ToolUseEffects : IFlowStateEffects
     {
         private FlowStateData<ChatSessionEntity> _flowStateData;
-        private ToolDefinitionManager _toolManager;
+        private FlowStateData<ToolManagementStateEntity> _toolStateData;
         private List<IToolDefinition> _definedTools;//TODO: make dictionary?
         private FlowActionHandler _flowActionHandler;
 
 
-        public ToolUseEffects(FlowActionHandler actionHandler, FlowStateData<ChatSessionEntity> flowStateData, ToolDefinitionManager toolManager, IEnumerable<IToolDefinition> definedTools)
+        public ToolUseEffects(FlowActionHandler actionHandler, FlowStateData<ChatSessionEntity> flowStateData, FlowStateData<ToolManagementStateEntity> toolStateData, IEnumerable<IToolDefinition> definedTools)
         {
             _flowActionHandler = actionHandler;
             _flowStateData = flowStateData;
-            _toolManager = toolManager;
+            _toolStateData = toolStateData;
             _definedTools = definedTools.ToList();
         }
 
@@ -87,13 +88,14 @@ namespace ChatSessionFlow
         public FlowActionBase OnToolExecutionsCompleted_ResolveChatRequested(FlowAction<List<OpenAIToolCall>> chatResponseAction)
         {
             var currentContext = _flowStateData.CurrentState(ChatSessionSelectors.GetChatContext);
-            
+            var currentTools = _toolStateData.CurrentState(ToolManagementSelectors.GetToolset);
+
             OpenAIChatRequest chatRequest = new OpenAIChatRequest
             {
                 model = "gpt-4o-mini", //TODO: make these a const or something - magic strings bad.
                 messages = currentContext,
                 temperature = 1,
-                tools = _toolManager.GetDefaultToolDefinitions()
+                tools = currentTools
             };
             return ChatSessionActions.ChatRequested(chatRequest);
         }

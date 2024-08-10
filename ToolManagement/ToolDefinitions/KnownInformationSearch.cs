@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
 
 namespace ToolManagement.ToolDefinitions

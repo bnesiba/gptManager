@@ -1,6 +1,6 @@
 ﻿
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
 namespace ChatSessionFlow.models
 {

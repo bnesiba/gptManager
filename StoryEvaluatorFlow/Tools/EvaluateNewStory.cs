@@ -1,9 +1,9 @@
 ﻿using ActionFlow;
 using ActionFlow.Models;
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
-namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
+namespace StoryEvaluatorFlow.Tools
 {
     public class EvaluateNewStory : IToolDefinition
     {

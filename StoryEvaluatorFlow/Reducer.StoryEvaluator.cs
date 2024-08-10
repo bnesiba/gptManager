@@ -3,7 +3,8 @@ using ChatSessionFlow;
 using ChatSessionFlow.models;
 using OpenAIConnector.ChatGPTRepository.models;
 using StoryEvaluatorFlow.Models;
-using ToolManagement.ToolDefinitions.StoryEvaluatorTools;
+using StoryEvaluatorFlow.Tools;
+using ToolManagementFlow.Models;
 
 namespace StoryEvaluatorFlow
 {
@@ -82,17 +83,17 @@ namespace StoryEvaluatorFlow
                 bool containsMonsters =
                     toolResult.Parameters.toolRequestParameters.GetStringParam("ContainsMonster") == "true";
 
-                if (animalTags.Count > 0)
+                if (animalTags.Count() > 0)
                 {
                     animalTags.ForEach(tag => currentState.SearchTags.Add(tag));
                 }
 
-                if (vehicleTags.Count > 0)
+                if (vehicleTags.Count() > 0)
                 {
                     vehicleTags.ForEach(tag => currentState.SearchTags.Add(tag));
                 }
 
-                if (peopleTags.Count > 0)
+                if (peopleTags.Count() > 0)
                 {
                     peopleTags.ForEach(tag => currentState.SearchTags.Add(tag));
                 }
@@ -152,7 +153,7 @@ namespace StoryEvaluatorFlow
                 var authors = 
                     toolResult.Parameters.toolRequestParameters.GetStringArrayParam("AuthorArray") ?? new List<string>(); //TODO: constants...or maybe extensions on the tool?
 
-                if (authors.Count > 0)
+                if (authors.Count() > 0)
                 {
                     authors.ForEach(author => currentState.Authors.Add(author));
                 }

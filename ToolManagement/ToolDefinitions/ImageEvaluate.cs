@@ -8,7 +8,7 @@ using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
 using Org.BouncyCastle.Asn1;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
 namespace ToolManagement.ToolDefinitions
 {

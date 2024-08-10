@@ -9,12 +9,9 @@
   <ItemGroup>
     <PackageReference Include="bcn.ActionFlow" Version="1.0.1" />
   </ItemGroup>
-  
-    <ItemGroup>
-    <ProjectReference Include="..\FakeDataStorageManager\FakeDataStorageManager.csproj" />
-    <ProjectReference Include="..\ToolManagementFlow\ToolManagementFlow.csproj" />
-	<ProjectReference Include="..\ChatSessionFlow\ChatSessionFlow.csproj" />
-  </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
+  </ItemGroup>
 
 </Project>

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ToolManagementFlow\ToolManagementFlow.csproj" />
     <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
   </ItemGroup>
 

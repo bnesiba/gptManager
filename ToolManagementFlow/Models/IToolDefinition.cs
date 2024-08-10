@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using OpenAIConnector.ChatGPTRepository.models;
 
-namespace ToolManagement.ToolDefinitions.Models
-{
+namespace ToolManagementFlow.Models
+{ 
     public interface IToolDefinition
     {
         public string Name { get; }

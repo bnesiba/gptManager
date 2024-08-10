@@ -1,8 +1,8 @@
 ﻿using FakeDataStorageManager;
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
-namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
+namespace StoryEvaluatorFlow.Tools
 {
     public class SearchForStories : IToolDefinition
     {

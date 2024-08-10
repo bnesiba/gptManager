@@ -6,10 +6,11 @@ using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
 using StoryEvaluatorFlow;
 using StoryEvaluatorFlow.Models;
+using StoryEvaluatorFlow.Tools;
 using ToolManagement;
 using ToolManagement.ToolDefinitions;
-using ToolManagement.ToolDefinitions.Models;
-using ToolManagement.ToolDefinitions.StoryEvaluatorTools;
+using ToolManagementFlow;
+using ToolManagementFlow.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ChatGPTRepo>();
-builder.Services.AddSingleton<ToolDefinitionManager>();
 builder.Services.AddSingleton<GmailDataAccess>();
 builder.Services.AddSingleton<GmailConnector>();
 
@@ -46,6 +46,10 @@ builder.Services.UseFlowState();
 builder.Services.UseEffects<ChatSessionEffects>();
 builder.Services.UseEffects<ToolUseEffects>();
 builder.Services.UseReducer<ChatSessionReducer, ChatSessionEntity>();
+
+
+//tool flow stuff
+builder.Services.UseReducer<ToolManagementReducer, ToolManagementStateEntity>();
 
 //story eval flow stuff
 builder.Services.UseEffects<StoryEvaluatorEffects>();
