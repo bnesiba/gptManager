@@ -1,14 +1,13 @@
 using ActionFlow;
 using ChatSessionFlow;
 using ChatSessionFlow.models;
+using ChatSessionFlow.ToolDefinitions;
 using FakeDataStorageManager;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
 using StoryEvaluatorFlow;
 using StoryEvaluatorFlow.Models;
 using StoryEvaluatorFlow.Tools;
-using ToolManagement;
-using ToolManagement.ToolDefinitions;
 using ToolManagementFlow;
 using ToolManagementFlow.Models;
 
@@ -38,7 +37,7 @@ builder.Services.AddSingleton<IToolDefinition, SetGeneralInfo>();
 builder.Services.AddSingleton<IToolDefinition, SetStorySummary>();
 
 //story search tools
-builder.Services.AddSingleton<IToolDefinition, EvaluateNewStory>();
+builder.Services.AddScoped<IToolDefinition, EvaluateNewStory>();//TODO: switch all tools to scoped? has to be scoped to resolve actions.
 builder.Services.AddSingleton<IToolDefinition, SearchForStories>();
 
 //redux flow stuff

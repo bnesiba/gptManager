@@ -1,6 +1,4 @@
 ﻿using OpenAIConnector.ChatGPTRepository.models;
-using OpenAIConnector.ChatGPTRepository;
-using ToolManagement;
 using ActionFlow.Models;
 using ActionFlow;
 using ChatSessionFlow.models;
@@ -34,7 +32,6 @@ namespace ChatSessionFlow
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
            this.effect(OnInitialStoryMsg_CreateChatRequest_ResolveChatRequestedAndStoryEvalComplete, StoryEvaluatorActions.InitStoryEval()),
-           this.effect(OnToolExecutionRequested_WhenInitiatingNewEvaluation_ResolveInitStoryEval, ChatSessionActions.ToolExecutionRequested()),
            this.effect(OnInitialStoryChat_CreateChatRequest_ResolveChatRequested,StoryEvaluatorActions.InitStoryChat())
         };
 
@@ -59,7 +56,6 @@ namespace ChatSessionFlow
                 messages = newContext,
                 temperature = 1,
                 tools = tools
-                //tool_choice = _toolManager.GetDefaultToolDefinitions().First() //If this is commented out, all tools still seem to get used correctly.
             };
 
             _flowActionHandler.ResolveAction(ChatSessionActions.ChatRequested(chatRequest));
@@ -68,17 +64,6 @@ namespace ChatSessionFlow
             _totallyADatabase.AddStory(storyData, initialMsg.Parameters.message);
 
             return StoryEvaluatorActions.StoryEvalCompleted();
-        }
-
-        public FlowActionBase OnToolExecutionRequested_WhenInitiatingNewEvaluation_ResolveInitStoryEval(
-            FlowAction<ToolRequestParameters> toolRequest)
-        {
-            if (toolRequest.Parameters.ToolName == EvaluateNewStory.ToolName)
-            {
-                var storyToEvaluate = toolRequest.Parameters.GetStringParam("StoryToEvaluate") ?? string.Empty; //TODO: Get parameter strings from the tools somehow
-                return StoryEvaluatorActions.InitStoryEval(storyToEvaluate);
-            }
-            return StoryEvaluatorActions.StoryEvalNoop("StoryEvaluatorEffects-OnToolExecutionRequested_WhenInitiatingNewEvaluation_ResolveInitStoryEval");
         }
 
         public FlowActionBase OnInitialStoryChat_CreateChatRequest_ResolveChatRequested(

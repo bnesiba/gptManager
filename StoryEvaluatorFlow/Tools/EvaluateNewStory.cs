@@ -7,7 +7,7 @@ namespace StoryEvaluatorFlow.Tools
 {
     public class EvaluateNewStory : IToolDefinition
     {
-        //private FlowState _flowState;
+        private FlowActionHandler _flowActionHandler;
 
         //static accessor for Tool Management
         public static string ToolName => "EvaluateNewStory";
@@ -16,9 +16,9 @@ namespace StoryEvaluatorFlow.Tools
 
         public string Description => "Run the evaluation process for a new story, causing it to be stored and searchable";
 
-        public EvaluateNewStory(/*FlowState flowstate*/)
+        public EvaluateNewStory(FlowActionHandler flowActionHandler)
         {
-            //_flowState = flowstate;
+            _flowActionHandler = flowActionHandler;
         }
 
         public List<ToolProperty> InputParameters => new List<ToolProperty>()
@@ -36,7 +36,9 @@ namespace StoryEvaluatorFlow.Tools
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
             var storyToEvaluate = toolParams.GetStringParam("StoryToEvaluate");
-            //_flowState.ResolveAction(InitStoryEval(storyToEvaluate)); //TODO: figure out circular dependency issues preventing import of FlowState so action impl doesnt have to be in effects. Maybe move actions out somewhere?
+            _flowActionHandler.ResolveAction(ChatSessionFlow.ChatSessionActions.ChatSessionStart());
+            _flowActionHandler.ResolveAction(StoryEvaluatorActions.InitStoryEval(storyToEvaluate));
+            _flowActionHandler.ResolveAction(ChatSessionFlow.ChatSessionActions.ChatSessionComplete());
             return new OpenAIToolMessage($"EvaluateNewStory: " + "Evaluation Executed!", toolParams.ToolRequestId);
         }
 

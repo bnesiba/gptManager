@@ -1,12 +1,11 @@
 ﻿using OpenAIConnector.ChatGPTRepository.models;
 using OpenAIConnector.ChatGPTRepository;
 using ChatSessionFlow.models;
-using ToolManagement;
 using ActionFlow.Models;
 using ActionFlow;
 using ToolManagementFlow.Models;
 using ToolManagementFlow;
-using ToolManagement.ToolDefinitions;
+using ChatSessionFlow.ToolDefinitions;
 
 namespace ChatSessionFlow
 {
@@ -29,6 +28,7 @@ namespace ChatSessionFlow
         List<IFlowEffectBase> IFlowStateEffects.SideEffects => new List<IFlowEffectBase>
         {
            this.effect(OnInitialChatMsg_CreateChatRequest_ResolveChatRequested, ChatSessionActions.InitAssistantChat()),
+           this.effect(OnTooledAsstantInit_SetToolset_ResolveInitAssistantChat, ChatSessionActions.InitTooledAssistantChat()),
            this.effect(OnChatRequested_CallChatGPT_ResolveResponseReceived, ChatSessionActions.ChatRequested()),
         };
 

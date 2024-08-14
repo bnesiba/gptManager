@@ -16,7 +16,10 @@ namespace ChatSessionFlow
             this.reduce(CurrentContext_OnToolExecutionCompleted_AddToContext, ChatSessionActions.ToolExecutionSucceeded()),
             this.reduce(RequestStack_OnChatRequested_PushRequestToStack, ChatSessionActions.ChatRequested()),
             this.reduce(RequestStack_OnChatRequestReceived_PopRequestFromStack, ChatSessionActions.ToolExecutionsCompleted(), ChatSessionActions.ToolsExecutionEmpty()),
-            this.reduce(CurrentContext_OnChatRequestReceived_IncrementCount, ChatSessionActions.ChatRequested())
+            this.reduce(CurrentContext_OnChatRequestReceived_IncrementCount, ChatSessionActions.ChatRequested()),
+            this.reduce(CurrentSession_OnChatSessionStart_StartNewSession, ChatSessionActions.ChatSessionStart()),
+            this.reduce(CurrentSession_OnChatSessionCompleted_CompleteSession, ChatSessionActions.ChatSessionComplete())
+
         };
 
 
@@ -57,5 +60,20 @@ namespace ChatSessionFlow
             return currentState;
         }
 
+        public ChatSessionEntity CurrentSession_OnChatSessionStart_StartNewSession(FlowAction newSessionAction, ChatSessionEntity currentState)
+        {
+            currentState.SessionContexts.TryAdd(currentState.CurrentSession, currentState.CurrentContext);
+            currentState.ChatSessionStack.Push(currentState.CurrentSession);
+            currentState.CurrentSession = Guid.NewGuid();
+            currentState.CurrentContext = new List<OpenAIChatMessage>();
+            return currentState;
+        }
+
+        public ChatSessionEntity CurrentSession_OnChatSessionCompleted_CompleteSession(FlowAction completeSessionAction, ChatSessionEntity currentState)
+        {
+            currentState.CurrentSession = currentState.ChatSessionStack.Pop();
+            currentState.CurrentContext = currentState.SessionContexts[currentState.CurrentSession];
+            return currentState;
+        }
     }
 }

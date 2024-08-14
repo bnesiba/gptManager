@@ -18,5 +18,7 @@ namespace ChatSessionFlow
         public static FlowAction<List<OpenAIToolCall>> ToolsExecutionEmpty() => new FlowAction<List<OpenAIToolCall>> { Name = "ToolExecutionEmpty", Parameters = new List<OpenAIToolCall>() };
         //public static FlowAction ResponseValidatonRequested() => new FlowAction { Name = "ResponseValidationRequested" };
 
+        public static FlowAction ChatSessionStart() => new FlowAction { Name = "ChatSessionStart"};
+        public static FlowAction ChatSessionComplete() => new FlowAction { Name = "ChatSessionComplete" };
     }
 }
