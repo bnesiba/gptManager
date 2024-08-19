@@ -36,7 +36,7 @@ namespace StoryEvaluatorFlow.Tools
         public OpenAIToolMessage ExecuteTool(List<OpenAIChatMessage> chatContext, ToolRequestParameters toolParams)
         {
             var storyToEvaluate = toolParams.GetStringParam("StoryToEvaluate");
-            _flowActionHandler.ResolveAction(ChatSessionFlow.ChatSessionActions.ChatSessionStart());
+            _flowActionHandler.ResolveAction(ChatSessionFlow.ChatSessionActions.ChatSessionStart());//TODO: make 'using'-able? 
             _flowActionHandler.ResolveAction(StoryEvaluatorActions.InitStoryEval(storyToEvaluate));
             _flowActionHandler.ResolveAction(ChatSessionFlow.ChatSessionActions.ChatSessionComplete());
             return new OpenAIToolMessage($"EvaluateNewStory: " + "Evaluation Executed!", toolParams.ToolRequestId);

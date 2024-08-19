@@ -1,12 +1,13 @@
 ﻿using FakeDataStorageManager;
 using OpenAIConnector.ChatGPTRepository.models;
+using StoryEvaluatorFlow.Models;
 using ToolManagementFlow.Models;
 
 namespace StoryEvaluatorFlow.Tools
 {
     public class SearchForStories : IToolDefinition
     {
-        private ITotallyADatabase _definitelyADatabase; 
+        private TotallyRealDatabase<StoryEvaluatorEntity> _definitelyADatabase; 
 
         
         //static accessor for Tool Management
@@ -49,7 +50,7 @@ namespace StoryEvaluatorFlow.Tools
 
         };
 
-        public SearchForStories(ITotallyADatabase aDatabase)
+        public SearchForStories(TotallyRealDatabase<StoryEvaluatorEntity> aDatabase)
         {
             _definitelyADatabase = aDatabase;
         }

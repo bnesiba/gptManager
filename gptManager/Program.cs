@@ -55,7 +55,6 @@ builder.Services.UseEffects<StoryEvaluatorEffects>();
 builder.Services.UseReducer<StoryEvaluationReducer, StoryEvaluatorEntity>();
 
 builder.Services.AddSingleton<TotallyRealDatabase<StoryEvaluatorEntity>>();
-builder.Services.AddSingleton<ITotallyADatabase>(s => s.GetRequiredService<TotallyRealDatabase<StoryEvaluatorEntity>>());
 
 var app = builder.Build();
 
