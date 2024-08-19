@@ -1,15 +1,15 @@
 using ActionFlow;
 using ChatSessionFlow;
 using ChatSessionFlow.models;
+using ChatSessionFlow.ToolDefinitions;
 using FakeDataStorageManager;
 using GoogleCloudConnector.GmailAccess;
 using OpenAIConnector.ChatGPTRepository;
 using StoryEvaluatorFlow;
 using StoryEvaluatorFlow.Models;
-using ToolManagement;
-using ToolManagement.ToolDefinitions;
-using ToolManagement.ToolDefinitions.Models;
-using ToolManagement.ToolDefinitions.StoryEvaluatorTools;
+using StoryEvaluatorFlow.Tools;
+using ToolManagementFlow;
+using ToolManagementFlow.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +20,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ChatGPTRepo>();
-builder.Services.AddSingleton<ToolDefinitionManager>();
 builder.Services.AddSingleton<GmailDataAccess>();
 builder.Services.AddSingleton<GmailConnector>();
 
@@ -38,7 +37,7 @@ builder.Services.AddSingleton<IToolDefinition, SetGeneralInfo>();
 builder.Services.AddSingleton<IToolDefinition, SetStorySummary>();
 
 //story search tools
-builder.Services.AddSingleton<IToolDefinition, EvaluateNewStory>();
+builder.Services.AddScoped<IToolDefinition, EvaluateNewStory>();//TODO: switch all tools to scoped? has to be scoped to resolve actions.
 builder.Services.AddSingleton<IToolDefinition, SearchForStories>();
 
 //redux flow stuff
@@ -47,12 +46,15 @@ builder.Services.UseEffects<ChatSessionEffects>();
 builder.Services.UseEffects<ToolUseEffects>();
 builder.Services.UseReducer<ChatSessionReducer, ChatSessionEntity>();
 
+
+//tool flow stuff
+builder.Services.UseReducer<ToolManagementReducer, ToolManagementStateEntity>();
+
 //story eval flow stuff
 builder.Services.UseEffects<StoryEvaluatorEffects>();
 builder.Services.UseReducer<StoryEvaluationReducer, StoryEvaluatorEntity>();
 
 builder.Services.AddSingleton<TotallyRealDatabase<StoryEvaluatorEntity>>();
-builder.Services.AddSingleton<ITotallyADatabase>(s => s.GetRequiredService<TotallyRealDatabase<StoryEvaluatorEntity>>());
 
 var app = builder.Build();
 

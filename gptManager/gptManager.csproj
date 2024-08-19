@@ -18,7 +18,7 @@
     <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
     <ProjectReference Include="..\StoryEvaluatorFlow\StoryEvaluatorFlow.csproj" />
-    <ProjectReference Include="..\ToolManagement\ToolManagement.csproj" />
+    <ProjectReference Include="..\ToolManagementFlow\ToolManagementFlow.csproj" />
   </ItemGroup>
 
 </Project>

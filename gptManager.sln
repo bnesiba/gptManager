@@ -7,15 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gptManager", "gptManager\gp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAIConnector", "OpenAIConnector\OpenAIConnector.csproj", "{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolManagement", "ToolManagement\ToolManagement.csproj", "{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCloudConnector", "GoogleCloudConnector\GoogleCloudConnector.csproj", "{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatSessionFlow", "ChatSessionFlow\ChatSessionFlow.csproj", "{73AF270C-42B1-4EB3-8242-7217A690262D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryEvaluatorFlow", "StoryEvaluatorFlow\StoryEvaluatorFlow.csproj", "{A3C76D5B-C00E-4E3E-ACC4-A3DA064E7A08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeDataStorageManager", "FakeDataStorageManager\FakeDataStorageManager.csproj", "{97D5D752-52DE-435B-AB69-8FF1028DFC17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakeDataStorageManager", "FakeDataStorageManager\FakeDataStorageManager.csproj", "{97D5D752-52DE-435B-AB69-8FF1028DFC17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolManagementFlow", "ToolManagementFlow\ToolManagementFlow.csproj", "{1CF02B85-E473-4756-BF08-331B92AF49EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,6 @@ Global
 		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACD6BB2F-D91C-4FBE-92CD-E9E28362FD6D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B4197B3B-5FF2-470C-A253-BB89DA21C4FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6E88620-653D-415D-B3E8-2ED95AC6AE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{97D5D752-52DE-435B-AB69-8FF1028DFC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97D5D752-52DE-435B-AB69-8FF1028DFC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97D5D752-52DE-435B-AB69-8FF1028DFC17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CF02B85-E473-4756-BF08-331B92AF49EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CF02B85-E473-4756-BF08-331B92AF49EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CF02B85-E473-4756-BF08-331B92AF49EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CF02B85-E473-4756-BF08-331B92AF49EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

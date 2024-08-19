@@ -9,7 +9,7 @@ using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagementFlow.Models;
 
 
-namespace ToolManagement.ToolDefinitions
+namespace ChatSessionFlow.ToolDefinitions
 {
     public class KnownInformationSearch : IToolDefinition
     {

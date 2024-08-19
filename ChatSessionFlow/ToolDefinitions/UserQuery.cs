@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using OpenAIConnector.ChatGPTRepository.models;
 using ToolManagementFlow.Models;
 
-namespace ToolManagement.ToolDefinitions
+namespace ChatSessionFlow.ToolDefinitions
 {
     //not in use
     public class UserQuery: IToolDefinition

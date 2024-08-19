@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using GoogleCloudConnector.GmailAccess;
+﻿using System.Text.Json;
 using OpenAIConnector.ChatGPTRepository;
 using OpenAIConnector.ChatGPTRepository.models;
-using Org.BouncyCastle.Asn1;
 using ToolManagementFlow.Models;
 
-namespace ToolManagement.ToolDefinitions
+namespace ChatSessionFlow.ToolDefinitions
 {
     public class ImageEvaluate : IToolDefinition
     {

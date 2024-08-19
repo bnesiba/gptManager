@@ -1,13 +1,14 @@
 ﻿using ActionFlow.Models;
 using ChatSessionFlow.models;
 using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
 namespace ChatSessionFlow
 {
     public static class ChatSessionActions
     {
         public static FlowAction<InitialMessage> InitAssistantChat(string initalMsg = "", Guid? chatSessionId = null) => new FlowAction<InitialMessage> { Name = "UserInitialMessage", Parameters = new InitialMessage { message = initalMsg, sessionId = chatSessionId ?? Guid.NewGuid() } };
+        public static FlowAction<InitialMessage> InitTooledAssistantChat(string initalMsg = "", Guid? chatSessionId = null) => new FlowAction<InitialMessage> { Name = "TooledAssistantInit", Parameters = new InitialMessage { message = initalMsg, sessionId = chatSessionId ?? Guid.NewGuid() } };
         public static FlowAction<OpenAIChatRequest> ChatRequested(OpenAIChatRequest? request = null) => new FlowAction<OpenAIChatRequest> { Name = "AIChatRequested", Parameters = request };
         public static FlowAction<OpenAIChatResponse> ChatResponseReceived(OpenAIChatResponse? response = null) => new FlowAction<OpenAIChatResponse> { Name = "AIChatResponse", Parameters = response };
         public static FlowAction<ToolRequestParameters> ToolExecutionRequested(ToolRequestParameters? toolRequest = null) => new FlowAction<ToolRequestParameters> { Name = "ToolExecutionRequested", Parameters = toolRequest };
@@ -17,5 +18,7 @@ namespace ChatSessionFlow
         public static FlowAction<List<OpenAIToolCall>> ToolsExecutionEmpty() => new FlowAction<List<OpenAIToolCall>> { Name = "ToolExecutionEmpty", Parameters = new List<OpenAIToolCall>() };
         //public static FlowAction ResponseValidatonRequested() => new FlowAction { Name = "ResponseValidationRequested" };
 
+        public static FlowAction ChatSessionStart() => new FlowAction { Name = "ChatSessionStart"};
+        public static FlowAction ChatSessionComplete() => new FlowAction { Name = "ChatSessionComplete" };
     }
 }

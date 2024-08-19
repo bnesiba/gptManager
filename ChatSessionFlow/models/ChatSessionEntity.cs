@@ -7,6 +7,10 @@ namespace ChatSessionFlow.models
     {
         public List<OpenAIChatMessage> CurrentContext { get; set; }
 
+        public Dictionary<Guid, List<OpenAIChatMessage>> SessionContexts { get; set; }
+        public Guid CurrentSession {  get; set; }
+        public Stack<Guid> ChatSessionStack { get; set; }
+
         public Stack<OpenAIChatRequest> ChatRequestStack { get; set; }
 
         //TODO: remove me - testing param
@@ -15,6 +19,9 @@ namespace ChatSessionFlow.models
         public ChatSessionEntity()
         {
             CurrentContext = new List<OpenAIChatMessage>();
+            SessionContexts = new Dictionary<Guid, List<OpenAIChatMessage>>();
+            CurrentSession = Guid.NewGuid();
+            ChatSessionStack = new Stack<Guid>();
             ChatRequestStack = new Stack<OpenAIChatRequest>();
             NumberOfChats = 0;
         }
@@ -23,9 +30,13 @@ namespace ChatSessionFlow.models
         {
             var copy = new ChatSessionEntity();
             copy.CurrentContext = CurrentContext;
+            copy.SessionContexts = SessionContexts;
+            copy.CurrentSession = CurrentSession;
+            copy.ChatSessionStack = new Stack<Guid>();
             copy.ChatRequestStack = new Stack<OpenAIChatRequest>();
             copy.NumberOfChats = NumberOfChats;
             ChatRequestStack.ToList().ForEach(r => copy.ChatRequestStack.Push(r.Copy()));
+            ChatSessionStack.ToList().ForEach(s => copy.ChatSessionStack.Push(s));
             return copy;
         }
 

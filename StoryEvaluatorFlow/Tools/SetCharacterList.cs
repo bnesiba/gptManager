@@ -1,7 +1,7 @@
 ﻿using OpenAIConnector.ChatGPTRepository.models;
-using ToolManagement.ToolDefinitions.Models;
+using ToolManagementFlow.Models;
 
-namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
+namespace StoryEvaluatorFlow.Tools
 {
     public class SetCharacterList : IToolDefinition
     {
@@ -29,7 +29,7 @@ namespace ToolManagement.ToolDefinitions.StoryEvaluatorTools
                             name = "CharacterName",
                             type = "string",
                             description = "The name of the character",
-                            IsRequired = true//TODO: don't let user set this anymore - per api spec if the array is required, each part of the array object *must* also be required
+                            IsRequired = true
                         },
                         new ToolProperty()
                         {
