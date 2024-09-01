@@ -1,3 +1,4 @@
+# ChatGPT based AI project platform
 Mostly a playground project for me to mess around with chatGPT and tool integrations.   
 
 This application uses `bcn.ActionFlow`, a custom redux-like architecture I set up to smoothly integrate new features, handle async behaviors, and manage states.
@@ -8,12 +9,12 @@ ChatSessionFlow handles the main chat loop logic, while tool-state is maintained
 Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search*, wikipedia api*   
 *in abandoned branch - future integrations planned, but maybe unnecessary.
 
----
+
 **There are 2 main Applications in the platform so far:**
 
----
 
-1.) Tool-informed Chatbot
+
+## 1.) Tool-informed Chatbot
    - This is the default chatbot flow.
    - Using the ChatController and the ChatSessionFlow, this application implements a simple RAG chatbot with some basic tools.   
 *This Flow was originally designed to use chatgpt-3.5 as often as possible due to cost concerns, I have since switched to chatgpt-4o-mini making some tools obsolute.*
@@ -22,9 +23,8 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
         - **NewsSearch** tool is a stub for a tool that could get and manage results from external news sources. At the moment it always returns fake articles about moon-aliens.
         - **KnownInformationSearch** tool allows the chatbot to ask itself knowledge questions. *This solved an issue with chatgpt-3.5 where it would keep trying tools instead of using internal knowledge. chatgpt-4o-mini does not appear to struggle with this.
 
----
 
-2.) Children's Story Evaluation and Search
+## 2.) Children's Story Evaluation and Search
    - Created as a demonstration of how one might use tools to extract, store, and search information from input documents (in this case children's stories)
    - Using StoryEvaluationController to trigger StoryEvaluatorFlow, this project defines two "features" or endpoints:
         - **Story Evaluate:** This endpoint takes in the full-text of a childrens story and produces+stores an object containing metadata extracted from the story including title/author(s), characters(with descriptions and roles, and tags related to the content of the story like vehicles, animals, or professions mentioned.
