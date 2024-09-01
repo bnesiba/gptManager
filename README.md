@@ -8,7 +8,10 @@ ChatSessionFlow handles the main chat loop logic, while tool-state is maintained
 Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search*, wikipedia api*   
 *in abandoned branch - future integrations planned, but maybe unnecessary.
 
+---
 **There are 2 main Applications in the platform so far:**
+
+---
 
 1.) Tool-informed Chatbot
    - This is the default chatbot flow.
@@ -18,6 +21,8 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
         - **ImageEvaluate** tool allows the chatbot to pass images to chatgpt 4 to analyse them. *This allowed the chatbot to use chatgpt 3.5 most of the time while maintaining feature access
         - **NewsSearch** tool is a stub for a tool that could get and manage results from external news sources. At the moment it always returns fake articles about moon-aliens.
         - **KnownInformationSearch** tool allows the chatbot to ask itself knowledge questions. *This solved an issue with chatgpt-3.5 where it would keep trying tools instead of using internal knowledge. chatgpt-4o-mini does not appear to struggle with this.
+
+---
 
 2.) Children's Story Evaluator
    - Created as a demonstration of how one might use tools to extract, store, and search information from input documents (in this case children's stories)
@@ -34,3 +39,5 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
         - **Story Search** only uses 2 tools for the story-search-chat *If this were a prod feature, there would probably be a couple more*
             - **SearchForStories** tool searches previously evaluated stories to retreive relevant stories for the end-user
             - **EvaluateNewStory** tool allows the bot to trigger the evaluation flow for a new story. This allows the chat to take in new stories (or to write new ones based on existing data) and store them for later search.
+         
+---
