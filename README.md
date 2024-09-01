@@ -24,7 +24,7 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
 
 ---
 
-2.) Children's Story Evaluator
+2.) Children's Story Evaluation and Search
    - Created as a demonstration of how one might use tools to extract, store, and search information from input documents (in this case children's stories)
    - Using StoryEvaluationController to trigger StoryEvaluatorFlow, this project defines two "features" or endpoints:
         - **Story Evaluate:** This endpoint takes in the full-text of a childrens story and produces+stores an object containing metadata extracted from the story including title/author(s), characters(with descriptions and roles, and tags related to the content of the story like vehicles, animals, or professions mentioned.
