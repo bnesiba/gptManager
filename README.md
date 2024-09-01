@@ -27,10 +27,10 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
              - This is a fully-functional chatbot and can reason about stories, produce new stories from known content and anything else you would expect chatgpt to be capable of doing.
    - StoryEvaluationFlow defines two sets of tools, one for each of the two features.
         - **Story Evaluation** is split up across 4 tools. This allows the agent to use previously location information to inform later responses, and minimizing the chance for hallucinations. Each tool also includes an optional parameter for the agent to input any complications encountered while finding the associated information (maybe a story doesn't have an author for example), further minimising hallicinations and alerting the user if they occurred. 
-             - *SetGeneralInfo* tool has the agent extract the title and author(s) of the particlar work.
-             - *SetCharacterList* tool has the agent extract a list of character names, descriptions, and roles from the story.
-             - *SetStoryTags* tool has the agent assign a number of tags to the story based on events or elements of the story (vehicles/animals/professions/family members/etc).
-             - *SetStorySummary* tool is always run last and has the agent generate a short summary of the story. Because this tool is always run last, it benefits from the accumulated information from previously run tools.
-         - **Story Search** only uses 2 tools for the story-search-chat *If this were a prod feature, there would probably be a couple more
-             - *SearchForStories* tool searches previously evaluated stories to retreive relevant stories for the end-user
-             - *EvaluateNewStory* tool allows the bot to trigger the evaluation flow for a new story. This allows the chat to take in new stories (or to write new ones based on existing data) and store them for later search.
+             - **SetGeneralInfo** tool has the agent extract the title and author(s) of the particlar work.
+             - **SetCharacterList** tool has the agent extract a list of character names, descriptions, and roles from the story.
+             - **SetStoryTags** tool has the agent assign a number of tags to the story based on events or elements of the story (vehicles/animals/professions/family members/etc).
+             - **SetStorySummary** tool is always run last and has the agent generate a short summary of the story. Because this tool is always run last, it benefits from the accumulated information from previously run tools.
+        - **Story Search** only uses 2 tools for the story-search-chat *If this were a prod feature, there would probably be a couple more*
+            - **SearchForStories** tool searches previously evaluated stories to retreive relevant stories for the end-user
+            - **EvaluateNewStory** tool allows the bot to trigger the evaluation flow for a new story. This allows the chat to take in new stories (or to write new ones based on existing data) and store them for later search.
