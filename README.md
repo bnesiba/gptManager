@@ -1,11 +1,12 @@
 Mostly a playground project for me to mess around with chatGPT and tool integrations.   
-This application uses bcn.ActionFlow a custom redux-like architecture I set up to smoothly integrate new features, handle async behaviors, and manage states.
+
+This application uses `bcn.ActionFlow`, a custom redux-like architecture I set up to smoothly integrate new features, handle async behaviors, and manage states.
 The project is currently a C# .Net WebAPI but the use of ActionFlow means that almost all of the code could be moved to any C# .Net project type (MAUI for example) with very few changes necessary. 
 
 ChatSessionFlow handles the main chat loop logic, while tool-state is maintained in ToolManagementFlow so future projects can define and use any tools they need. 
    
-Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search*, wikipedia api*
-*in a branch i probably won't merge in...
+Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search*, wikipedia api*   
+*in abandoned branch - future integrations planned, but maybe unnecessary.
 
 **There are 2 main Applications in the platform so far:**
 
