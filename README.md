@@ -26,12 +26,12 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
 
 ## 2.) Story Evaluation and Search
    - Created as a demonstration of how one might use tools to extract, store, and search information from input documents (in this case children's stories)
-   - Using StoryEvaluationController to trigger StoryEvaluatorFlow, this project defines two "features" or endpoints:
+   - Using StoryEvaluationController to trigger StoryEvaluatorFlow, this project defines two features:
         - **Story Evaluate:** This endpoint takes in the full-text of a childrens story and produces+stores an object containing metadata extracted from the story including title/author(s), characters(with descriptions and roles, and tags related to the content of the story like vehicles, animals, or professions mentioned.
         - **Story Search:** This endpoint takes a prompt and, using the defined search tools, finds stories that match the user's query. It can also run the evaluation process on new stories it is given.
              - This is a fully-functional chatbot and can reason about stories, produce new stories from known content and anything else you would expect chatgpt to be capable of doing.
    - StoryEvaluationFlow defines two sets of tools, one for each of the two features.
-        - **Story Evaluation** is split up across 4 tools. This allows the agent to use previously location information to inform later responses, and minimizing the chance for hallucinations. Each tool also includes an optional parameter for the agent to input any complications encountered while finding the associated information (maybe a story doesn't have an author for example), further minimising hallicinations and alerting the user if they occurred. 
+        - **Story Evaluation** is split up across 4 tools. This allows the agent's previously located information to inform later responses, and lowers the chance of hallucinations. Each tool also includes an optional parameter for the agent to input any complications encountered while finding the associated information (maybe a story doesn't have an author for example), further minimising hallicinations and alerting the user if they occurred. 
              - **SetGeneralInfo** tool has the agent extract the title and author(s) of the particlar work.
              - **SetCharacterList** tool has the agent extract a list of character names, descriptions, and roles from the story.
              - **SetStoryTags** tool has the agent assign a number of tags to the story based on events or elements of the story (vehicles/animals/professions/family members/etc).
