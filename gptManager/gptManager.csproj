@@ -16,6 +16,7 @@
     <ProjectReference Include="..\ChatSessionFlow\ChatSessionFlow.csproj" />
     <ProjectReference Include="..\FakeDataStorageManager\FakeDataStorageManager.csproj" />
     <ProjectReference Include="..\GoogleCloudConnector\GoogleCloudConnector.csproj" />
+    <ProjectReference Include="..\ImageFlow\ImageGenFlow.csproj" />
     <ProjectReference Include="..\OpenAIConnector\OpenAIConnector.csproj" />
     <ProjectReference Include="..\StoryEvaluatorFlow\StoryEvaluatorFlow.csproj" />
     <ProjectReference Include="..\ToolManagementFlow\ToolManagementFlow.csproj" />

@@ -4,7 +4,10 @@ using ChatSessionFlow.models;
 using ChatSessionFlow.ToolDefinitions;
 using FakeDataStorageManager;
 using GoogleCloudConnector.GmailAccess;
+using ImageGenFlow;
+using ImageGenFlow.Models;
 using OpenAIConnector.ChatGPTRepository;
+using OpenAIConnector.DallERepository;
 using StoryEvaluatorFlow;
 using StoryEvaluatorFlow.Models;
 using StoryEvaluatorFlow.Tools;
@@ -20,6 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ChatGPTRepo>();
+builder.Services.AddSingleton<DallERepo>();
 builder.Services.AddSingleton<GmailDataAccess>();
 builder.Services.AddSingleton<GmailConnector>();
 
@@ -40,6 +44,7 @@ builder.Services.AddSingleton<IToolDefinition, SetStorySummary>();
 builder.Services.AddScoped<IToolDefinition, EvaluateNewStory>();//TODO: switch all tools to scoped? has to be scoped to resolve actions.
 builder.Services.AddSingleton<IToolDefinition, SearchForStories>();
 
+
 //redux flow stuff
 builder.Services.UseFlowState();
 builder.Services.UseEffects<ChatSessionEffects>();
@@ -55,6 +60,11 @@ builder.Services.UseEffects<StoryEvaluatorEffects>();
 builder.Services.UseReducer<StoryEvaluationReducer, StoryEvaluatorEntity>();
 
 builder.Services.AddSingleton<TotallyRealDatabase<StoryEvaluatorEntity>>();
+
+
+//img gen flow stuff
+builder.Services.UseEffects<ImageGenEffects>();
+builder.Services.UseReducer<ImageGenReducer, ImageGenStateEntity>();
 
 var app = builder.Build();
 

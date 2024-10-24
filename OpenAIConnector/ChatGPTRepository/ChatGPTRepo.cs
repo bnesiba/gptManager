@@ -15,7 +15,7 @@ namespace OpenAIConnector.ChatGPTRepository
             _httpClient = httpClientFactory.CreateClient();
 
             //TODO: get from config?
-            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<Bearer Token Goes Here>");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "<token goes here>");
 
         }
 
