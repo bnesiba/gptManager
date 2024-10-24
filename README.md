@@ -17,7 +17,7 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
 ## 1.) Tool-informed Chatbot
    - This is the default chatbot flow.
    - Using the ChatController and the ChatSessionFlow, this application implements a simple RAG chatbot with some basic tools.   
-*This Flow was originally designed to use chatgpt-3.5 as often as possible due to cost concerns, I have since switched to chatgpt-4o-mini making some tools obsolute.*
+*This Flow was originally designed to use chatgpt-3.5 as often as possible due to cost concerns, I have since switched to chatgpt-4o-mini making some tools obsolete.*
         - **SendEmail** tool sends emails on the user's (my) behalf using the Google Cloud Platform.
         - **ImageEvaluate** tool allows the chatbot to pass images to chatgpt 4 to analyse them. *This allowed the chatbot to use chatgpt 3.5 most of the time while maintaining feature access
         - **NewsSearch** tool is a stub for a tool that could get and manage results from external news sources. At the moment it always returns fake articles about moon-aliens.
@@ -31,8 +31,8 @@ Currently integrates: ChatGPT, Google Cloud Platform, Google programmable search
         - **Story Search:** This endpoint takes a prompt and, using the defined search tools, finds stories that match the user's query. It can also run the evaluation process on new stories it is given.
              - This is a fully-functional chatbot and can reason about stories, produce new stories from known content and anything else you would expect chatgpt to be capable of doing.
    - StoryEvaluationFlow defines two sets of tools, one for each of the two features.
-        - **Story Evaluation** is split up across 4 tools. This allows the agent's previously located information to inform later responses, and lowers the chance of hallucinations. Each tool also includes an optional parameter for the agent to input any complications encountered while finding the associated information (maybe a story doesn't have an author for example), further minimising hallicinations and alerting the user if they occurred. 
-             - **SetGeneralInfo** tool has the agent extract the title and author(s) of the particlar work.
+        - **Story Evaluation** is split up across 4 tools. This allows the agent's previously located information to inform later responses, and lowers the chance of hallucinations. Each tool also includes an optional parameter for the agent to input any complications encountered while finding the associated information (maybe a story doesn't have an author for example), further minimising hallucinations and alerting the user if they occurred. 
+             - **SetGeneralInfo** tool has the agent extract the title and author(s) of the particular work.
              - **SetCharacterList** tool has the agent extract a list of character names, descriptions, and roles from the story.
              - **SetStoryTags** tool has the agent assign a number of tags to the story based on events or elements of the story (vehicles/animals/professions/family members/etc).
              - **SetStorySummary** tool is always run last and has the agent generate a short summary of the story. Because this tool is always run last, it benefits from the accumulated information from previously run tools.
